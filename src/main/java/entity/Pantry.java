@@ -1,4 +1,4 @@
-package sizzleAndServe;
+package entity;
 
 import java.util.Map;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package sizzleAndServe;
+package entity;
 
 public class Recipe {
     private String name;
