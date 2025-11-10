@@ -30,7 +30,7 @@ public class ProductPricesInteractor implements ProductPricesInputBoundary{
         }
         else {
             final Recipe recipe = pantry.getRecipe(productPricesInputData.getName());
-            recipe.setPrice(productPricesInputData.getCurrentPrice());
+            recipe.setCurrentPrice(productPricesInputData.getCurrentPrice());
 
             userDataAccessObject.changePrice(recipe);
 
