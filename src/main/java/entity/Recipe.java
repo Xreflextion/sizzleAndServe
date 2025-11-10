@@ -44,18 +44,22 @@ public class Recipe {
         return stock;
     }
 
-    public int getPrice() {
+    public int getBasePrice() {
+        return basePrice;
+    }
+
+    public int getCurrentPrice() {
         return currentPrice;
     }
 
-    public void setPrice(int newPrice) {
+    public void setCurrentPrice(int newPrice) {
         if (newPrice <= 0) {
             throw new IllegalArgumentException("Price must be positive");
         }
         currentPrice = newPrice;
     }
 
-    public void resetPrice() {
+    public void resetCurrentPrice() {
         currentPrice = basePrice;
     }
 }
