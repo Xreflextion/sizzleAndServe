@@ -24,6 +24,7 @@ public class ProductPricesView extends JPanel implements ActionListener, Propert
     private ProductPricesController productPricesController = null;
 
     private final JLabel nameLabel;
+    private final JLabel imageLabel;
     private final JLabel basePriceLabel;
     private final JLabel currentPriceLabel;
 
@@ -38,18 +39,27 @@ public class ProductPricesView extends JPanel implements ActionListener, Propert
     private final JSlider marginSlider = new JSlider(JSlider.HORIZONTAL, MIN_MARGIN, MAX_MARGIN, DEFAULT_MARGIN);
 
     public ProductPricesView(ProductPricesViewModel productPricesViewModel) {
+        // TODO: make 3 of these dish panels
         this.productPricesViewModel = productPricesViewModel;
         this.productPricesViewModel.addPropertyChangeListener(this);
 
         final JLabel titleLabel = new JLabel("Product Prices");
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        // Information Panel
         final JPanel informationPanel = new JPanel();
         informationPanel.setLayout(new BoxLayout(informationPanel, BoxLayout.Y_AXIS));
+        informationPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         nameLabel = new JLabel("Name: "
                 + (productPricesViewModel.getState() != null && productPricesViewModel.getState().getSelectedDishName()
                 != null ? productPricesViewModel.getState().getSelectedDishName() : "N/A"));
         informationPanel.add(nameLabel);
+
+        // TODO: figure out how we will store images
+        ImageIcon imageIcon = new ImageIcon("src/main/resources/images/sample.jpg");
+        Image scaledImage = imageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+        imageLabel = new JLabel(new ImageIcon(scaledImage));
+        informationPanel.add(imageLabel);
 
         String selectedDishName = productPricesViewModel.getState().getSelectedDishName();
         Recipe selectedRecipe = productPricesViewModel.getState().getRecipes().get(selectedDishName);
@@ -60,12 +70,15 @@ public class ProductPricesView extends JPanel implements ActionListener, Propert
         informationPanel.add(basePriceLabel);
         informationPanel.add(currentPriceLabel);
 
+        // Margin Panel
         final JPanel marginPanel = new JPanel();
         marginPanel.setLayout(new BoxLayout(marginPanel, BoxLayout.Y_AXIS));
+        final JPanel subMarginPanel = new JPanel();
         marginLabel = new JLabel("Profit Margin: " + marginSlider.getValue() + "%");
-        marginPanel.add(marginLabel);
+        subMarginPanel.add(marginLabel);
         marginReset = new JButton("Reset");
-        marginPanel.add(marginReset);
+        subMarginPanel.add(marginReset);
+        marginPanel.add(subMarginPanel);
         marginSlider.setMinorTickSpacing(MINOR_TICK_SPACING);
         marginSlider.setMajorTickSpacing(MAJOR_TICK_SPACING);
         marginSlider.setPaintTicks(true);
