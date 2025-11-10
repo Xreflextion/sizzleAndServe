@@ -1,4 +1,4 @@
 package interface_adapter.pantry;
 
-public class PantryState {
+public class ProductPricesState {
 }
