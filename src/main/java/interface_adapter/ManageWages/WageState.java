@@ -4,53 +4,39 @@ public class WageState {
     /**
      * The state for the Wage Management View Model.
      */
-    private int WaiterWage = 1;
-    private int CookWage = 1;
-    private float WaiterWageEffect = 1;
-    private float CookWageEffect = 1;
-    private String BelowMiniumWageError;
+    private int waiterWage;
+    private int cookWage;
+    private float waiterWageEffect;
+    private float cookWageEffect;
+
+    public void setWaiterWage(int waiterWage) {
+        this.waiterWage = waiterWage;
+    }
+
+    public void setCookWage(int cookWage) {
+        this.cookWage = cookWage;
+    }
+
+    public void setWaiterWageEffect(float waiterWageEffect) {
+        this.waiterWageEffect = waiterWageEffect;
+    }
+    public void setCookWageEffect(float cookWageEffect) {
+        this.cookWageEffect = cookWageEffect;
+    }
 
     public int getWaiterWage() {
-        return WaiterWage;
+        return waiterWage;
     }
 
     public int getCookWage() {
-        return CookWage;
+        return cookWage;
     }
 
     public float getWaiterWageEffect() {
-        return WaiterWageEffect;
+        return waiterWageEffect;
     }
+
     public float getCookWageEffect() {
-        return CookWageEffect;
+        return cookWageEffect;
     }
-
-    public void increaseWaiterWage() {
-        WaiterWage++;
-        WaiterWageEffect += 0.2F;
-    }
-
-    public void decreaseWaiterWage() {
-        WaiterWage--;
-        WaiterWageEffect -= 0.2F;
-    }
-
-    public void increaseCookWage() {
-        CookWage++;
-        CookWageEffect += 0.2F;
-    }
-
-    public void decreaseCookWage() {
-        CookWage--;
-        CookWageEffect -= 0.2F;
-    }
-
-    public String getBelowMiniumWageError() {
-        return BelowMiniumWageError;
-    }
-
-    public void setBelowMiniumWageError(String belowMiniumWageError) {
-        BelowMiniumWageError = belowMiniumWageError;
-    }
-
 }
