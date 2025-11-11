@@ -9,7 +9,7 @@ import java.util.Map;
 public class ProductPricesState {
     private final Map<String, Recipe> recipes;
     private String selectedDishName;  // Track which dish is being modified
-    private int currentPrice;     // Track the price being edited
+    private double currentPrice;     // Track the price being edited
 
     public ProductPricesState(Map<String, Recipe> recipes) {
         this.recipes = recipes;
@@ -32,11 +32,11 @@ public class ProductPricesState {
         }
     }
 
-    public int getCurrentPrice() {
+    public double getCurrentPrice() {
         return currentPrice;
     }
 
-    public void setCurrentPrice(int price) {
+    public void setCurrentPrice(double price) {
         this.currentPrice = price;
     }
 }

@@ -6,9 +6,9 @@ package use_case.product_prices;
 public class ProductPricesInputData {
 
     private final String name;
-    private final int currentPrice;
+    private final double currentPrice;
 
-    public ProductPricesInputData(String name, int currentPrice) {
+    public ProductPricesInputData(String name, double currentPrice) {
         this.name = name;
         this.currentPrice = currentPrice;
     }
@@ -17,7 +17,7 @@ public class ProductPricesInputData {
         return name;
     }
 
-    int getCurrentPrice() {
+    double getCurrentPrice() {
         return currentPrice;
     }
 }
