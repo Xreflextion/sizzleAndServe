@@ -1,15 +1,21 @@
-package Use_Case.WaiterWageIncrease;
+package Use_Case;
 
-import sizzleAndServe.Waiter;
+import sizzleAndServe.Employee;
 /**
- *  The output boundary interface for waiter wage increase,
- * gives current waiter wage, and current rating effect
- /**
- *
+ * Data Access Interface for Wage Management use case.
+ * Provides methods to retrieve and save employee data.
  */
-public interface WaiterWageIncreaseUserDataAccessInterface {
+public interface WageUserDataAccessInterface {
+    /**
+     * Retrieves an employee by position.
+     * @param position The position of the employee (e.g., "Cook", "Waiter")
+     * @return The Employee object, or null if not found.
+     */
+    Employee getEmployee(String position);
 
-Waiter getCurrentWaiter();
-
-void setCurrentWaiter(Waiter currentWaiter);
+    /**
+     * Saves the updated employee data.
+     * @param employee The Employee object to save.
+     */
+    void save(Employee employee);
 }
