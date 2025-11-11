@@ -1,40 +1,64 @@
 package sizzleAndServe;
 
 
-public abstract class Employee {
+public class Employee {
    /* Employee of the restaurant:
    User can increase or decrease the wages of two employees: waiter & cook
    every 1 increase in waiter's wage leads to 20 percentage point increase in rating
    every 1 increase in cook's wage leads to -20 percentage point preparation time needed
     */
-    protected static final int minWage = 1;
-    protected int wage;
-    /*
-     initial creation put it at minWage
-     */
-    protected static int totalWage = 0;
+    private static final int MIN_WAGE = 1;
+    private static int totalWage = 0;
     /*
     a static variable that is responsible for counting total wages and should be used in daily expense
      */
-    public Employee(int wage) {
-        if (wage < minWage) {
-            this.wage = minWage;
-        }
-        else {
-            this.wage = wage;
-        }
+
+    private int wage;
+    private float wageEffect;
+    private String position;
+    /*
+     initial creation put it at minWage
+     */
+
+
+    public Employee(int wage, String position) {
+        this.wage = Math.max(wage, MIN_WAGE);
+        this.position = position;
+        this.wageEffect = calculateInitialEffect(this.wage);
         totalWage += this.wage;
     }
-    public void increaseWage(int amount){
-        this.wage += amount;
+
+    private float calculateInitialEffect(int wage) {
+        return 1 + (wage - MIN_WAGE) * 0.2f;
     }
 
-    public void decreaseWage(int amount){
-        int proposedWage = this.wage + amount;
-        if  (proposedWage >= minWage) {
-            this.wage -= amount;}
-        else {this.wage = minWage;}
+    public void increaseWage() {
+        this.wage++;
+        this.wageEffect += 0.2f;
+        totalWage++;
     }
-    public abstract void applyWageEffect();
 
+    public void decreaseWage() {
+        if (this.wage > MIN_WAGE) {
+            this.wage--;
+            this.wageEffect -= 0.2f;
+            totalWage--;
+        }
+    }
+
+    public int getWage() {
+        return wage;
+    }
+
+    public float getWageEffect() {
+        return wageEffect;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public static int getTotalWage() {
+        return totalWage;
+    }
 }
