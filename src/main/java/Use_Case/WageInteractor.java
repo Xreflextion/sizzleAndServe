@@ -1,29 +1,44 @@
-package Use_Case.WaiterWageIncrease;
+package Use_Case;
 
-import sizzleAndServe.Waiter;
+import sizzleAndServe.Employee;
 
-public class WaiterWageIncreaseInteractor implements WaiterWageIncreaseInputBoundary {
-    private WaiterWageIncreaseUserDataAccessInterface wageIncreaseUserDataAccess;
-    private WaiterWageIncreaseOutputBoundary waiterWageIncreasePresenter;
-    private final Waiter waiter;
+import java.util.Map;
+/**
+        * Interactor for managing employee wages.
+ * Implements the WageInputBoundary and coordinates between data access and presenter.
+        */
+public class WageInteractor implements WageInputBoundary {
+    private final WageUserDataAccessInterface dataAccess;
+    private final WageOutputBoundary presenter;
+    private final Map<String, Employee> employees;
 
-    public WaiterWageIncreaseInteractor(
-            WaiterWageIncreaseUserDataAccessInterface wageIncreaseUserDataAccess,
-            WaiterWageIncreaseOutputBoundary waiterWageIncreasePresenter,
-            Waiter waiter) {
-        this.wageIncreaseUserDataAccess = wageIncreaseUserDataAccess;
-        this.waiterWageIncreasePresenter = waiterWageIncreasePresenter;
-        this.waiter = waiter;}
-
-    @Override
-    public void execute() {
-        //* instantiate output
-        this.waiter.increaseWage();
-        this.wageIncreaseUserDataAccess.setCurrentWaiter(waiter);
-        final WaiterWageIncreaseOutputData WWI = new WaiterWageIncreaseOutputData
-                (this.wageIncreaseUserDataAccess.getCurrentWaiter());
-        waiterWageIncreasePresenter.prepareSuccessView(WWI);
+    public WageInteractor(WageUserDataAccessInterface dataAccess,
+                          WageOutputBoundary presenter,
+                          Map<String, Employee> employees) {
+        this.dataAccess = dataAccess;
+        this.presenter = presenter;
+        this.employees = employees;
     }
 
+    @Override
+    public void increaseWage(String position) {
+        Employee currentEmployee = employees.get(position);
+        if (currentEmployee != null) {
+            currentEmployee.increaseWage();
+            dataAccess.save(currentEmployee); // ✅ Persist changes
+            WageOutputData outputData = new WageOutputData(currentEmployee);
+            presenter.prepareSuccessView(outputData);
+        }
+    }
 
+    @Override
+    public void decreaseWage(String position) {
+        Employee currentEmployee = employees.get(position);
+        if (currentEmployee != null) {
+            currentEmployee.decreaseWage();
+            dataAccess.save(currentEmployee); // ✅ Persist changes
+            WageOutputData outputData = new WageOutputData(currentEmployee);
+            presenter.prepareSuccessView(outputData);
+        }
+    }
 }
