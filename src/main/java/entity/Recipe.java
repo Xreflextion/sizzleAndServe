@@ -53,10 +53,17 @@ public class Recipe {
     }
 
     public void setCurrentPrice(double newPrice) {
-        if (newPrice <= 0) {
+        if (newPrice < 0) {
             throw new IllegalArgumentException("Price must be positive");
         }
         currentPrice = newPrice;
+    }
+
+    public void applyMargin(int marginPercentage) {
+        if (marginPercentage < 0) {
+            throw new IllegalArgumentException("Price must be positive");
+        }
+        currentPrice = Math.round(currentPrice * (1 + marginPercentage)) / 100.0; // rounds it to 2 decimal places
     }
 
     public void resetCurrentPrice() {

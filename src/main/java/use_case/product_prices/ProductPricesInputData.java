@@ -6,18 +6,18 @@ package use_case.product_prices;
 public class ProductPricesInputData {
 
     private final String name;
-    private final double currentPrice;
+    private final int marginPercentage;
 
-    public ProductPricesInputData(String name, double currentPrice) {
+    public ProductPricesInputData(String name, int marginPercentage) {
         this.name = name;
-        this.currentPrice = currentPrice;
+        this.marginPercentage = marginPercentage;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
-    double getCurrentPrice() {
-        return currentPrice;
+    public int getMarginPercentage() {
+        return marginPercentage;
     }
 }

@@ -25,16 +25,17 @@ public class ProductPricesInteractor implements ProductPricesInputBoundary{
             userPresenter.prepareFailView("The dish you are trying to change the price of" +
                     " does not exist in the Pantry.");
         }
-        else if (productPricesInputData.getCurrentPrice() < 0) {
+        else if (productPricesInputData.getMarginPercentage() < 0) {
             userPresenter.prepareFailView("The price cannot be negative.");
         }
         else {
             final Recipe recipe = pantry.getRecipe(productPricesInputData.getName());
-            recipe.setCurrentPrice(productPricesInputData.getCurrentPrice());
+            recipe.applyMargin(productPricesInputData.getMarginPercentage());
 
             userDataAccessObject.changePrice(recipe);
 
-            final ProductPricesOutputData productPricesOutputData = new ProductPricesOutputData(recipe.getName());
+            final ProductPricesOutputData productPricesOutputData = new ProductPricesOutputData(recipe.getName(),
+                    recipe.getCurrentPrice());
             userPresenter.prepareSuccessView(productPricesOutputData);
         }
     }
