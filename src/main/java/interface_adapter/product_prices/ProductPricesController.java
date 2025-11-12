@@ -16,11 +16,11 @@ public class ProductPricesController {
     /**
      * Executes the Product Prices Use Case.
      * @param name the dish's name
-     * @param price the dish's new price
+     * @param marginPercentage the margin percentage to apply to the dish
      */
-    public void execute(String name, int price) {
-        final ProductPricesInputData productPricesInputData = new ProductPricesInputData(name, price);
+    public void execute(String name, int marginPercentage) {
+        final ProductPricesInputData productPricesInputData = new ProductPricesInputData(name, marginPercentage);
 
-        productPricesUseCaseInteractor.execute(new ProductPricesInputData(name, price));
+        productPricesUseCaseInteractor.execute(productPricesInputData);
     }
 }

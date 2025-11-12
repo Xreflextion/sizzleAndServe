@@ -20,15 +20,29 @@ public class ProductPricesPresenter implements ProductPricesOutputBoundary{
 
     @Override
     public void prepareSuccessView(ProductPricesOutputData outputData) {
-        productPricesViewModel.setState(new ProductPricesState(productPricesViewModel.getState().getRecipes()));
-        productPricesViewModel.getState().setSelectedDishName(outputData.getName());
+        ProductPricesState newProductPricesState = new ProductPricesState(productPricesViewModel
+                .getState()
+                .getRecipes());
+        newProductPricesState.setSelectedDishName(outputData.getName());
+        newProductPricesState.setCurrentPrice(outputData.getNewPrice());
+
+        productPricesViewModel.setState(newProductPricesState);
         productPricesViewModel.firePropertyChange();
+
+        viewManagerModel.setState(productPricesViewModel.getViewName());
+        viewManagerModel.firePropertyChange();
     }
 
     @Override
     public void prepareFailView(String error) {
-        productPricesViewModel.setState(new ProductPricesState(productPricesViewModel.getState().getRecipes()));
-        productPricesViewModel.getState().setSelectedDishName(null);
+        ProductPricesState newProductPricesState = new ProductPricesState(productPricesViewModel
+                .getState()
+                .getRecipes());
+        newProductPricesState.setSelectedDishName(productPricesViewModel.getState().getSelectedDishName());
+        newProductPricesState.setCurrentPrice(productPricesViewModel.getState().getCurrentPrice());
+
+        productPricesViewModel.setState(newProductPricesState);
         productPricesViewModel.firePropertyChange();
+
     }
 }
