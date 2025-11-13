@@ -13,7 +13,7 @@ public class AppBuilder {
 
     public AppBuilder addProductPricesView() {
         productPricesViewModel = new ProductPricesViewModel();
-        productPricesView = new ProductPricesView(productPricesViewModel);
+        productPricesView = new ProductPricesView(productPricesViewModel, null);
         cardPanel.add(productPricesView, productPricesView.getViewName());
         return this;
     }
