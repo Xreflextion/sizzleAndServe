@@ -21,6 +21,10 @@ public class Pantry {
         recipes.put(dish3.getName(), dish3);
     }
 
+    public Pantry() {
+        recipes = new HashMap<>();
+    }
+
     public Recipe getRecipe(String dish) {
         return recipes.get(dish);
     }
