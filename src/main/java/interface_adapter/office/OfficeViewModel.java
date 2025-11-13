@@ -16,7 +16,7 @@ public class OfficeViewModel extends ViewModel<OfficeState> {
     public static final String INVENTORY_BUTTON_LABEL = "Inventory";
     public static final String PRICE_MANAGER_BUTTON_LABEL = "Price Manager";
     public static final String INSIGHTS_BUTTON_LABEL = "Insights";
-    public static final String REVIEW_MANAGER_BUTTON_LABEL = "Review Manager";
+    public static final String REVIEW_MANAGER_BUTTON_LABEL = "Rating Manager";
     public static final String SIMULATE_BUTTON_LABEL = "Simulate Next Day";
 
     public static final String CURRENT_DAY_LABEL = "Current Day: ";
