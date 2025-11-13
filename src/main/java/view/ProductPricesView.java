@@ -13,6 +13,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The View for when the user is changing product prices.
@@ -21,84 +23,47 @@ public class ProductPricesView extends JPanel implements ActionListener, Propert
 
     private final String viewName = "product prices";
     private final ProductPricesViewModel productPricesViewModel;
-    private ProductPricesController productPricesController = null;
+    private ProductPricesController productPricesController;
 
-    private final JLabel nameLabel;
-    private final JLabel imageLabel;
-    private final JLabel basePriceLabel;
-    private final JLabel currentPriceLabel;
+    // store each DishPanel by its dish name
+    private final Map<String, DishPanel> dishPanels = new HashMap<>();
 
-    private final int DEFAULT_MARGIN = 10;
-    private final int MIN_MARGIN = 0;
-    private final int MAX_MARGIN = 100;
-    private final int MINOR_TICK_SPACING = 5;
-    private final int MAJOR_TICK_SPACING = 10;
-
-    private final JLabel marginLabel;
-    private final JButton marginReset;
-    private final JSlider marginSlider = new JSlider(JSlider.HORIZONTAL, MIN_MARGIN, MAX_MARGIN, DEFAULT_MARGIN);
-
-    public ProductPricesView(ProductPricesViewModel productPricesViewModel) {
-        // TODO: make 3 of these dish panels
+    public ProductPricesView(ProductPricesViewModel productPricesViewModel,
+                             ProductPricesController productPricesController) {
         this.productPricesViewModel = productPricesViewModel;
+        this.productPricesController = productPricesController;
         this.productPricesViewModel.addPropertyChangeListener(this);
 
-        final JLabel titleLabel = new JLabel("Product Prices");
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        setLayout(new BorderLayout());
 
-        // Information Panel
-        final JPanel informationPanel = new JPanel();
-        informationPanel.setLayout(new BoxLayout(informationPanel, BoxLayout.Y_AXIS));
-        informationPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        nameLabel = new JLabel("Name: "
-                + (productPricesViewModel.getState() != null && productPricesViewModel.getState().getSelectedDishName()
-                != null ? productPricesViewModel.getState().getSelectedDishName() : "N/A"));
-        informationPanel.add(nameLabel);
+        // title
+        JLabel titleLabel = new JLabel("Product Prices");
+        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        add(titleLabel, BorderLayout.NORTH);
 
-        // TODO: figure out how we will store images
-        ImageIcon imageIcon = new ImageIcon("src/main/resources/images/sample.jpg");
-        Image scaledImage = imageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-        imageLabel = new JLabel(new ImageIcon(scaledImage));
-        informationPanel.add(imageLabel);
+        // container for all dishes
+        JPanel dishesPanel = new JPanel(new GridLayout(1, 3, 10, 10)); // 3 columns
+        ProductPricesState productPricesState = productPricesViewModel.getState();
 
-        String selectedDishName = productPricesViewModel.getState().getSelectedDishName();
-        Recipe selectedRecipe = productPricesViewModel.getState().getRecipes().get(selectedDishName);
-        basePriceLabel = new JLabel("Base Price: " 
-                + (selectedRecipe != null ? selectedRecipe.getBasePrice() : "N/A"));
-        currentPriceLabel = new JLabel("Current Price: " 
-                + (productPricesViewModel.getState() != null ? productPricesViewModel.getState().getCurrentPrice() : "N/A"));
-        informationPanel.add(basePriceLabel);
-        informationPanel.add(currentPriceLabel);
+        // TODO: REMOVE THIS, ITS JUST FOR TESTING
+        if (productPricesState.getRecipes().isEmpty()) {
+            Map<String, Recipe> testRecipes = new HashMap<>();
+            testRecipes.put("Pizza", new Recipe("Pizza", 8.99));
+            testRecipes.put("Burger", new Recipe("Burger", 6.49));
+            testRecipes.put("Pasta", new Recipe("Pasta", 7.99));
+            productPricesState = new ProductPricesState(testRecipes);
+        }
 
-        // Margin Panel
-        final JPanel marginPanel = new JPanel();
-        marginPanel.setLayout(new BoxLayout(marginPanel, BoxLayout.Y_AXIS));
-        final JPanel subMarginPanel = new JPanel();
-        marginLabel = new JLabel("Profit Margin: " + marginSlider.getValue() + "%");
-        subMarginPanel.add(marginLabel);
-        marginReset = new JButton("Reset");
-        subMarginPanel.add(marginReset);
-        marginPanel.add(subMarginPanel);
-        marginSlider.setMinorTickSpacing(MINOR_TICK_SPACING);
-        marginSlider.setMajorTickSpacing(MAJOR_TICK_SPACING);
-        marginSlider.setPaintTicks(true);
-        marginSlider.setPaintLabels(true);
-        marginPanel.add(marginSlider);
+        // build each DishPanel dynamically
+        for (String dishName : productPricesState.getRecipes().keySet()) {
+            Recipe recipe = productPricesState.getRecipes().get(dishName);
+            DishPanel dishPanel = new DishPanel(dishName, recipe, productPricesController);
+            dishPanels.put(dishName, dishPanel);
+            dishesPanel.add(dishPanel);
+        }
 
-        marginReset.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                marginSlider.setValue(DEFAULT_MARGIN);
-            }
-        });
-        marginSlider.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                marginLabel.setText("Profit Margin: " + marginSlider.getValue() + "%");
-            }
-        });
-
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.add(informationPanel);
-        this.add(marginPanel);
+        add(dishesPanel, BorderLayout.CENTER);
     }
 
     /**
@@ -116,9 +81,11 @@ public class ProductPricesView extends JPanel implements ActionListener, Propert
     }
 
     public void setFields(ProductPricesState state) {
-        nameLabel.setText("Name: " + state.getSelectedDishName());
-        basePriceLabel.setText("Base Price: " + state.getRecipes().get(state.getSelectedDishName()).getBasePrice());
-        currentPriceLabel.setText("Current Price: " + state.getCurrentPrice());
+        String selected = state.getSelectedDishName();
+        if (selected != null && dishPanels.containsKey(selected)) {
+            double currentPrice = state.getCurrentPrice();
+            dishPanels.get(selected).updatePrices(currentPrice);
+        }
     }
 
     public String getViewName() {
