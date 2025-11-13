@@ -12,8 +12,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 public class OfficeView extends JPanel implements ActionListener, PropertyChangeListener {
-    public static final int HEIGHT = 500;
-    public static final int WIDTH = 800;
     private final OfficeViewModel officeViewModel;
 //    private SimulateController simulationController;
 
@@ -25,38 +23,50 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
         this.officeViewModel = officeViewModel;
         officeViewModel.addPropertyChangeListener(this);
 
-        this.setLayout(new BorderLayout());
-
-        final JPanel headerPanel = new JPanel();
-        headerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        this.setLayout(new GridBagLayout());
+        this.setPreferredSize(new Dimension(OfficeViewModel.WIDTH, OfficeViewModel.HEIGHT));
 
         final JLabel title = new JLabel(OfficeViewModel.TITLE_LABEL);
-        title.setAlignmentX(Component.RIGHT_ALIGNMENT);
-
-        final JPanel curDetails = new JPanel();
+        title.setFont(title.getFont().deriveFont(OfficeViewModel.TITLE_SIZE));
+        final JPanel titlePanel = new JPanel();
+        titlePanel.add(title);
+        final JPanel curDetailsPanel = new JPanel();
 
         curDayLabel = new JLabel();
         curBalanceLabel = new JLabel();
         pastCustomerCountLabel = new JLabel();
 
-        curDetails.add(curDayLabel);
-        curDetails.add(curBalanceLabel);
-        curDetails.add(pastCustomerCountLabel);
-        curDetails.setLayout(new BoxLayout(curDetails, BoxLayout.Y_AXIS));
+        curDetailsPanel.add(curDayLabel);
+        curDetailsPanel.add(curBalanceLabel);
+        curDetailsPanel.add(pastCustomerCountLabel);
+        curDetailsPanel.setLayout(new BoxLayout(curDetailsPanel, BoxLayout.Y_AXIS));
 
-        headerPanel.setLayout( new BoxLayout(headerPanel, BoxLayout.X_AXIS));
-        headerPanel.add(curDetails);
-        headerPanel.add( Box.createHorizontalGlue() );
-        headerPanel.add(title);
-        headerPanel.add( Box.createHorizontalGlue() );
+        final JPanel midLeftPanel = new JPanel();
+        midLeftPanel.setLayout(new BoxLayout(midLeftPanel, BoxLayout.Y_AXIS));
+        final JPanel centerPanel = new JPanel();
+        final JPanel midRightPanel = new JPanel();
+        midRightPanel.setLayout(new BoxLayout(midRightPanel, BoxLayout.Y_AXIS));
 
+        final JButton inventoryButton = new JButton(OfficeViewModel.INVENTORY_BUTTON_LABEL);
+        editButtonSize(inventoryButton);
+        final JButton priceButton = new JButton(OfficeViewModel.PRICE_MANAGER_BUTTON_LABEL);
+        editButtonSize(priceButton);
+        final JButton reviewButton = new JButton(OfficeViewModel.REVIEW_MANAGER_BUTTON_LABEL);
+        editButtonSize(reviewButton);
+        final JButton insightsButton = new JButton(OfficeViewModel.INSIGHTS_BUTTON_LABEL);
+        editButtonSize(insightsButton);
+        final JButton employeeButton = new JButton(OfficeViewModel.EMPLOYEE_BUTTON_LABEL);
+        editButtonSize(employeeButton);
 
+        midLeftPanel.add(inventoryButton);
+        midLeftPanel.add(reviewButton);
+        centerPanel.add(employeeButton);
+        midRightPanel.add(priceButton);
+        midRightPanel.add(insightsButton);
 
-        final JPanel bottomPanel = new JPanel();
-        bottomPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        bottomPanel.add(Box.createHorizontalGlue());
-      
-        final JButton simulateButton = new JButton(OfficeViewModel.SIMULATE_LABEL);
+        final JPanel botRightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        final JButton simulateButton = new JButton(OfficeViewModel.SIMULATE_BUTTON_LABEL);
+        editButtonSize(simulateButton);
         simulateButton.addActionListener(
                 evt ->
                 {
@@ -72,10 +82,14 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
                 }
         );
 
-        bottomPanel.add(simulateButton);
-        this.add(headerPanel, BorderLayout.PAGE_START);
-        this.add(bottomPanel, BorderLayout.PAGE_END);
-        this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        botRightPanel.add(simulateButton);
+        this.add(titlePanel, new GridBagConstraintBuilder().setGridX(1).setGridY(0));
+        this.add(curDetailsPanel, new GridBagConstraintBuilder().setGridX(0).setGridY(0).setAnchor(GridBagConstraints.NORTH));
+        this.add(centerPanel, new GridBagConstraintBuilder().setGridX(1).setGridY(1));
+        this.add(midLeftPanel, new GridBagConstraintBuilder().setGridX(0).setGridY(1).setAnchor(GridBagConstraints.WEST));
+        this.add(midRightPanel, new GridBagConstraintBuilder().setGridX(2).setGridY(1).setAnchor(GridBagConstraints.EAST));
+        this.add(botRightPanel, new GridBagConstraintBuilder().setGridX(2).setGridY(2));
+
     }
 
     public String getViewName() {
@@ -97,7 +111,23 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
         }
     }
 
+    public void editButtonSize(JButton button) {
+        button.setMargin(
+                (
+                        new Insets(
+                                OfficeViewModel.BUTTON_PADDING,
+                                OfficeViewModel.BUTTON_PADDING,
+                                OfficeViewModel.BUTTON_PADDING,
+                                OfficeViewModel.BUTTON_PADDING
+                        )
+                )
+        );
+    }
+
+
+
 //    public void setSimulationController(SimulateController simulationController) {
 //        this.simulationController = simulationController;
 //    }
 }
+

@@ -35,6 +35,7 @@ public class AppBuilder {
         final JFrame application = new JFrame("Sizzle and Serve");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         application.add(cardPanel);
+        application.setResizable(false);
 
         // Set initial state to office
         viewManagerModel.setState(officeView.getViewName());
