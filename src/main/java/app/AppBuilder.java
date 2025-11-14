@@ -17,6 +17,9 @@ import java.util.Map;
 
 public class AppBuilder {
     public static final int INITIAL_BALANCE = 500;
+    public static final int INITIAL_DAY = 0;
+    public static final int INITIAL_PAST_CUSTOMER_COUNT = 0;
+
 
     private final JPanel cardPanel = new JPanel();
     final ViewManagerModel viewManagerModel = new ViewManagerModel();
@@ -73,11 +76,12 @@ public class AppBuilder {
         final JFrame application = new JFrame("Sizzle and Serve");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         application.add(cardPanel);
+        application.setResizable(false);
 
         viewManagerModel.setState(officeView.getViewName());
         officeViewModel.getState().setCurrentBalance(INITIAL_BALANCE);
-        officeViewModel.getState().setCurrentDay(0);
-        officeViewModel.getState().setPastCustomerCount(0);
+        officeViewModel.getState().setCurrentDay(INITIAL_DAY);
+        officeViewModel.getState().setPastCustomerCount(INITIAL_PAST_CUSTOMER_COUNT);
         officeViewModel.firePropertyChange();
         viewManagerModel.firePropertyChange();
 
