@@ -5,18 +5,20 @@ import entity.Pantry;
 import entity.Recipe;
 
 public class BuyServingInteractor implements BuyServingInputBoundary{
-    private final BuyServingDataAccessInterface dataAccess;
+    private final PlayerDataAccessInterface playerDao;
+    private final PantryDataAccessInterface pantryDao;
     private final BuyServingOutputBoundary outputBoundary;
 
-    public BuyServingInteractor(BuyServingDataAccessInterface dataAccess, BuyServingOutputBoundary outputBoundary){
-        this.dataAccess = dataAccess;
+    public BuyServingInteractor(PlayerDataAccessInterface playerDao, PantryDataAccessInterface pantryDao, BuyServingOutputBoundary outputBoundary){
+        this.playerDao = playerDao;
+        this.pantryDao = pantryDao;
         this.outputBoundary = outputBoundary;
     }
 
     @Override
     public void execute(BuyServingInputData inputData) {
-        Player player = dataAccess.getPlayer();
-        Pantry pantry = dataAccess.getPantry();
+        Player player = playerDao.getPlayer();
+        Pantry pantry = pantryDao.getPantry();
         String[] dishNames = inputData.getDishNames();
         int[] servingsToBuy = inputData.getServingsToBuy();
 
@@ -41,7 +43,7 @@ public class BuyServingInteractor implements BuyServingInputBoundary{
         if (balance < totalCost) {
             BuyServingOutputData output = new BuyServingOutputData(
                     false,
-                    "Insufficient balance",
+                    "Transaction failed.",
                     balance
             );
             outputBoundary.present(output);
@@ -55,12 +57,12 @@ public class BuyServingInteractor implements BuyServingInputBoundary{
             pantry.addStock(dishNames[i], servingsToBuy[i]);
         }
 
-        dataAccess.savePlayer(player);
-        dataAccess.savePantry(pantry);
+        playerDao.savePlayer(player);
+        pantryDao.savePantry(pantry);
 
         BuyServingOutputData output = new BuyServingOutputData(
                 true,
-                "Transaction successful",
+                "Transaction succeeded.",
                 newBalance
         );
 
