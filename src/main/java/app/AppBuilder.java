@@ -28,18 +28,11 @@ public class AppBuilder {
     private OfficeView officeView;
 
     // Local data objects
-    DataStorageDataAccessObject dataStorage;
     PantryDataAccessObject pantry;
-    ReviewManagerDataAccessObject reviewManager;
-    EmployeeManagerDataAccessObject employeeManager;
-
     public AppBuilder() {
 
         cardPanel.setLayout(new CardLayout());
         pantry = new PantryDataAccessObject();
-        dataStorage = new DataStorageDataAccessObject();
-        reviewManager = new ReviewManagerDataAccessObject();
-        employeeManager = new EmployeeManagerDataAccessObject();
     }
 
     public AppBuilder addOfficeView() {
@@ -65,7 +58,7 @@ public class AppBuilder {
         prices.put("Three", 16.8);
         pantry.setPrices(prices);
 
-        final SimulateInputBoundary simulateInteractor = new SimulateInteractor(simulateOutputBoundary, pantry, reviewManager, employeeManager, dataStorage);
+        final SimulateInputBoundary simulateInteractor = new SimulateInteractor(simulateOutputBoundary, pantry);
 
         SimulateController controller = new SimulateController(simulateInteractor);
         officeView.setSimulationController(controller);

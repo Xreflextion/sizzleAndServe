@@ -16,24 +16,14 @@ public class SimulateInteractor implements SimulateInputBoundary {
 
     private final SimulateOutputBoundary simulatePresenter;
 
-    // TODO Communicate with group to figure out local data access objects
     private final PantryDataAccessObject pantry;
-    private final ReviewManagerDataAccessObject reviewManager;
-    private final EmployeeManagerDataAccessObject employeeManager;
-    private final DataStorageDataAccessObject dataStorage;
 
     private final RandomHelper randomHelper;
 
     public SimulateInteractor(SimulateOutputBoundary simulateOutputBoundary,
-                              PantryDataAccessObject pantry,
-                              ReviewManagerDataAccessObject reviewManager,
-                              EmployeeManagerDataAccessObject employeeManager,
-                              DataStorageDataAccessObject dataStorage) {
+                              PantryDataAccessObject pantry) {
         this.simulatePresenter = simulateOutputBoundary;
         this.pantry = pantry;
-        this.reviewManager = reviewManager;
-        this.employeeManager = employeeManager;
-        this.dataStorage = dataStorage;
         randomHelper = new RandomHelper();
     }
 
@@ -42,7 +32,8 @@ public class SimulateInteractor implements SimulateInputBoundary {
         ArrayList<String> dishes = new ArrayList<>(pantry.getPrices().keySet());
         Map<String, Integer> stock = pantry.getStock();
         int currentBalance = simulateInputData.getCurrentBalance();
-        int customerCount = getCustomerCount(reviewManager.getRating(), employeeManager.getCookEffect(), simulateInputData.getPastCustomerCount());
+        // hardcoded
+        int customerCount = getCustomerCount(3, 0, simulateInputData.getPastCustomerCount());
         ArrayList<String> orders = getOrders(customerCount, dishes);
         ArrayList<Integer> ratings = new ArrayList<>();
         int ratingsSum = 0;
@@ -82,7 +73,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
         pantry.setStock(stock);
 
         // Managing expenses
-        expenses += employeeManager.getTotalWages();
+        expenses += 20; // hardcoded
 
         // Changing current balance
         currentBalance += profit;
@@ -96,8 +87,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
         System.out.println("Average rating: " + avgRating);
 
         int newDay = simulateInputData.getCurrentDay() + 1;
-        DayRecordDataAccessObject dayRecord = new DayRecordDataAccessObject(newDay, profit, expenses, customerCount, avgRating);
-        dataStorage.addNewDay(dayRecord);
+        // Do sth to save new day number, profit, expenses, customer count, average rating
 
         SimulateOutputData outputData = new SimulateOutputData(newDay, currentBalance, customerCount);
         simulatePresenter.prepareSuccessView(outputData);
