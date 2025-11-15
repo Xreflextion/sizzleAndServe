@@ -27,12 +27,8 @@ public class AppBuilder {
     private OfficeViewModel officeViewModel;
     private OfficeView officeView;
 
-    // Local data objects
-    PantryDataAccessObject pantry;
     public AppBuilder() {
-
         cardPanel.setLayout(new CardLayout());
-        pantry = new PantryDataAccessObject();
     }
 
     public AppBuilder addOfficeView() {
@@ -46,19 +42,7 @@ public class AppBuilder {
         final SimulateOutputBoundary simulateOutputBoundary = new SimulatePresenter(viewManagerModel,
                 officeViewModel);
 
-        // TODO remove testing code
-        Map<String, Integer> stock = new HashMap<>();
-        stock.put("One", 5);
-        stock.put("Two", 10);
-        stock.put("Three", 15);
-        pantry.setStock(stock);
-        Map<String, Double> prices = new HashMap<>();
-        prices.put("One", 20.0);
-        prices.put("Two", 19.0);
-        prices.put("Three", 16.8);
-        pantry.setPrices(prices);
-
-        final SimulateInputBoundary simulateInteractor = new SimulateInteractor(simulateOutputBoundary, pantry);
+        final SimulateInputBoundary simulateInteractor = new SimulateInteractor(simulateOutputBoundary);
 
         SimulateController controller = new SimulateController(simulateInteractor);
         officeView.setSimulationController(controller);

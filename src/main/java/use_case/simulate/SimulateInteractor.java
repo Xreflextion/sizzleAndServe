@@ -16,21 +16,31 @@ public class SimulateInteractor implements SimulateInputBoundary {
 
     private final SimulateOutputBoundary simulatePresenter;
 
-    private final PantryDataAccessObject pantry;
+    private Map<String, Integer> stock;
+    private Map<String, Double> prices;
 
     private final RandomHelper randomHelper;
 
-    public SimulateInteractor(SimulateOutputBoundary simulateOutputBoundary,
-                              PantryDataAccessObject pantry) {
+    public SimulateInteractor(SimulateOutputBoundary simulateOutputBoundary) {
         this.simulatePresenter = simulateOutputBoundary;
-        this.pantry = pantry;
+
+        // TODO remove testing code
+        Map<String, Integer> stock = new HashMap<>();
+        stock.put("One", 5);
+        stock.put("Two", 10);
+        stock.put("Three", 15);
+        this.stock = stock;
+        Map<String, Double> prices = new HashMap<>();
+        prices.put("One", 20.0);
+        prices.put("Two", 19.0);
+        prices.put("Three", 16.8);
+        this.prices = prices;
         randomHelper = new RandomHelper();
     }
 
     @Override
     public void execute(SimulateInputData simulateInputData) {
-        ArrayList<String> dishes = new ArrayList<>(pantry.getPrices().keySet());
-        Map<String, Integer> stock = pantry.getStock();
+        ArrayList<String> dishes = new ArrayList<>(prices.keySet());
         int currentBalance = simulateInputData.getCurrentBalance();
         // hardcoded
         int customerCount = getCustomerCount(3, 0, simulateInputData.getPastCustomerCount());
@@ -51,7 +61,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
             int newRating;
             if (stock.get(order) > 0) {
                 stock.put(order, stock.get(order) - 1);
-                profit += pantry.getPrices().get(order);
+                profit += prices.get(order);
                 newRating = randomHelper.getValueFromList(NORMAL_RATING_OPTIONS);
             } else {
                 newRating = randomHelper.getValueFromList(NO_STOCK_RATING_OPTIONS);
@@ -70,7 +80,6 @@ public class SimulateInteractor implements SimulateInputBoundary {
         for (String dish: stock.keySet() ) {
             System.out.println("Dish " + dish + ": " + stock.get(dish));
         }
-        pantry.setStock(stock);
 
         // Managing expenses
         expenses += 20; // hardcoded
