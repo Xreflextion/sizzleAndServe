@@ -6,7 +6,7 @@ public class Pantry {
 
     private final Map<String, Recipe> recipes = new HashMap<>();
 
-    public Map<String, Recipe> getRecipes() {
+    public Map<String, Recipe> getPantry() {
         return recipes;
     }
 
