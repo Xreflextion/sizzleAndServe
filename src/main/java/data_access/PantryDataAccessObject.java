@@ -18,7 +18,8 @@ public class PantryDataAccessObject implements PantryDataAccessInterface {
         this.pantry = new Pantry();
         // Fetch three random dishes from API
         OkHttpClient client = new OkHttpClient();
-        Random rand = new Random();
+        int max = 15;
+        int min = 1;
         int numDishes = 3;
         for (int i = 0; i < numDishes; i++) {
             try {
@@ -32,7 +33,7 @@ public class PantryDataAccessObject implements PantryDataAccessInterface {
                 if (meals.length() > 0) {
                     JSONObject meal = meals.getJSONObject(0);
                     String dishName = meal.getString("strMeal");
-                    int price = rand.nextInt(15); // Random price below 15
+                    int price = new Random().nextInt((max - min) + 1) + min;
                     pantry.getPantry().put(dishName, new Recipe(dishName, price));
                 }
                 response.close();
