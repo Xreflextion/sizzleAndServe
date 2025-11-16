@@ -3,11 +3,13 @@ package interface_adapter.BuyServing;
 import entity.Player;
 import entity.Pantry;
 import entity.Recipe;
+import interface_adapter.ViewModel;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.*;
 
-public class BuyServingViewModel {
+public class BuyServingViewModel extends ViewModel<BuyServingViewModel.State> {
 
     public static class State{
         public String message = "";
@@ -15,20 +17,19 @@ public class BuyServingViewModel {
         public boolean success = false;
     }
 
-    private final State state = new State();
     private final Player player;
     private Pantry pantry;
     private final List<Recipe> recipes;
-    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
     public BuyServingViewModel(Player player, Pantry pantry, List<Recipe> recipes) {
+        super("buyServing");
         this.player = player;
         this.pantry = pantry;
         this.recipes = recipes;
-        this.state.balance = player.getBalance();
+        State initialState = new State();
+        initialState.balance = player.getBalance();
+        setState(initialState);
     }
-
-    public State getState() { return state; }
 
     public Player getPlayer() { return player; }
 
@@ -46,24 +47,17 @@ public class BuyServingViewModel {
     }
 
     public void setMessage(String message) {
-        state.message = message;
+        getState().message = message;
+        firePropertyChange();
     }
 
     public void setNewBalance(double newBalance) {
-        state.balance = newBalance;
+        getState().balance = newBalance;
+        firePropertyChange();
     }
 
     public void setSuccess(boolean success) {
-        state.success = success;
-    }
-
-    // Notify the View the state has changed
-    public void firePropertyChange(String buyServing) {
-        support.firePropertyChange("buyServing", null, state);
-    }
-
-    // View registers to the update event of the ViewModel.
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        support.addPropertyChangeListener(listener);
+        getState().success = success;
+        firePropertyChange();
     }
 }
