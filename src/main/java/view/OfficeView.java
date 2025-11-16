@@ -2,7 +2,7 @@ package view;
 
 import interface_adapter.office.OfficeState;
 import interface_adapter.office.OfficeViewModel;
-//import interface_adapter.office.SimulateController;
+import interface_adapter.office.SimulateController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +13,7 @@ import java.beans.PropertyChangeListener;
 
 public class OfficeView extends JPanel implements ActionListener, PropertyChangeListener {
     private final OfficeViewModel officeViewModel;
-//    private SimulateController simulationController;
+    private SimulateController simulationController;
 
     private final JLabel curDayLabel;
     private final JLabel curBalanceLabel;
@@ -73,11 +73,11 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
                     if (evt.getSource().equals(simulateButton)) {
                         final OfficeState currentState = officeViewModel.getState();
 
-//                        simulationController.execute(
-//                                currentState.getCurrentDay(),
-//                                currentState.getCurrentBalance(),
-//                                currentState.getPastCustomerCount()
-//                        );
+                        simulationController.execute(
+                                currentState.getCurrentDay(),
+                                currentState.getCurrentBalance(),
+                                currentState.getPastCustomerCount()
+                        );
                     }
                 }
         );
@@ -124,10 +124,8 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
         );
     }
 
-
-
-//    public void setSimulationController(SimulateController simulationController) {
-//        this.simulationController = simulationController;
-//    }
+    public void setSimulationController(SimulateController simulationController) {
+        this.simulationController = simulationController;
+    }
 }
 
