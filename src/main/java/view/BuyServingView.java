@@ -17,9 +17,13 @@ public class BuyServingView extends JPanel {
     private JLabel[] costLabels;
     private JLabel[] quantityLabels;
 
+    private int[] quantities;
+
     public BuyServingView(BuyServingController controller, BuyServingViewModel viewModel) {
         this.controller = controller;
         this.viewModel = viewModel;
+
+        quantities = new int[3];
 
         setupUI();
 
@@ -40,7 +44,7 @@ public class BuyServingView extends JPanel {
         JPanel balancePanel = new JPanel();
         balancePanel.setLayout(new BoxLayout(balancePanel, BoxLayout.X_AXIS));
         balanceLabel = new JLabel("Current Balance: "
-                                  + viewModel.getPlayer().getBalance());
+                                  + viewModel.getState().balance);
         balancePanel.add(balanceLabel);
         this.add(balancePanel);
 
@@ -57,8 +61,8 @@ public class BuyServingView extends JPanel {
             // First line of each dish serving
             JPanel line1 = new JPanel();
             line1.setLayout(new BoxLayout(line1, BoxLayout.X_AXIS));
-            dishNameLabels[i] = new JLabel(viewModel.getDishName(i));
-            stockLabels[i] = new JLabel("Amount in Stock: " + viewModel.getDishStock(i));
+            dishNameLabels[i] = new JLabel(viewModel.getState().dishNames[i]);
+            stockLabels[i] = new JLabel("Amount in Stock: " + viewModel.getState().dishStocks[i]);
             stockLabels[i].setHorizontalAlignment(SwingConstants.LEFT); // Left-align stock label
             line1.add(dishNameLabels[i]);
             line1.add(Box.createRigidArea(new Dimension(10, 0)));
@@ -67,18 +71,20 @@ public class BuyServingView extends JPanel {
             // Second line of each dish serving
             JPanel line2 = new JPanel();
             line2.setLayout(new BoxLayout(line2, BoxLayout.X_AXIS));
-            costLabels[i] = new JLabel("Cost: " + viewModel.getDishCost(i));
+            costLabels[i] = new JLabel("Cost: " + viewModel.getState().dishCosts[i]);
             quantityLabels[i] = new JLabel("0");
             JButton minusButton = new JButton("-");
             JButton plusButton = new JButton("+");
 
             int index = i;
             minusButton.addActionListener(e -> {
-                controller.decreaseQuantity(index);
-                updateView();
+                if (quantities[index] > 0) {
+                    quantities[index]--;
+                    updateView();
+                }
             });
             plusButton.addActionListener(e -> {
-                controller.increaseQuantity(index);
+                quantities[index]++;
                 updateView();
             });
 
@@ -104,16 +110,20 @@ public class BuyServingView extends JPanel {
 
         confirmButton.addActionListener(e -> {
             boolean allZero = true;
-            for (int i = 0; i < quantityLabels.length; i++) {
-                if(controller.getQuantity(i) != 0) {
+            for (int i = 0; i < quantities.length; i++) {
+                if(quantities[i] != 0) {
                     allZero = false;
                     break;
                 }
             }
             if (!allZero) {
-                controller.confirmPurchase();
+                controller.confirmPurchase(viewModel.getState().dishNames, quantities);
                 var state = viewModel.getState();
                 showTransactionResult(state.success);
+                // Reset all quantities to 0 after confirming purchase
+                for (int i = 0; i < quantities.length; i++) {
+                    quantities[i] = 0;
+                }
                 updateView();
             }
         });
@@ -125,8 +135,8 @@ public class BuyServingView extends JPanel {
         balanceLabel.setText("Current Balance: " + viewModel.getState().balance);
 
         for (int i = 0; i < dishNameLabels.length; i++) {
-            stockLabels[i].setText("Amount in Stock: " + viewModel.getDishStock(i));
-            quantityLabels[i].setText(String.valueOf(controller.getQuantity(i)));
+            stockLabels[i].setText("Amount in Stock: " + viewModel.getState().dishStocks[i]);
+            quantityLabels[i].setText(String.valueOf(quantities[i]));
         }
     }
 

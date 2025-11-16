@@ -17,21 +17,26 @@ public class BuyServingAppBuilder {
         PlayerDataAccessObject playerDAO = new PlayerDataAccessObject();
         PantryDataAccessObject pantryDAO = new PantryDataAccessObject();
 
-        BuyServingViewModel viewModel = new BuyServingViewModel(
-                playerDAO.getPlayer(),
-                pantryDAO.getPantry(),
-                pantryDAO.getPantry().getMenuList()
-        );
+        BuyServingViewModel viewModel = new BuyServingViewModel();
+        // Set initial balance from player
+        double initialBalance = playerDAO.getPlayer().getBalance();
+        viewModel.setNewBalance(initialBalance);
+
+        // Initialize ViewModel state with dish names, costs, and stocks
+        String[] dishNames = pantryDAO.getPantry().getDishNames();
+        int[] dishCosts = new int[dishNames.length];
+        int[] dishStocks = new int[dishNames.length];
+        for (int i = 0; i < dishNames.length; i++) {
+            dishCosts[i] = pantryDAO.getPantry().getRecipe(dishNames[i]).getCost();
+            dishStocks[i] = pantryDAO.getPantry().getRecipe(dishNames[i]).getStock();
+        }
+        viewModel.setDishNames(dishNames);
+        viewModel.setDishCosts(dishCosts);
+        viewModel.setDishStocks(dishStocks);
+
         BuyServingPresenter presenter = new BuyServingPresenter(viewModel);
         BuyServingInteractor interactor = new BuyServingInteractor(playerDAO, pantryDAO, presenter);
-
-        // Get dish names and dish prices and create Controller
-        String[] dishNames = pantryDAO.getPantry().getDishNames();
-        double[] dishPrices = new double[dishNames.length];
-        for (int i = 0; i < dishNames.length; i++) {
-            dishPrices[i] = pantryDAO.getPantry().getRecipe(dishNames[i]).getCost();
-        }
-        BuyServingController controller = new BuyServingController(interactor, dishNames, dishPrices);
+        BuyServingController controller = new BuyServingController(interactor);
 
         // Create BuyServingView
         BuyServingView view = new BuyServingView(controller, viewModel);

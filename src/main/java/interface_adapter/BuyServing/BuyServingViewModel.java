@@ -1,12 +1,7 @@
 package interface_adapter.BuyServing;
 
-import entity.Player;
-import entity.Pantry;
-import entity.Recipe;
 import interface_adapter.ViewModel;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.*;
 
 public class BuyServingViewModel extends ViewModel<BuyServingViewModel.State> {
@@ -15,35 +10,29 @@ public class BuyServingViewModel extends ViewModel<BuyServingViewModel.State> {
         public String message = "";
         public double balance = 0;
         public boolean success = false;
+        public String[] dishNames;
+        public int[] dishCosts;
+        public int[] dishStocks;
     }
 
-    private final Player player;
-    private Pantry pantry;
-    private final List<Recipe> recipes;
-
-    public BuyServingViewModel(Player player, Pantry pantry, List<Recipe> recipes) {
+    public BuyServingViewModel() {
         super("buyServing");
-        this.player = player;
-        this.pantry = pantry;
-        this.recipes = recipes;
-        State initialState = new State();
-        initialState.balance = player.getBalance();
-        setState(initialState);
+        setState(new State());
     }
 
-    public Player getPlayer() { return player; }
-
-    public Pantry getPantry() { return pantry; }
-
-    public String getDishName(int i) {
-        return recipes.get(i).getName();
+    public void setDishNames(String[] names) {
+        getState().dishNames = names;
+        firePropertyChange();
     }
 
-    public int getDishCost(int i) {
-        return recipes.get(i).getCost();
+    public void setDishCosts(int[] costs) {
+        getState().dishCosts = costs;
+        firePropertyChange();
     }
-    public int getDishStock(int i) {
-        return recipes.get(i).getStock();
+
+    public void setDishStocks(int[] stocks) {
+        getState().dishStocks = stocks;
+        firePropertyChange();
     }
 
     public void setMessage(String message) {
