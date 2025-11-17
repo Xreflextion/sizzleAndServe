@@ -1,6 +1,6 @@
-package Use_Case;
+package use_case;
 
-import sizzleAndServe.Employee;
+import entity.Employee;
 /**
  * Output data for the Wage Management use case.
  * Contains updated wage and wage effect for the employee.

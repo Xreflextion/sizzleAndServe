@@ -1,4 +1,4 @@
-package interface_adapter.ManageWages;
+package interface_adapter.manage_wages;
 
 public class WageState {
     /**

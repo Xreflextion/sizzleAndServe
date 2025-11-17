@@ -1,6 +1,6 @@
-package Use_Case;
+package use_case;
 
-import sizzleAndServe.Employee;
+import entity.Employee;
 /**
  * Data Access Interface for Wage Management use case.
  * Provides methods to retrieve and save employee data.

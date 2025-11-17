@@ -1,7 +1,7 @@
-package interface_adapter.ManageWages;
+package interface_adapter.manage_wages;
 
-import Use_Case.WageOutputBoundary;
-import Use_Case.WageOutputData;
+import use_case.WageOutputBoundary;
+import use_case.WageOutputData;
 
 public class WagePresenter implements WageOutputBoundary {
 
@@ -15,10 +15,10 @@ public class WagePresenter implements WageOutputBoundary {
     public void prepareSuccessView(WageOutputData data) {
         WageState state = viewModel.getState();
 
-        if ("Cook".equals(data.getCurrentEmployee().getPosition())) {
+        if ("Cook".equals(data.getPosition())) {
             state.setCookWage(data.getWageAfter());
             state.setCookWageEffect(data.getWageEffectAfter());
-        } else if ("Waiter".equals(data.getCurrentEmployee().getPosition())) {
+        } else if ("Waiter".equals(data.getPosition())) {
             state.setWaiterWage(data.getWageAfter());
             state.setWaiterWageEffect(data.getWageEffectAfter());
         }

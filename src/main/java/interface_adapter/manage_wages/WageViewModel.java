@@ -1,4 +1,4 @@
-package interface_adapter.ManageWages;
+package interface_adapter.manage_wages;
 
 import interface_adapter.ViewModel;
 

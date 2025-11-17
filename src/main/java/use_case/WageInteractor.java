@@ -1,6 +1,6 @@
-package Use_Case;
+package use_case;
 
-import sizzleAndServe.Employee;
+import entity.Employee;
 
 import java.util.Map;
 /**

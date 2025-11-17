@@ -1,4 +1,4 @@
-# sizzleAndServe
+# entity
 
 ## Group Members
 - Marcus Bharrat

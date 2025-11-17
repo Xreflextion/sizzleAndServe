@@ -1,6 +1,4 @@
-package Use_Case;
-
-import sizzleAndServe.Employee;
+package use_case;
 
 
 /**

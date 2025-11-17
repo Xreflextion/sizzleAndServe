@@ -1,9 +1,9 @@
-package view.Manage_Employees_Wage;
+package view.manage_employees_wage;
 
 
-import interface_adapter.ManageWages.WageController;
-import interface_adapter.ManageWages.WageState;
-import interface_adapter.ManageWages.WageViewModel;
+import interface_adapter.manage_wages.WageController;
+import interface_adapter.manage_wages.WageState;
+import interface_adapter.manage_wages.WageViewModel;
 
 import javax.swing.*;
 import java.awt.*;

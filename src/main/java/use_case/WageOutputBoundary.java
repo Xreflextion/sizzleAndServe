@@ -1,4 +1,4 @@
-package Use_Case;
+package use_case;
 
 public interface WageOutputBoundary {
     /**

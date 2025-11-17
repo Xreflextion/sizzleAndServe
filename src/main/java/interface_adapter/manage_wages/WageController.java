@@ -1,6 +1,6 @@
-package interface_adapter.ManageWages;
+package interface_adapter.manage_wages;
 
-import Use_Case.WageInputBoundary;
+import use_case.WageInputBoundary;
 
 public class WageController {
     private final WageInputBoundary interactor;
