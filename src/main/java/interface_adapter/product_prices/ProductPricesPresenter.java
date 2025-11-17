@@ -19,7 +19,7 @@ public class ProductPricesPresenter implements ProductPricesOutputBoundary{
     }
 
     @Override
-    public void prepareSuccessView(ProductPricesOutputData outputData) {
+    public void present(ProductPricesOutputData outputData) {
         ProductPricesState newProductPricesState = new ProductPricesState(productPricesViewModel
                 .getState()
                 .getRecipes());
@@ -31,18 +31,5 @@ public class ProductPricesPresenter implements ProductPricesOutputBoundary{
 
         viewManagerModel.setState(productPricesViewModel.getViewName());
         viewManagerModel.firePropertyChange();
-    }
-
-    @Override
-    public void prepareFailView(String error) {
-        ProductPricesState newProductPricesState = new ProductPricesState(productPricesViewModel
-                .getState()
-                .getRecipes());
-        newProductPricesState.setSelectedDishName(productPricesViewModel.getState().getSelectedDishName());
-        newProductPricesState.setCurrentPrice(productPricesViewModel.getState().getCurrentPrice());
-
-        productPricesViewModel.setState(newProductPricesState);
-        productPricesViewModel.firePropertyChange();
-
     }
 }

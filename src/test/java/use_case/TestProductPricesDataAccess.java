@@ -1,14 +1,20 @@
 package use_case;
 
+import entity.Pantry;
 import entity.Recipe;
-import use_case.product_prices.ProductPricesUserDataAccessInterface;
+import use_case.product_prices.ProductPricesPantryDataAccessInterface;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class TestProductPricesDataAccess implements ProductPricesUserDataAccessInterface {
+public class TestProductPricesDataAccess implements ProductPricesPantryDataAccessInterface {
 
     private final Map<String, Recipe> recipeStore = new HashMap<>();
+
+    @Override
+    public Pantry getPantry() {
+        return null;
+    }
 
     @Override
     public void changePrice(Recipe recipe) {

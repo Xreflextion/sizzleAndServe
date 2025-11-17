@@ -1,11 +1,18 @@
 package use_case.product_prices;
 
+import entity.Pantry;
 import entity.Recipe;
 
 /**
  * The DAO interface for the Product Prices Use Case.
  */
-public interface ProductPricesUserDataAccessInterface {
+public interface ProductPricesPantryDataAccessInterface {
+
+    /**
+     * Retrieves the pantry containing all recipes.
+     * @return the Pantry entity
+     */
+    Pantry getPantry();
 
     /**
      * Updates the system to record this product's price.

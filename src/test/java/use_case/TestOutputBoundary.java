@@ -9,7 +9,7 @@ public class TestOutputBoundary implements ProductPricesOutputBoundary {
     public String lastFailMessage = null;
 
     @Override
-    public void prepareSuccessView(ProductPricesOutputData outputData) {
+    public void present(ProductPricesOutputData outputData) {
         this.lastSuccessOutput = outputData;
     }
 
