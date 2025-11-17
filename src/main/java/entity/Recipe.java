@@ -5,8 +5,9 @@ package entity;
  * Recipes have a name, a predetermined base price, a current price, and a total stock
  */
 public class Recipe {
+
     private final String name;
-    private final double basePrice;
+    private final int basePrice;
     private double currentPrice;
     private int stock;
 
@@ -16,7 +17,7 @@ public class Recipe {
      * @param basePrice the basePrice
      * @throws IllegalArgumentException if the name is empty or if basePrice is non-positive
      */
-    public Recipe(String name, double basePrice) {
+    public Recipe(String name, int basePrice) {
         if ("".equals(name)) {
             throw new IllegalArgumentException("Name cannot be empty");
         }
@@ -33,18 +34,18 @@ public class Recipe {
         return name;
     }
 
-    public void setStock(int quantity){
-        if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be non-negative");
-        }
-        stock = quantity;
-    }
-
     public int getStock() {
         return stock;
     }
 
-    public double getBasePrice() {
+    public void setStock(int quantity) {
+        if (quantity < 0) {
+            throw new IllegalArgumentException("Quantity must be non-negative");
+        }
+        this.stock = quantity;
+    }
+
+    public int getBasePrice(){
         return basePrice;
     }
 
@@ -69,4 +70,5 @@ public class Recipe {
     public void resetCurrentPrice() {
         currentPrice = basePrice;
     }
+
 }
