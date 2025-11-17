@@ -1,22 +1,27 @@
-package Entities;
-
-import java.util.List;
-import java.util.ArrayList;
+package entities;
 
 public class Insights {
 
-    private float averageRating;
+    private double averageRating;
     private int reviewCount;
-    private float totalRevenue;
-    private float totalExpenses;
-    private float totalProfit;
+    private double totalRevenue;
+    private double totalExpenses;
+    private double totalProfit;
     // private Object trendChart;
 
-    public float getAverageRating() {
+    public Insights(double averageRating, int reviewCount, double totalRevenue, double totalExpenses, double totalProfit) {
+        this.averageRating = averageRating;
+        this.reviewCount = reviewCount;
+        this.totalRevenue = totalRevenue;
+        this.totalExpenses = totalExpenses;
+        this.totalProfit = totalProfit;
+    }
+
+    public double getAverageRating() {
         return averageRating;
     }
 
-    public void setAverageRating(float averageRating) {
+    public void setAverageRating(double averageRating) {
         this.averageRating = averageRating;
     }
 
@@ -28,28 +33,28 @@ public class Insights {
         this.reviewCount = reviewCount;
     }
 
-    public float getTotalRevenue() {
+    public double getTotalRevenue() {
         return totalRevenue;
     }
 
-    public void setTotalRevenue(float totalRevenue) {
+    public void setTotalRevenue(double totalRevenue) {
         this.totalRevenue = totalRevenue;
     }
 
-    public float getTotalExpenses() {
+    public double getTotalExpenses() {
         return totalExpenses;
     }
 
-    public void setTotalExpenses(float totalExpenses) {
-        this.totalExpenses = totalExpenses;
-    }
+//    public void setTotalExpenses(double totalExpenses) {
+//        this.totalExpenses = totalExpenses;
+//    }
 
-    public float getTotalProfit() {
+    public double getTotalProfit() {
         return totalProfit;
     }
 
-    public void setTotalProfit(float totalProfit) {
-        this.totalProfit = totalProfit;
-    }
+//    public void setTotalProfit(double totalProfit) {
+//        this.totalProfit = totalProfit;
+//    }
 
 }

@@ -1,54 +1,77 @@
-package Entities;
+package entities;
 
 import java.util.List;
 import java.util.ArrayList;
 
 public class PerformanceCalculation {
-    private final List<Float> dailyRevenue;
-    private final List<Float> dailyExpenses;
-    private final List<Float> profitCalculation;
 
-    public PerformanceCalculation(){
-        this.dailyRevenue = new ArrayList<>();
-        this.dailyExpenses = new ArrayList<>();
-        this.profitCalculation = new ArrayList<>();
 
+    private final DataStorage dataStorage;
+
+    public PerformanceCalculation(DataStorage dataStorage){
+        this.dataStorage = dataStorage;
     }
 
-    public float calculateTotalRevenue(){
-        float totalRevenue = 0;
-        int r = 0;
-        for (int i = 0; i < dailyRevenue.size(); i++) {
-            totalRevenue += dailyRevenue.get(i);
+    public PerDayRecord daySummary(double sales, double ingredientCost, double employeeWage, double rating){
+        double totalRevenue = sales;
+        double totalCost = ingredientCost + employeeWage;
+
+        return new PerDayRecord(totalRevenue, totalCost, rating);
+    }
+
+    public double calculateTotalRevenue(){
+        double totalRevenue = 0;
+        List <PerDayRecord> allRecords = dataStorage.getAllData();
+        for (int i = 0; i < allRecords.size(); i++) {
+            PerDayRecord currRec = allRecords.get(i);
+            totalRevenue += currRec.getRevenue();
         }
         return totalRevenue;
     }
 
-    public float calculateTotalExpense(){
-        // need to add to sum up the expenses stored in DataStorage per day --> put into dailyExpenses
-        float totalExpenses = 0;
-        int r = 0;
-        for (int i = 0; i < dailyExpenses.size(); i++) {
-            totalExpenses += dailyExpenses.get(i);
+    public double calculateTotalExpense(){
+        double totalExpenses = 0;
+        List <PerDayRecord> allRecords = dataStorage.getAllData();
+        for (int i = 0; i < allRecords.size(); i++) {
+            PerDayRecord currRec = allRecords.get(i);
+            totalExpenses += currRec.getExpenses();
         }
         return totalExpenses;
     }
 
-    public float calculateProfit(){
-        return calculateTotalRevenue()-calculateTotalExpense();
+    public double calculateProfit(){
+        double totalProfit = 0;
+        List <PerDayRecord> allRecords = dataStorage.getAllData();
+        for (int i = 0; i < allRecords.size(); i++) {
+            PerDayRecord currRec = allRecords.get(i);
+            totalProfit += currRec.getProfit();
+        }
+        return totalProfit;
     }
 
-    public List<Float> getProfitTrend() {
-        return new ArrayList<>(profitCalculation);
+    public List<Double> getProfitTrend() {
+        List<Double> profitTrend = new ArrayList<>();
+        for (int i = 0; i < dataStorage.getAllData().size(); i++) {
+            profitTrend.add(dataStorage.getAllData().get(i).getProfit());
+        }
+        return profitTrend;
     }
 
-    public List<Float> getDailyRevenue() {
-        return new ArrayList<>(dailyRevenue);
+    public List<Double> getRevenueTrend() {
+        List<Double> revenueTrend = new ArrayList<>();
+        for (int i = 0; i < dataStorage.getAllData().size(); i++) {
+            revenueTrend.add(dataStorage.getAllData().get(i).getRevenue());
+        }
+        return revenueTrend;
 
     }
 
-    public List<Float> getDailyExpenses() {
-        return new ArrayList<>(dailyExpenses);
+    public List<Double> getExpensesTrend() {
+        List<Double> expensesTrend = new ArrayList<>();
+        for (int i = 0; i < dataStorage.getAllData().size(); i++) {
+            expensesTrend.add(dataStorage.getAllData().get(i).getExpenses());
+        }
+        return expensesTrend;
     }
 
 
