@@ -9,19 +9,16 @@ import entity.Pantry;
 public class ProductPricesInteractor implements ProductPricesInputBoundary{
     private final ProductPricesPantryDataAccessInterface userDataAccessObject;
     private final ProductPricesOutputBoundary userPresenter;
-    private Pantry pantry;
 
     public ProductPricesInteractor(ProductPricesPantryDataAccessInterface productPricesPantryDataAccessInterface,
-                                   ProductPricesOutputBoundary productPricesOutputBoundary,
-                                   Pantry pantry) {
+                                   ProductPricesOutputBoundary productPricesOutputBoundary) {
         this.userDataAccessObject = productPricesPantryDataAccessInterface;
         this.userPresenter = productPricesOutputBoundary;
-        this.pantry = pantry;
     }
 
     @Override
     public void execute(ProductPricesInputData productPricesInputData) {
-        pantry = userDataAccessObject.getPantry();
+        Pantry pantry = userDataAccessObject.getPantry();
         final Recipe recipe = pantry.getRecipe(productPricesInputData.getName());
         recipe.applyMargin(productPricesInputData.getMarginPercentage());
 

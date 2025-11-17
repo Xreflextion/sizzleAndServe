@@ -46,15 +46,6 @@ public class ProductPricesView extends JPanel implements ActionListener, Propert
         JPanel dishesPanel = new JPanel(new GridLayout(1, 3, 10, 10)); // 3 columns
         ProductPricesState productPricesState = productPricesViewModel.getState();
 
-        // TODO: REMOVE THIS, ITS JUST FOR TESTING
-        if (productPricesState.getRecipes().isEmpty()) {
-            Map<String, Recipe> testRecipes = new HashMap<>();
-            testRecipes.put("Pizza", new Recipe("Pizza", 9));
-            testRecipes.put("Burger", new Recipe("Burger", 7));
-            testRecipes.put("Pasta", new Recipe("Pasta", 8));
-            productPricesState = new ProductPricesState(testRecipes);
-        }
-
         // build each DishPanel dynamically
         for (String dishName : productPricesState.getRecipes().keySet()) {
             Recipe recipe = productPricesState.getRecipes().get(dishName);
