@@ -40,11 +40,11 @@ public class BuyServingInteractor implements BuyServingInputBoundary{
                 outputBoundary.present(output);
                 return;
             }
-            totalCost += recipe.getCost() * servingsToBuy[i];
+            totalCost += recipe.getBasePrice() * servingsToBuy[i];
         }
 
         double balance = player.getBalance();
-        final double EPSILON = 1e-6;
+        final double EPSILON = 1e-10;
 
         if (balance + EPSILON < totalCost) {
             String[] emptyNames = new String[dishNames.length];
@@ -78,7 +78,7 @@ public class BuyServingInteractor implements BuyServingInputBoundary{
         for (int i = 0; i < dishNames.length; i++) {
             updatedDishNames[i] = dishNames[i];
             Recipe recipe = pantry.getRecipe(dishNames[i]);
-            updatedDishCosts[i] = recipe.getCost();
+            updatedDishCosts[i] = recipe.getBasePrice();
             updatedDishStocks[i] = recipe.getStock();
         }
 

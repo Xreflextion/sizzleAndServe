@@ -67,10 +67,6 @@ public class Pantry {
         }
     }
 
-    public List<Recipe> getMenuList() {
-        return new ArrayList<>(recipes.values());
-    }
-
     public String[] getDishNames() {
         return recipes.keySet().toArray(new String[0]);
     }

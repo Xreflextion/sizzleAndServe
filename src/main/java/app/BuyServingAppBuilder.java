@@ -27,7 +27,7 @@ public class BuyServingAppBuilder {
         int[] dishCosts = new int[dishNames.length];
         int[] dishStocks = new int[dishNames.length];
         for (int i = 0; i < dishNames.length; i++) {
-            dishCosts[i] = pantryDAO.getPantry().getRecipe(dishNames[i]).getCost();
+            dishCosts[i] = pantryDAO.getPantry().getRecipe(dishNames[i]).getBasePrice();
             dishStocks[i] = pantryDAO.getPantry().getRecipe(dishNames[i]).getStock();
         }
         viewModel.setDishNames(dishNames);
