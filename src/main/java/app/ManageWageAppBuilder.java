@@ -49,4 +49,4 @@ public class ManageWageAppBuilder {
         return application;
     }
 }
-}
+
