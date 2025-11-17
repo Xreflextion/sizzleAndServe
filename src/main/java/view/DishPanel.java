@@ -21,7 +21,7 @@ public class DishPanel extends JPanel {
     private final JButton resetButton;
 
     // constants
-    private static final int DEFAULT_MARGIN = 10;
+    private static final int DEFAULT_MARGIN = 0;
     private static final int MIN_MARGIN = 0;
     private static final int MAX_MARGIN = 100;
 
@@ -33,8 +33,8 @@ public class DishPanel extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createTitledBorder(dishName));
 
-        basePriceLabel = new JLabel("Base Price: " + recipe.getBasePrice());
-        currentPriceLabel = new JLabel("Current Price: " + recipe.getBasePrice()); // placeholder
+        basePriceLabel = new JLabel("Base Price: " + (double) recipe.getBasePrice());
+        currentPriceLabel = new JLabel("Current Price: " + (double) recipe.getBasePrice()); // placeholder
 
         // image (placeholder)
         ImageIcon icon = new ImageIcon("src/main/resources/images/sample.jpg");
@@ -50,7 +50,7 @@ public class DishPanel extends JPanel {
             marginLabel.setText("Profit Margin: " + margin + "%");
             controller.execute(dishName, margin);
         });
-        resetButton.addActionListener((ActionEvent e) -> marginSlider.setValue(10));
+        resetButton.addActionListener((ActionEvent e) -> marginSlider.setValue(DEFAULT_MARGIN));
 
         add(imageLabel);
         add(basePriceLabel);
