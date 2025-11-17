@@ -21,7 +21,7 @@ public class DishPanel extends JPanel {
     private final JButton resetButton;
 
     // constants
-    private static final int DEFAULT_MARGIN = 10;
+    private static final int DEFAULT_MARGIN = 0;
     private static final int MIN_MARGIN = 0;
     private static final int MAX_MARGIN = 100;
 
@@ -50,7 +50,7 @@ public class DishPanel extends JPanel {
             marginLabel.setText("Profit Margin: " + margin + "%");
             controller.execute(dishName, margin);
         });
-        resetButton.addActionListener((ActionEvent e) -> marginSlider.setValue(10));
+        resetButton.addActionListener((ActionEvent e) -> marginSlider.setValue(DEFAULT_MARGIN));
 
         add(imageLabel);
         add(basePriceLabel);
