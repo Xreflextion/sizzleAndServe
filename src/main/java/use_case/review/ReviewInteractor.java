@@ -1,0 +1,98 @@
+package use_case.review;
+
+import data_access.ReviewDAOHash;
+import entity.ReviewEntity;
+
+
+public class ReviewInteractor {
+
+    // Creates a DAO hashmap
+    private final ReviewDAOHash reviewDAOHash;
+
+    public ReviewInteractor(ReviewDAOHash reviewDAOHash) {
+        this.reviewDAOHash = reviewDAOHash;
+    }
+
+    // adds a review to the DAO
+    public void addReview(ReviewEntity review){
+        reviewDAOHash.addReview(review);
+    }
+
+
+    // This will get the total number of reviews of the entire restaurant
+    // It will iterate through the values of the hashmap
+    // The values it will iterate through are array list since they keep the reviews
+    // then the counter variable will increment by the size of these array list
+    // since that will be the number of reviews
+    // uses the DAO to get all reviews to increase the num of reviews
+    public int getTotalNumReview(){
+        int counter = 0;
+        for(var _: reviewDAOHash.getAllReviews()){
+            counter += 1;
+        }
+        return counter;
+    }
+
+    // This will get the total num of reviews for a specific day
+    // Uses DAO to get the number of the reviews for said day
+    public int getDayTotalNumReview(int day){
+        return reviewDAOHash.getReviewsByDay(day).size();
+    }
+
+
+    // gets the average review by the day
+    // For example day 1: 3.5 stars out of 5
+    // uses the getReviews for the day to get the number of reviews for that day
+    // Iterates through the reviews to find the numerator
+    public double getAverageReviewDay(int day){
+        double numerator = 0;
+        double totalReviews = reviewDAOHash.getReviewsByDay(day).size();
+        for(Double reviews: reviewDAOHash.getReviewsByDay(day)){
+            numerator += reviews;
+
+        }
+        if(totalReviews > 0){
+            double avg = numerator / totalReviews;
+            return Math.round(avg * 10.0) / 10.0;
+        }
+        else{
+            return 0;
+        }
+
+    }
+
+    // gets the average reviews overall for the restaurant
+    // uses the get all reviews to iterate through all reviews
+    public double getAverageOverall(){
+        int totalReviews = getTotalNumReview();
+        double numerator = 0;
+        for(double review : reviewDAOHash.getAllReviews()){
+            numerator += review;
+        }
+        if(totalReviews > 0){
+            double avg = numerator / totalReviews;
+            return Math.round(avg * 10.0) / 10.0;
+        }
+        else{
+            return 0;
+        }
+
+    }
+
+    // Returns emoji
+    public String getEmoji(double rating){
+
+        if(rating < 2.0){
+            return "\uD83D\uDE22";
+        }
+        else if(rating < 3.0){
+            return "\uD83D\uDE04";
+        }
+        else{
+            return "\uD83D\uDE01";
+        }
+    }
+
+
+}
+
