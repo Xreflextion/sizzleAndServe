@@ -7,6 +7,7 @@ public class Main {
         AppBuilder appBuilder = new AppBuilder();
         JFrame application = appBuilder
                 .addOfficeView()
+                .addProductPricesView()
                 .addSimulateUseCase()
                 .build();
 

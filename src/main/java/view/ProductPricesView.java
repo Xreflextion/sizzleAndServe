@@ -49,9 +49,9 @@ public class ProductPricesView extends JPanel implements ActionListener, Propert
         // TODO: REMOVE THIS, ITS JUST FOR TESTING
         if (productPricesState.getRecipes().isEmpty()) {
             Map<String, Recipe> testRecipes = new HashMap<>();
-            testRecipes.put("Pizza", new Recipe("Pizza", 8.99));
-            testRecipes.put("Burger", new Recipe("Burger", 6.49));
-            testRecipes.put("Pasta", new Recipe("Pasta", 7.99));
+            testRecipes.put("Pizza", new Recipe("Pizza", 9));
+            testRecipes.put("Burger", new Recipe("Burger", 7));
+            testRecipes.put("Pasta", new Recipe("Pasta", 8));
             productPricesState = new ProductPricesState(testRecipes);
         }
 

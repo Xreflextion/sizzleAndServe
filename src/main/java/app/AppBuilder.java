@@ -5,10 +5,12 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.office.OfficeViewModel;
 import interface_adapter.office.SimulateController;
 import interface_adapter.office.SimulatePresenter;
+import interface_adapter.product_prices.ProductPricesViewModel;
 import use_case.simulate.SimulateInputBoundary;
 import use_case.simulate.SimulateInteractor;
 import use_case.simulate.SimulateOutputBoundary;
 import view.OfficeView;
+import view.ProductPricesView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,6 +29,9 @@ public class AppBuilder {
     private OfficeViewModel officeViewModel;
     private OfficeView officeView;
 
+    private ProductPricesView productPricesView;
+    private ProductPricesViewModel productPricesViewModel;
+
     public AppBuilder() {
         cardPanel.setLayout(new CardLayout());
     }
@@ -35,6 +40,13 @@ public class AppBuilder {
         officeViewModel = new OfficeViewModel();
         officeView = new OfficeView(officeViewModel);
         cardPanel.add(officeView, officeView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addProductPricesView() {
+        productPricesViewModel = new ProductPricesViewModel();
+        productPricesView = new ProductPricesView(productPricesViewModel, null);
+        cardPanel.add(productPricesView, productPricesView.getViewName());
         return this;
     }
 
