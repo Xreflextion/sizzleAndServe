@@ -1,6 +1,6 @@
-package data_Access;
+package data_access;
 
-import use_case.WageUserDataAccessInterface;
+import use_case.manage_wage.WageUserDataAccessInterface;
 import entity.Employee;
 
 import java.util.Map;

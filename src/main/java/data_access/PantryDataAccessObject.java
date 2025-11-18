@@ -7,9 +7,11 @@ import entity.Recipe;
 import okhttp3.*;
 import org.json.JSONObject;
 import org.json.JSONArray;
+import use_case.product_prices.ProductPricesPantryDataAccessInterface;
+
 import java.util.Random;
 
-public class PantryDataAccessObject implements PantryDataAccessInterface {
+public class PantryDataAccessObject implements PantryDataAccessInterface, ProductPricesPantryDataAccessInterface {
 
     private final Pantry pantry;
 
@@ -46,6 +48,11 @@ public class PantryDataAccessObject implements PantryDataAccessInterface {
     @Override
     public Pantry getPantry() {
         return pantry;
+    }
+
+    @Override
+    public void changePrice(Recipe recipe) {
+
     }
 
 

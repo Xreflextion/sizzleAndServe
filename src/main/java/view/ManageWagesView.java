@@ -1,4 +1,4 @@
-package view.manage_employees_wage;
+package view;
 
 
 import interface_adapter.manage_wages.WageController;
@@ -25,6 +25,10 @@ public class ManageWagesView extends JPanel implements ActionListener, PropertyC
     private JButton waiterMinus;
     private JButton cookMinus;
 
+    private final int layOut1 = 20;
+    private final int layOut2 = 10;
+    private final int font = 18;
+
 
     public ManageWagesView(WageViewModel wageViewModel) {
         this.wageViewModel = wageViewModel;
@@ -34,18 +38,18 @@ public class ManageWagesView extends JPanel implements ActionListener, PropertyC
         setLayout(new GridLayout(2, 1));
         /* Cook Panel
         */
-        JPanel cookPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        JPanel cookPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, layOut1, layOut2));
         cookPanel.setBorder(BorderFactory.createTitledBorder("Cook Wage"));
         cookMinus = new JButton("−");
         cookAdd = new JButton("+");
         cookWage = new JLabel(String.valueOf(wageViewModel.getState().getCookWage()));
-        cookWage.setFont(new Font("Arial", Font.BOLD, 18));
+        cookWage.setFont(new Font("Arial", Font.BOLD, font));
         cookPanel.add(cookMinus);
         cookPanel.add(cookWage);
         cookPanel.add(cookAdd);
         /* Waiter Panel
         */
-        JPanel waiterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        JPanel waiterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, layOut1, layOut2));
         waiterPanel.setBorder(BorderFactory.createTitledBorder("Waiter Wage"));
         waiterMinus = new JButton("−");
         waiterAdd = new JButton("+");

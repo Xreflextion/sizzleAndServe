@@ -1,7 +1,7 @@
 package interface_adapter.manage_wages;
 
-import use_case.WageOutputBoundary;
-import use_case.WageOutputData;
+import use_case.manage_wage.WageOutputBoundary;
+import use_case.manage_wage.WageOutputData;
 
 public class WagePresenter implements WageOutputBoundary {
 
