@@ -12,7 +12,6 @@ public class DishPanel extends JPanel {
     private final String dishName;
     private final Recipe recipe;
     private final ProductPricesController controller;
-    private final int index;
 
     private final JLabel imageLabel;
     private final JLabel basePriceLabel;
@@ -26,11 +25,10 @@ public class DishPanel extends JPanel {
     private static final int MIN_MARGIN = 0;
     private static final int MAX_MARGIN = 100;
 
-    public DishPanel(String dishName, Recipe recipe, ProductPricesController controller, int index) {
+    public DishPanel(String dishName, Recipe recipe, ProductPricesController controller) {
         this.dishName = dishName;
         this.recipe = recipe;
         this.controller = controller;
-        this.index = index;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createTitledBorder(dishName));
@@ -38,7 +36,8 @@ public class DishPanel extends JPanel {
         basePriceLabel = new JLabel("Base Price: " + (double) recipe.getBasePrice());
         currentPriceLabel = new JLabel("Current Price: " + (double) recipe.getBasePrice()); // placeholder
 
-        String imagePath = "src/main/resources/images/" + index + ".jpg";
+        String imagePath = "src/main/resources/images/"
+                + dishName.replaceAll("a-ZA-Z0-9\\-_", "_") + ".jpg";
         ImageIcon icon = new ImageIcon(imagePath);
         Image scaled = icon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
         imageLabel = new JLabel(new ImageIcon(scaled));

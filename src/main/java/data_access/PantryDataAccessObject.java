@@ -43,7 +43,7 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
                     pantry.getPantry().put(dishName, new Recipe(dishName, price));
 
                     String mealURL = meal.getString("strMealThumb");
-                    downloadTempImage(mealURL, i);
+                    downloadTempImage(mealURL, dishName);
                 }
                 response.close();
             } catch (Exception e) {
@@ -67,13 +67,13 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
 
     }
 
-    public static File downloadTempImage(String imageURL, int index) throws Exception {
+    public static File downloadTempImage(String imageURL, String dishName) throws Exception {
         String dirPath = "src/main/resources/images";
         File dir = new File(dirPath);
         if (!dir.exists()) {
             dir.mkdirs();
         }
-        File tempFile = new File(dir, index + ".jpg");
+        File tempFile = new File(dir, dishName.replaceAll("a-ZA-Z0-9\\-_", "_") + ".jpg");
         URL url = new URL(imageURL);
         try (InputStream inputStream = url.openStream()) {
             Files.copy(inputStream, tempFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);

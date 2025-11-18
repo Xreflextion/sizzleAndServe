@@ -47,13 +47,11 @@ public class ProductPricesView extends JPanel implements ActionListener, Propert
         ProductPricesState productPricesState = productPricesViewModel.getState();
 
         // build each DishPanel dynamically
-        int index = 0;
         for (String dishName : productPricesState.getRecipes().keySet()) {
             Recipe recipe = productPricesState.getRecipes().get(dishName);
-            DishPanel dishPanel = new DishPanel(dishName, recipe, productPricesController, index);
+            DishPanel dishPanel = new DishPanel(dishName, recipe, productPricesController);
             dishPanels.put(dishName, dishPanel);
             dishesPanel.add(dishPanel);
-            index++;
         }
 
         add(dishesPanel, BorderLayout.CENTER);
