@@ -20,9 +20,7 @@ public class ProductPricesPresenter implements ProductPricesOutputBoundary{
 
     @Override
     public void present(ProductPricesOutputData outputData) {
-        ProductPricesState newProductPricesState = new ProductPricesState(productPricesViewModel
-                .getState()
-                .getRecipes());
+        ProductPricesState newProductPricesState = productPricesViewModel.getState();
         newProductPricesState.setSelectedDishName(outputData.getName());
         newProductPricesState.setCurrentPrice(outputData.getNewPrice());
 

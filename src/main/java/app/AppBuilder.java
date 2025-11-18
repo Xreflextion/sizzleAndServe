@@ -5,7 +5,11 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.office.OfficeViewModel;
 import interface_adapter.office.SimulateController;
 import interface_adapter.office.SimulatePresenter;
+import interface_adapter.product_prices.ProductPricesController;
+import interface_adapter.product_prices.ProductPricesPresenter;
 import interface_adapter.product_prices.ProductPricesViewModel;
+import use_case.product_prices.ProductPricesInteractor;
+import use_case.product_prices.ProductPricesOutputBoundary;
 import use_case.simulate.SimulateInputBoundary;
 import use_case.simulate.SimulateInteractor;
 import use_case.simulate.SimulateOutputBoundary;
@@ -45,7 +49,12 @@ public class AppBuilder {
 
     public AppBuilder addProductPricesView() {
         productPricesViewModel = new ProductPricesViewModel();
-        productPricesView = new ProductPricesView(productPricesViewModel, null);
+        ProductPricesPresenter productPricesPresenter = new ProductPricesPresenter(productPricesViewModel,
+                viewManagerModel);
+        ProductPricesInteractor productPricesInteractor = new ProductPricesInteractor(new PantryDataAccessObject(),
+                productPricesPresenter);
+        ProductPricesController productPricesController = new ProductPricesController(productPricesInteractor);
+        productPricesView = new ProductPricesView(productPricesViewModel, productPricesController);
         cardPanel.add(productPricesView, productPricesView.getViewName());
         return this;
     }

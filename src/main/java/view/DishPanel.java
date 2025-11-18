@@ -50,7 +50,10 @@ public class DishPanel extends JPanel {
             marginLabel.setText("Profit Margin: " + margin + "%");
             controller.execute(dishName, margin);
         });
-        resetButton.addActionListener((ActionEvent e) -> marginSlider.setValue(DEFAULT_MARGIN));
+        resetButton.addActionListener((ActionEvent e) -> {
+            marginSlider.setValue(DEFAULT_MARGIN);
+            controller.execute(dishName, DEFAULT_MARGIN);
+        });
 
         add(imageLabel);
         add(basePriceLabel);

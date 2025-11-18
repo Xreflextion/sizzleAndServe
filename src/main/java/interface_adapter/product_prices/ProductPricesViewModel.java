@@ -5,7 +5,7 @@ import interface_adapter.ViewModel;
 import java.util.Collections;
 
 /**
- * The View Model for the Logged In View.
+ * The View Model for the Product Prices View.
  */
 public class ProductPricesViewModel extends ViewModel<ProductPricesState> {
 
