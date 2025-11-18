@@ -32,7 +32,7 @@ public class ManageWageAppBuilder {
         wageViewModel.setState(state); // fires property change
 
         // 3) DataAccess + Presenter + Controller
-        WageUserDataAccessInterface dataAccess = new data_Access.InMemoryWageDataAccess(employees);
+        WageUserDataAccessInterface dataAccess = new data_Access.WageDataAccessObject(employees);
         WagePresenter presenter = new WagePresenter(wageViewModel);
         WageController controller = new WageController(new WageInteractor(dataAccess, presenter,employees));
 

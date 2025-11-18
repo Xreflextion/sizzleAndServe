@@ -5,11 +5,11 @@ import entity.Employee;
 
 import java.util.Map;
 
-    public class InMemoryWageDataAccess implements WageUserDataAccessInterface {
+    public class WageDataAccessObject implements WageUserDataAccessInterface {
 
         private final Map<String, Employee> employees;
 
-        public InMemoryWageDataAccess(Map<String, Employee> employees) {
+        public WageDataAccessObject(Map<String, Employee> employees) {
             this.employees = employees;
         }
 
