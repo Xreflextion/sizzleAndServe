@@ -1,14 +1,13 @@
 package entity;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * A simple entity representing a Pantry.
  * A pantry contains a map of recipe names to recipe objects.
  */
 public class Pantry {
+
     private final Map<String, Recipe> recipes;
 
     /**
@@ -25,6 +24,10 @@ public class Pantry {
         recipes = new HashMap<>();
     }
 
+    public Map<String, Recipe> getPantry() {
+        return recipes;
+    }
+
     public Recipe getRecipe(String dish) {
         return recipes.get(dish);
     }
@@ -36,7 +39,7 @@ public class Pantry {
      * @throws IllegalArgumentException if the dish is not found in the pantry
      */
     public boolean addStock(String dish, int quantity) {
-        Recipe recipe = getRecipe(dish);
+        Recipe recipe = recipes.get(dish);
         if (recipe == null) {
             throw new NullPointerException("Dish does not exist in the Pantry");
         }
@@ -64,7 +67,7 @@ public class Pantry {
         }
     }
 
-    public List<Recipe> getMenuList() {
-        return (List<Recipe>) recipes.values();
+    public String[] getDishNames() {
+        return recipes.keySet().toArray(new String[0]);
     }
 }
