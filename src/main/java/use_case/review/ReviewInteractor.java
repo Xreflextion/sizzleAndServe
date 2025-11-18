@@ -27,7 +27,7 @@ public class ReviewInteractor {
     // uses the DAO to get all reviews to increase the num of reviews
     public int getTotalNumReview(){
         int counter = 0;
-        for(var _: reviewDAOHash.getAllReviews()){
+        for(double iterate : reviewDAOHash.getAllReviews()){
             counter += 1;
         }
         return counter;
