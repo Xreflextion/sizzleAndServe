@@ -1,4 +1,4 @@
-package Entities;
+package use_case;
 
 import java.util.List;
 import java.util.ArrayList;
