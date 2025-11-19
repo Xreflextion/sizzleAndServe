@@ -1,10 +1,12 @@
-package entities;
+package data_access;
+
+import entities.PerDayRecord;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class DataStorage {
+
     private List<PerDayRecord> dayRecords = new ArrayList<PerDayRecord>();
     private int currentDay = 1;
     // private int pastDays = 0;
@@ -37,3 +39,4 @@ public class DataStorage {
 
 
 }
+

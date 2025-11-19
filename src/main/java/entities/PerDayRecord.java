@@ -30,5 +30,5 @@ public class PerDayRecord {
         return rating;
     }
 
-
 }
+
