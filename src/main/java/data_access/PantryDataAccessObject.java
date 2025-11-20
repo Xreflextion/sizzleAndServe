@@ -8,7 +8,12 @@ import okhttp3.*;
 import org.json.JSONObject;
 import org.json.JSONArray;
 import use_case.product_prices.ProductPricesPantryDataAccessInterface;
+import constants.Constants;
 
+import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
 import java.util.Random;
 
 public class PantryDataAccessObject implements PantryDataAccessInterface, ProductPricesPantryDataAccessInterface {
@@ -37,6 +42,9 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
                     String dishName = meal.getString("strMeal");
                     int price = new Random().nextInt((max - min) + 1) + min;
                     pantry.getPantry().put(dishName, new Recipe(dishName, price));
+
+                    String mealURL = meal.getString("strMealThumb");
+                    downloadTempImage(mealURL, dishName);
                 }
                 response.close();
             } catch (Exception e) {
@@ -55,9 +63,25 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
 
     }
 
-
     @Override
     public void savePantry(Pantry pantry) {
 
+    }
+
+    public static File downloadTempImage(String imageURL, String dishName) throws Exception {
+        String dirPath = Constants.DIR_PATH;
+        File dir = new File(dirPath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        File tempFile = new File(dir, dishName.replaceAll(Constants.REGEX_CHARACTERS,
+                Constants.REPLACEMENT_CHARACTER) + Constants.FILE_TYPE);
+        URL url = new URL(imageURL);
+        try (InputStream inputStream = url.openStream()) {
+            Files.copy(inputStream, tempFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+        }
+        tempFile.deleteOnExit();
+
+        return tempFile;
     }
 }
