@@ -69,13 +69,13 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
     }
 
     public static File downloadTempImage(String imageURL, String dishName) throws Exception {
-        String dirPath = Constants.getPath();
+        String dirPath = Constants.DIR_PATH;
         File dir = new File(dirPath);
         if (!dir.exists()) {
             dir.mkdirs();
         }
-        File tempFile = new File(dir, dishName.replaceAll(Constants.getRegex(),
-                Constants.getReplacement()) + Constants.getFileType());
+        File tempFile = new File(dir, dishName.replaceAll(Constants.REGEX_CHARACTERS,
+                Constants.REPLACEMENT_CHARACTER) + Constants.FILE_TYPE);
         URL url = new URL(imageURL);
         try (InputStream inputStream = url.openStream()) {
             Files.copy(inputStream, tempFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
