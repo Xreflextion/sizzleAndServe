@@ -1,21 +1,37 @@
 package use_case.review;
 
-import data_access.ReviewDAOHash;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+
+import interface_adapter.ViewModel;
 import entity.ReviewEntity;
+import data_access.ReviewDAOHash;
 
 
 public class ReviewInteractor {
 
     // Creates a DAO hashmap
-    private final ReviewDAOHash reviewDAOHash;
+    private ReviewDAOHash reviewDAOHash;
 
-    public ReviewInteractor(ReviewDAOHash reviewDAOHash) {
+    //Creates instance of viewModel
+    private final ViewModel<ReviewOutputData> viewModel;
+
+    public ReviewInteractor(ReviewDAOHash reviewDAOHash, ViewModel<ReviewOutputData> viewModel) {
         this.reviewDAOHash = reviewDAOHash;
+        this.viewModel = viewModel;
     }
 
     // adds a review to the DAO
     public void addReview(ReviewEntity review){
         reviewDAOHash.addReview(review);
+    }
+
+    // gets the view model
+    public ViewModel<ReviewOutputData> getViewModel() {
+        return viewModel;
     }
 
 
@@ -79,18 +95,27 @@ public class ReviewInteractor {
 
     }
 
+
     // Returns emoji
     public String getEmoji(double rating){
 
-        if(rating < 2.0){
+        if(rating <= 2.0){
             return "\uD83D\uDE22";
         }
-        else if(rating < 3.0){
-            return "\uD83D\uDE04";
+        else if(rating <= 3.0){
+            return "\uD83D\uDE10";
         }
         else{
             return "\uD83D\uDE01";
         }
+    }
+
+    // Gets all the days the user has completed
+    public List<Integer> getAvailableDays() {
+        Set<Integer> dayKeys = reviewDAOHash.getAllDays();
+        List<Integer> days = new ArrayList<>(dayKeys);
+        Collections.sort(days);
+        return days;
     }
 
 

@@ -1,24 +1,24 @@
 package data_access;
 
+import data_access.ReviewDAO;
 import entity.ReviewEntity;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class ReviewDAOHash implements ReviewDAO{
+
+public class ReviewDAOHash implements ReviewDAO {
     /**
      * Review manager add reviews by a mapping with the key being the number day (for example
      * 1) and having a list of integers being the ratings you are able to get the average review
-     * by day, you are able to get the average review for the restuarant coming from the insights class,
-     * you are able to get the total number of reviews also comoing from the insights class, and
+     * by day, you are able to get the average review for the restaurant coming from the insights class,
+     * you are able to get the total number of reviews also coming from the insights class, and
      * you are able to get the total number of reviews per day
      *
      * An example of what it may look like
      * {
-     *     1 : [5, 4, 3, 5],
-     *     2 : [2, 5],
-     *     3 : [4, 4, 4]
+     *     1 : [5.0, 4.1, 3.5, 5.0],
+     *     2 : [2.9, 5.0],
+     *     3 : [4.8, 4.5, 4.1]
      * }
      *
      */
@@ -26,7 +26,7 @@ public class ReviewDAOHash implements ReviewDAO{
 
     private final Map<Integer, ArrayList<Double>> storage;
 
-    // This implemention of the ReviewDAO is a hashmap
+    // This implementation of the ReviewDAO is a hashmap
     public ReviewDAOHash(Map<Integer, ArrayList<Double>> reviewsByDay) {
         this.storage = reviewsByDay;
     }
@@ -67,6 +67,11 @@ public class ReviewDAOHash implements ReviewDAO{
             allReviews.addAll(reviews);
         }
         return allReviews;
+    }
+
+    // gets the all days
+    public Set<Integer> getAllDays() {
+        return storage.keySet();
     }
 }
 
