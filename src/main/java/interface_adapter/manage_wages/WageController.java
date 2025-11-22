@@ -25,4 +25,6 @@ public class WageController {
         interactor.decreaseWage("Waiter");
     }
 
+    public void apply() { interactor.applyWages(); }
+
 }

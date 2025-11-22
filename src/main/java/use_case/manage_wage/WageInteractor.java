@@ -1,6 +1,7 @@
 package use_case.manage_wage;
 
 import entity.Employee;
+import entity.Player;
 
 import java.util.Map;
 /**
@@ -9,36 +10,83 @@ import java.util.Map;
         */
 public class WageInteractor implements WageInputBoundary {
     private final WageUserDataAccessInterface dataAccess;
+    private final WagePlayerDataAccessInterface playerDataAccess;
     private final WageOutputBoundary presenter;
     private final Map<String, Employee> employees;
 
     public WageInteractor(WageUserDataAccessInterface dataAccess,
+                          WagePlayerDataAccessInterface playerDataAccess,
                           WageOutputBoundary presenter,
                           Map<String, Employee> employees) {
         this.dataAccess = dataAccess;
+        this.playerDataAccess = playerDataAccess;
         this.presenter = presenter;
         this.employees = employees;
     }
 
+    private boolean canAffordIncrease() {
+        int prospectiveTotal = Employee.getTotalWage() + 1;
+        double balance = playerDataAccess.getPlayer().getBalance();
+        return prospectiveTotal <= balance;}
     @Override
-    public void increaseWage(String position) {
+    public void increaseWage (String position){
         Employee currentEmployee = employees.get(position);
-        if (currentEmployee != null) {
+        if (currentEmployee == null) return;
+
+        if (canAffordIncrease()) {
             currentEmployee.increaseWage();
-            dataAccess.save(currentEmployee); // ✅ Persist changes
-            WageOutputData outputData = new WageOutputData(currentEmployee);
-            presenter.prepareSuccessView(outputData);
+            dataAccess.save(currentEmployee);
+
+            presenter.prepareSuccessView(
+                    new WageOutputData(currentEmployee,
+                            Employee.getTotalWage(),
+                            playerDataAccess.getPlayer().getBalance())
+            );
+        } else {
+            // Do not change anything; warn and refresh UI
+            presenter.prepareErrorView("exceed current balance");
+            presenter.prepareSuccessView(
+                    new WageOutputData(currentEmployee,Employee.getTotalWage(),
+                            playerDataAccess.getPlayer().getBalance())
+            );
         }
     }
 
     @Override
-    public void decreaseWage(String position) {
+    public void decreaseWage (String position){
         Employee currentEmployee = employees.get(position);
-        if (currentEmployee != null) {
-            currentEmployee.decreaseWage();
-            dataAccess.save(currentEmployee); // ✅ Persist changes
-            WageOutputData outputData = new WageOutputData(currentEmployee);
-            presenter.prepareSuccessView(outputData);
+        if (currentEmployee == null) return;
+
+        currentEmployee.decreaseWage();
+        dataAccess.save(currentEmployee);
+
+        presenter.prepareSuccessView(
+                new WageOutputData(currentEmployee,
+                        Employee.getTotalWage(),
+                        playerDataAccess.getPlayer().getBalance())
+        );
+    }
+
+    @Override
+    public void applyWages () {
+        Player player = playerDataAccess.getPlayer();
+        int total = Employee.getTotalWage();
+        double balance = player.getBalance();
+
+        if (total <= balance) {
+            player.setBalance(balance - total); // assumes Player has setBalance(int)
+            playerDataAccess.savePlayer(player);
+
+            presenter.prepareSuccessView(
+                    new WageOutputData(total, player.getBalance())
+            );
+        } else {
+            presenter.prepareErrorView("exceed current balance");
+            presenter.prepareSuccessView(
+                    new WageOutputData(total, balance)
+            );
         }
     }
-}
+
+
+    }

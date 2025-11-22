@@ -15,8 +15,7 @@ public class Employee {
 
     private int wage;
     private float wageEffect;
-    private String position;
-    /*
+    private final String position;/*
      initial creation put it at minWage
      */
 

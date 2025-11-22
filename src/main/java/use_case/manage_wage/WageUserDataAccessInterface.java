@@ -12,6 +12,11 @@ public interface WageUserDataAccessInterface {
      * @return The Employee object, or null if not found.
      */
     Employee getEmployee(String position);
+    /**
+     * Return the total wage of the all the employees in DAO
+     * @return the wage of all the employees, adding up together.
+     */
+    int getTotalWage();
 
     /**
      * Saves the updated employee data.
