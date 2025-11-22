@@ -1,7 +1,6 @@
 package data_access;
 
-import use_case.BuyServing.PantryDataAccessInterface;
-import entity.Player;
+import use_case.buy_serving.PantryDataAccessInterface;
 import entity.Pantry;
 import entity.Recipe;
 import okhttp3.*;

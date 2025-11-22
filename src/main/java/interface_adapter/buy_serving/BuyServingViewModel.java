@@ -1,8 +1,6 @@
-package interface_adapter.BuyServing;
+package interface_adapter.buy_serving;
 
 import interface_adapter.ViewModel;
-
-import java.util.*;
 
 public class BuyServingViewModel extends ViewModel<BuyServingViewModel.State> {
 
