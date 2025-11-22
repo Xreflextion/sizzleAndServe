@@ -18,5 +18,9 @@ public interface WageInputBoundary {
      * @param position The position of the employee (e.g., "Cook", "Waiter")
      */
     void decreaseWage(String position);
+    /**
+     * Apply wage and deduct current total wage from current balance.
+     */
+    void applyWages();
 }
 
