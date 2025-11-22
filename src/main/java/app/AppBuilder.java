@@ -2,21 +2,27 @@ package app;
 
 import data_access.*;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.ViewModel;
 import interface_adapter.office.OfficeViewModel;
 import interface_adapter.office.SimulateController;
 import interface_adapter.office.SimulatePresenter;
 import interface_adapter.product_prices.ProductPricesController;
 import interface_adapter.product_prices.ProductPricesPresenter;
 import interface_adapter.product_prices.ProductPricesViewModel;
+import interface_adapter.review.ReviewController;
+import interface_adapter.review.ReviewPresenter;
+import interface_adapter.review.ReviewViewModel;
 import use_case.product_prices.ProductPricesInteractor;
 import use_case.product_prices.ProductPricesOutputBoundary;
+import use_case.review.ReviewInteractor;
+import use_case.review.ReviewOutputData;
 import use_case.simulate.SimulateInputBoundary;
 import use_case.simulate.SimulateInteractor;
 import use_case.simulate.SimulateOutputBoundary;
 import view.OfficeView;
 import view.ProductPricesView;
 import view.ViewManager;
-
+import view.ReviewView;
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
@@ -38,6 +44,7 @@ public class AppBuilder {
 
     private ProductPricesView productPricesView;
     private ProductPricesViewModel productPricesViewModel;
+
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -61,6 +68,32 @@ public class AppBuilder {
         cardPanel.add(productPricesView, productPricesView.getViewName());
         return this;
     }
+
+    // Adds the ReviewView to the app builder
+    public AppBuilder addReviewViewAndUseCase() {
+
+        // Creates ViewModel
+        ReviewViewModel reviewViewModel = new ReviewViewModel();
+
+        // Creates a presenter
+        ReviewPresenter reviewPresenter = new ReviewPresenter(reviewViewModel);
+
+        // Creates a reviewDAO
+        ReviewDAOHash reviewDAO = new ReviewDAOHash(new HashMap<>());
+
+        // Creates a review interactor
+        ReviewInteractor  reviewInteractor = new ReviewInteractor(reviewDAO, reviewViewModel);
+
+        // Creates a review controller
+        ReviewController  reviewController = new ReviewController(reviewInteractor, reviewPresenter);
+
+        // Initializes View and add it to card panel
+        ReviewView reviewView = new ReviewView(reviewController, reviewViewModel);
+        cardPanel.add(reviewView, ReviewViewModel.VIEW_NAME);
+
+        return this;
+    }
+
 
     public AppBuilder addSimulateUseCase() {
         final SimulateOutputBoundary simulateOutputBoundary = new SimulatePresenter(viewManagerModel,
