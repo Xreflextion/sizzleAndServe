@@ -53,6 +53,10 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
         }
     }
 
+    public PantryDataAccessObject(Pantry pantry) {
+        this.pantry = pantry;
+    }
+
     @Override
     public Pantry getPantry() {
         return pantry;
