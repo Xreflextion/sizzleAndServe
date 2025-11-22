@@ -1,6 +1,8 @@
 package view;
 
 import entity.Recipe;
+import interface_adapter.ViewManagerModel;
+import interface_adapter.office.OfficeViewModel;
 import interface_adapter.product_prices.ProductPricesController;
 import interface_adapter.product_prices.ProductPricesState;
 import interface_adapter.product_prices.ProductPricesViewModel;
@@ -24,15 +26,18 @@ public class ProductPricesView extends JPanel implements ActionListener, Propert
     private final String viewName = "product prices";
     private final ProductPricesViewModel productPricesViewModel;
     private ProductPricesController productPricesController;
+    private final ViewManagerModel viewManagerModel;
 
     // store each DishPanel by its dish name
     private final Map<String, DishPanel> dishPanels = new HashMap<>();
 
     public ProductPricesView(ProductPricesViewModel productPricesViewModel,
-                             ProductPricesController productPricesController) {
+                             ProductPricesController productPricesController,
+                             ViewManagerModel viewManagerModel) {
         this.productPricesViewModel = productPricesViewModel;
         this.productPricesController = productPricesController;
         this.productPricesViewModel.addPropertyChangeListener(this);
+        this.viewManagerModel = viewManagerModel;
 
         setLayout(new BorderLayout());
 
@@ -55,6 +60,17 @@ public class ProductPricesView extends JPanel implements ActionListener, Propert
         }
 
         add(dishesPanel, BorderLayout.CENTER);
+
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JButton backButton = new JButton("Office");
+
+        backButton.addActionListener(evt -> {
+            this.viewManagerModel.setState(OfficeViewModel.VIEW_NAME);
+            this.viewManagerModel.firePropertyChange();
+        });
+
+        bottomPanel.add(backButton);
+        add(bottomPanel, BorderLayout.SOUTH);
     }
 
     /**

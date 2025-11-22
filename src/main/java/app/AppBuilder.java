@@ -1,6 +1,7 @@
 package app;
 
 import data_access.*;
+import entity.Recipe;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.ViewModel;
 import interface_adapter.office.OfficeViewModel;
@@ -33,11 +34,12 @@ public class AppBuilder {
     public static final int INITIAL_DAY = 0;
     public static final int INITIAL_PAST_CUSTOMER_COUNT = 0;
 
-
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
     private ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
+
+    private final PantryDataAccessObject pantryDataAccessObject = new PantryDataAccessObject();
 
     private OfficeViewModel officeViewModel;
     private OfficeView officeView;
@@ -58,13 +60,14 @@ public class AppBuilder {
     }
 
     public AppBuilder addProductPricesView() {
-        productPricesViewModel = new ProductPricesViewModel();
+        Map<String, Recipe> recipes = pantryDataAccessObject.getPantry().getPantry();
+        productPricesViewModel = new ProductPricesViewModel(recipes);
         ProductPricesPresenter productPricesPresenter = new ProductPricesPresenter(productPricesViewModel,
                 viewManagerModel);
-        ProductPricesInteractor productPricesInteractor = new ProductPricesInteractor(new PantryDataAccessObject(),
+        ProductPricesInteractor productPricesInteractor = new ProductPricesInteractor(pantryDataAccessObject,
                 productPricesPresenter);
         ProductPricesController productPricesController = new ProductPricesController(productPricesInteractor);
-        productPricesView = new ProductPricesView(productPricesViewModel, productPricesController);
+        productPricesView = new ProductPricesView(productPricesViewModel, productPricesController, viewManagerModel);
         cardPanel.add(productPricesView, productPricesView.getViewName());
         return this;
     }
