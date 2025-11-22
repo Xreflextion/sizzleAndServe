@@ -6,7 +6,7 @@ import use_case.review.ReviewOutputData;
 public class ReviewPresenter{
 
     // viewModel is needed since the presenter receives output data then sends to viewModel to update the GUI
-    private final interface_adapter.review.ReviewViewModel viewModel;
+    private final ReviewViewModel viewModel;
     public ReviewPresenter(interface_adapter.review.ReviewViewModel viewModel) {
         this.viewModel = viewModel;
     }

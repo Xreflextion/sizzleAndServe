@@ -18,10 +18,23 @@ import java.util.ArrayList;
 
 public class ReviewView extends JPanel implements ActionListener, PropertyChangeListener {
 
-    final String FONT = "Arial";
+    // Constants for UI formatting
+    private static final String FONT = "Arial";
+    private static final int TITLE_FONT_SIZE = 28;
+    private static final int SUBTITLE_FONT_SIZE = 22;
+    private static final int BUTTON_FONT_SIZE = 20;
+    private static final int LABEL_FONT_SIZE = 32;
+    private static final int EMOJI_FONT_SIZE = 48;
+
+
+    // Panel names for CardLayout
+    private static final String MENU_PANEL = "menu";
+    private static final String OVERALL_PANEL = "overall";
+    private static final String DAY_PANEL = "day";
+
 
     private final interface_adapter.review.ReviewController controller;
-    private final ViewModel<ReviewOutputData> viewModel;
+    private final ReviewViewModel viewModel;
 
     // UI components
     private JButton overallButton;
@@ -36,7 +49,7 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
 
 
 
-    public ReviewView(interface_adapter.review.ReviewController controller, ViewModel<ReviewOutputData> viewModel) {
+    public ReviewView(interface_adapter.review.ReviewController controller, ReviewViewModel viewModel) {
         this.controller = controller;
         this.viewModel = viewModel;
 
@@ -58,24 +71,24 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
 
         // Sets the title for the panel the shows the options for reviews and formats it
         JLabel title = new JLabel("Office - Reviews");
-        title.setFont(new Font(FONT, Font.BOLD, 28));
+        title.setFont(new Font(FONT, Font.BOLD, TITLE_FONT_SIZE));
         title.setAlignmentX(CENTER_ALIGNMENT);
 
         // Sets the subtitle for select an option
         JLabel subtitle = new JLabel("Select an option:");
-        subtitle.setFont(new Font(FONT, Font.PLAIN, 22));
+        subtitle.setFont(new Font(FONT, Font.PLAIN, SUBTITLE_FONT_SIZE));
         subtitle.setAlignmentX(CENTER_ALIGNMENT);
 
         // Button to select an overall review for restaurant
-        overallButton = new JButton("Overall");
+        overallButton = new JButton(OVERALL_PANEL);
         overallButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        overallButton.setFont(new Font(FONT, Font.PLAIN, 20));
+        overallButton.setFont(new Font(FONT, Font.PLAIN, BUTTON_FONT_SIZE));
         overallButton.addActionListener(this);
 
         // Day Button
         dayButton = new JButton("Day");
         dayButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        dayButton.setFont(new Font(FONT, Font.PLAIN, 20));
+        dayButton.setFont(new Font(FONT, Font.PLAIN, BUTTON_FONT_SIZE));
         dayButton.addActionListener(this);
 
         // Provides spacing for the menuPanel
@@ -97,19 +110,19 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
 
         // Creating the label for the overall review with formatting
         overallLabel = new JLabel("Loading...");
-        overallLabel.setFont(new Font(FONT, Font.PLAIN, 32));
+        overallLabel.setFont(new Font(FONT, Font.PLAIN, LABEL_FONT_SIZE));
         overallLabel.setAlignmentX(CENTER_ALIGNMENT);
 
         // Creating and formating the overall emoji
-        overallEmoji = new JLabel("\uD83D\uDE22");
-        overallEmoji.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 48));
+        overallEmoji = new JLabel();
+        overallEmoji.setFont(new Font("Segoe UI Emoji", Font.PLAIN, EMOJI_FONT_SIZE));
         overallEmoji.setAlignmentX(CENTER_ALIGNMENT);
 
         // Creating the back button
         backOverall = new JButton("Back");
 
         // Formatting the back button
-        backOverall.setFont(new Font(FONT, Font.PLAIN, 20));
+        backOverall.setFont(new Font(FONT, Font.PLAIN, BUTTON_FONT_SIZE));
         backOverall.setAlignmentX(Component.CENTER_ALIGNMENT);
         backOverall.addActionListener(this);
 
@@ -129,14 +142,14 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
 
         // Creating the day label and formatting it
         dayLabel = new JLabel("Loading...");
-        dayLabel.setFont(new Font(FONT, Font.PLAIN, 32));
+        dayLabel.setFont(new Font(FONT, Font.PLAIN, LABEL_FONT_SIZE));
         dayLabel.setAlignmentX(CENTER_ALIGNMENT);
 
         // Emoji used for rating
-        dayEmoji = new JLabel("\uD83D\uDE00");
+        dayEmoji = new JLabel();
 
         //Formating the Emoji
-        dayEmoji.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 48));
+        dayEmoji.setFont(new Font("Segoe UI Emoji", Font.PLAIN, EMOJI_FONT_SIZE));
         dayEmoji.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // Creates the dropdown and formats it
@@ -163,7 +176,7 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
         backDay = new JButton("Back");
 
         // Formatting the back button
-        backDay.setFont(new Font(FONT, Font.PLAIN, 20));
+        backDay.setFont(new Font(FONT, Font.PLAIN, BUTTON_FONT_SIZE));
         backDay.addActionListener(this);
 
         // Formats the back button and dropdown so they inline with each-other
@@ -182,9 +195,9 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
         dayPanel.add(inLine);
 
         // adds the panels to the card layout
-        add(menuPanel, "menu");
-        add(overallPanel, "overall");
-        add(dayPanel, "day");
+        add(menuPanel, MENU_PANEL);
+        add(overallPanel, OVERALL_PANEL);
+        add(dayPanel, DAY_PANEL);
 
 
     }
@@ -198,7 +211,7 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
         // Makes the overall button work
         if(e.getSource() == overallButton){
             controller.getReviewOverall();
-            cl.show(this, "overall");
+            cl.show(this, OVERALL_PANEL);
 
         }
 
@@ -206,12 +219,12 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
         if (e.getSource() == dayButton) {
             int day = Integer.parseInt((String) daySelect.getSelectedItem());
             controller.getReview(day);
-            cl.show(this, "day");
+            cl.show(this, DAY_PANEL);
         }
 
         // Makes the back buttons work
         if (e.getSource() == backOverall || e.getSource() == backDay) {
-            cl.show(this, "menu");
+            cl.show(this, MENU_PANEL);
         }
 
     }

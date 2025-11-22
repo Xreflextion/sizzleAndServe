@@ -9,6 +9,7 @@ import java.util.Set;
 import interface_adapter.ViewModel;
 import entity.ReviewEntity;
 import data_access.ReviewDAOHash;
+import interface_adapter.review.ReviewViewModel;
 
 
 public class ReviewInteractor {
@@ -17,9 +18,9 @@ public class ReviewInteractor {
     private ReviewDAOHash reviewDAOHash;
 
     //Creates instance of viewModel
-    private final ViewModel<ReviewOutputData> viewModel;
+    private final ReviewViewModel viewModel;
 
-    public ReviewInteractor(ReviewDAOHash reviewDAOHash, ViewModel<ReviewOutputData> viewModel) {
+    public ReviewInteractor(ReviewDAOHash reviewDAOHash, ReviewViewModel viewModel) {
         this.reviewDAOHash = reviewDAOHash;
         this.viewModel = viewModel;
     }

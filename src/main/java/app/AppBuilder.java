@@ -43,8 +43,6 @@ public class AppBuilder {
     private ProductPricesView productPricesView;
     private ProductPricesViewModel productPricesViewModel;
 
-    private ReviewView reviewView;
-    private ViewModel<ReviewOutputData> reviewViewModel;
 
     public AppBuilder() {
         cardPanel.setLayout(new CardLayout());
@@ -70,28 +68,30 @@ public class AppBuilder {
     }
 
     // Adds the ReviewView to the app builder
-    public AppBuilder addReviewView() {
-        // Create ViewModel
+    public AppBuilder addReviewViewAndUseCase() {
+
+        // Creates ViewModel
         ReviewViewModel reviewViewModel = new ReviewViewModel();
 
-        // Create Presenter
+        // Creates a presenter
         ReviewPresenter reviewPresenter = new ReviewPresenter(reviewViewModel);
 
-        // Create DAO
+        // Creates a reviewDAO
         ReviewDAOHash reviewDAO = new ReviewDAOHash(new HashMap<>());
 
-        // Create Interactor
-        ReviewInteractor reviewInteractor = new ReviewInteractor(reviewDAO, reviewViewModel);
+        // Creates a review interactor
+        ReviewInteractor  reviewInteractor = new ReviewInteractor(reviewDAO, reviewViewModel);
 
-        // Create Controller using Interactor and Presenter
-        ReviewController reviewController = new ReviewController(reviewInteractor, reviewPresenter);
+        // Creates a review controller
+        ReviewController  reviewController = new ReviewController(reviewInteractor, reviewPresenter);
 
-        // Create View and add it to card panel
+        // Initializes View and add it to card panel
         ReviewView reviewView = new ReviewView(reviewController, reviewViewModel);
         cardPanel.add(reviewView, ReviewViewModel.VIEW_NAME);
 
         return this;
     }
+
 
     public AppBuilder addSimulateUseCase() {
         final SimulateOutputBoundary simulateOutputBoundary = new SimulatePresenter(viewManagerModel,

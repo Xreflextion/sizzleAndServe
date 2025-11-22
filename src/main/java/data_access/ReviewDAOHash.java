@@ -1,6 +1,6 @@
 package data_access;
 
-import data_access.ReviewDAO;
+import use_case.review.ReviewDAO;
 import entity.ReviewEntity;
 
 import java.util.*;
