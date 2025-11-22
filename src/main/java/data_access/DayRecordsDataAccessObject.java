@@ -1,11 +1,12 @@
 package data_access;
 
 import entity.PerDayRecord;
+import use_case.insights_performance_calculation.DayRecordsDataAccessInterface;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DayRecordsDataAccessObject {
+public class DayRecordsDataAccessObject implements DayRecordsDataAccessInterface {
 
     private List<PerDayRecord> dayRecords = new ArrayList<PerDayRecord>();
 
@@ -13,6 +14,7 @@ public class DayRecordsDataAccessObject {
 
     }
 
+    @Override
     public void saveNewData(PerDayRecord dayRecord){
 
         if (dayRecord == null){
@@ -21,6 +23,7 @@ public class DayRecordsDataAccessObject {
         dayRecords.add(dayRecord);
     }
 
+    @Override
     public PerDayRecord getDayData(int day){
         if (day < 1 || day > dayRecords.size()){
             return null;
@@ -30,11 +33,13 @@ public class DayRecordsDataAccessObject {
 
     }
 
+    @Override
     public List<PerDayRecord> getAllData(){
         return new ArrayList<>(dayRecords);
     }
 
-    public int getNumberofDays(){
+    @Override
+    public int getNumberOfDays(){
         return dayRecords.size();
     }
 
