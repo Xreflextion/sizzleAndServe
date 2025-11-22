@@ -15,6 +15,7 @@ import use_case.simulate.SimulateInteractor;
 import use_case.simulate.SimulateOutputBoundary;
 import view.OfficeView;
 import view.ProductPricesView;
+import view.ViewManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +29,9 @@ public class AppBuilder {
 
 
     private final JPanel cardPanel = new JPanel();
-    final ViewManagerModel viewManagerModel = new ViewManagerModel();
+    private final CardLayout cardLayout = new CardLayout();
+    private final ViewManagerModel viewManagerModel = new ViewManagerModel();
+    private ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
     private OfficeViewModel officeViewModel;
     private OfficeView officeView;
@@ -37,12 +40,12 @@ public class AppBuilder {
     private ProductPricesViewModel productPricesViewModel;
 
     public AppBuilder() {
-        cardPanel.setLayout(new CardLayout());
+        cardPanel.setLayout(cardLayout);
     }
 
     public AppBuilder addOfficeView() {
         officeViewModel = new OfficeViewModel();
-        officeView = new OfficeView(officeViewModel);
+        officeView = new OfficeView(officeViewModel, viewManagerModel);
         cardPanel.add(officeView, officeView.getViewName());
         return this;
     }
