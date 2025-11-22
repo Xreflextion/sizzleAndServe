@@ -7,7 +7,7 @@ import interface_adapter.BuyServing.BuyServingViewModel;
 import view.BuyServingView;
 import data_access.PantryDataAccessObject;
 
-import use_case.BuyServing.BuyServingInteractor;
+import use_case.buy_serving.BuyServingInteractor;
 
 import javax.swing.JFrame;
 
