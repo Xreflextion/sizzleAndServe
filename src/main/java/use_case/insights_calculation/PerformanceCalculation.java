@@ -1,16 +1,16 @@
-package use_case;
+package use_case.insights_calculation;
 
-import data_access.DataStorage;
-import entities.PerDayRecord;
+import data_access.DayRecordsDataAccessObject;
+import entity.PerDayRecord;
 import java.util.List;
 import java.util.ArrayList;
 
 public class PerformanceCalculation {
 
 
-    private final DataStorage dataStorage;
+    private final DayRecordsDataAccessObject dataStorage;
 
-    public PerformanceCalculation(DataStorage dataStorage){
+    public PerformanceCalculation(DayRecordsDataAccessObject dataStorage){
         this.dataStorage = dataStorage;
     }
 

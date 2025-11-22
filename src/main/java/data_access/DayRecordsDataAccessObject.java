@@ -1,17 +1,15 @@
 package data_access;
 
-import entities.PerDayRecord;
+import entity.PerDayRecord;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataStorage {
+public class DayRecordsDataAccessObject {
 
     private List<PerDayRecord> dayRecords = new ArrayList<PerDayRecord>();
-    private int currentDay = 1;
-    // private int pastDays = 0;
 
-    public DataStorage() {
+    public DayRecordsDataAccessObject() {
 
     }
 
@@ -21,7 +19,6 @@ public class DataStorage {
             throw new NullPointerException("dayRecord is null");
         }
         dayRecords.add(dayRecord);
-        currentDay = dayRecords.size() + 1;
     }
 
     public PerDayRecord getDayData(int day){
@@ -37,6 +34,9 @@ public class DataStorage {
         return new ArrayList<>(dayRecords);
     }
 
+    public int getNumberofDays(){
+        return dayRecords.size();
+    }
 
 }
 

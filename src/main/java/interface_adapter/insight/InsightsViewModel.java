@@ -1,6 +1,6 @@
-package entities;
+package interface_adapter.insight;
 
-public class Insights {
+public class InsightsViewModel {
 
     private double averageRating;
     private int reviewCount;
@@ -9,7 +9,7 @@ public class Insights {
     private double totalProfit;
     // private Object trendChart;
 
-    public Insights(double averageRating, int reviewCount, double totalRevenue, double totalExpenses, double totalProfit) {
+    public InsightsViewModel(double averageRating, int reviewCount, double totalRevenue, double totalExpenses, double totalProfit) {
         this.averageRating = averageRating;
         this.reviewCount = reviewCount;
         this.totalRevenue = totalRevenue;
