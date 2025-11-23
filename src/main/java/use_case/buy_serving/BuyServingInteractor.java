@@ -32,14 +32,12 @@ public class BuyServingInteractor implements BuyServingInputBoundary{
         final double EPSILON = 1e-10;
 
         if (balance + EPSILON < totalCost) {
-            int[] emptyCosts = new int[dishNames.length];
-            int[] emptyStocks = new int[dishNames.length];
             BuyServingOutputData output = new BuyServingOutputData(
                     false,
                     "Transaction failed.",
                     balance,
-                    emptyCosts,
-                    emptyStocks
+                    null,
+                    null
             );
             outputBoundary.present(output);
             return;
