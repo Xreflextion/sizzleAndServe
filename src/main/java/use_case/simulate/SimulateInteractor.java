@@ -1,52 +1,68 @@
 package use_case.simulate;
 
-import data_access.*;
+import entity.Pantry;
+import entity.Player;
+import entity.ReviewEntity;
 
 import java.util.*;
 
 public class SimulateInteractor implements SimulateInputBoundary {
     // value to add to yesterday's customer count to determine today's possible range of customers
     private final int CUSTOMER_RANGE = 3;
-    // Multiplier to impact customer count based on current rating
-    private final double[] RATING_MULTIPLIER = new double[] {0.5, 0.8, 1, 1.2, 1.5};
-    // Possible default rating options (equal probability)
-    private final int[] NORMAL_RATING_OPTIONS = new int[] {1,2,3,4,5};
-    // Possible rating options when order is incomplete (equal probability)
-    private final int[] NO_STOCK_RATING_OPTIONS = new int[] {1,2,3};
+    private final int NORMAL_RATING_UPPER_BOUND = 5;
+    private final int NO_STOCK_RATING_UPPER_BOUND = 2;
+    private final int RATING_LOWER_BOUND = 1;
+
+    private final String COOK_POSITION = "Cook";
+    private final String WAITER_POSITION = "Waiter";
 
     private final SimulateOutputBoundary simulatePresenter;
 
-    private Map<String, Integer> stock;
-    private Map<String, Double> prices;
+    private SimulatePantryDataAccessInterface pantryDataAccessObject;
+    private SimulateReviewDataAccessInterface reviewManagerDataAccessObject;
+    private SimulateWageDataAccessInterface wageDataAccessObject;
+    private SimulatePlayerDataAccessInterface playerDataAccessObject;
 
     private final RandomHelper randomHelper;
 
-    public SimulateInteractor(SimulateOutputBoundary simulateOutputBoundary) {
+    public SimulateInteractor(
+            SimulateOutputBoundary simulateOutputBoundary,
+            SimulatePantryDataAccessInterface pantryDataAccessInterface,
+            SimulateReviewDataAccessInterface reviewManagerDataAccessInterface,
+            SimulateWageDataAccessInterface wageDataAccessInterface,
+            SimulatePlayerDataAccessInterface playerDataAccessInterface) {
         this.simulatePresenter = simulateOutputBoundary;
-
-        // TODO remove testing code
-        Map<String, Integer> stock = new HashMap<>();
-        stock.put("One", 5);
-        stock.put("Two", 10);
-        stock.put("Three", 15);
-        this.stock = stock;
-        Map<String, Double> prices = new HashMap<>();
-        prices.put("One", 20.0);
-        prices.put("Two", 19.0);
-        prices.put("Three", 16.8);
-        this.prices = prices;
+        this.pantryDataAccessObject = pantryDataAccessInterface;
+        this.reviewManagerDataAccessObject = reviewManagerDataAccessInterface;
+        this.wageDataAccessObject = wageDataAccessInterface;
+        this.playerDataAccessObject = playerDataAccessInterface;
         randomHelper = new RandomHelper();
     }
 
     @Override
     public void execute(SimulateInputData simulateInputData) {
-        ArrayList<String> dishes = new ArrayList<>(prices.keySet());
-        int currentBalance = simulateInputData.getCurrentBalance();
+        Pantry pantry = pantryDataAccessObject.getPantry();
+        String[] dishes = pantry.getDishNames();
+        Map<String, Integer> stock = pantryDataAccessObject.getStock();
+        Map<String, Double> currentPrices = pantryDataAccessObject.getCurrentPrices();
+        double currentBalance = simulateInputData.getCurrentBalance();
         // hardcoded
-        int customerCount = getCustomerCount(3, 0, simulateInputData.getPastCustomerCount());
+        int curDay = simulateInputData.getCurrentDay();
+        ArrayList<Double> curRatings = reviewManagerDataAccessObject.getReviewsByDay(curDay);
+        double curRating = getAverageRating(curRatings);
+        double cookEffect = wageDataAccessObject.getEmployee(COOK_POSITION).getWageEffect();
+        double waiterEffect = wageDataAccessObject.getEmployee(WAITER_POSITION).getWageEffect();
+        System.out.println("cur rating" + curRating);
+        System.out.println("cook effect" + cookEffect);
+        System.out.println("waiter" + waiterEffect);
+        int pastCustomerCount = simulateInputData.getPastCustomerCount();
+        if (curDay == 0 ) {
+            pastCustomerCount = 5;
+        }
+        int customerCount = getCustomerCount(curRating, cookEffect, pastCustomerCount);
         ArrayList<String> orders = getOrders(customerCount, dishes);
-        ArrayList<Integer> ratings = new ArrayList<>();
-        int ratingsSum = 0;
+        ArrayList<Double> ratings = new ArrayList<>();
+        double ratingsSum = 0;
         int profit = 0;
         int expenses = 0;
 
@@ -58,24 +74,34 @@ public class SimulateInteractor implements SimulateInputBoundary {
 
 
         for (String order: orders) {
-            int newRating;
+            double newRating;
+
             if (stock.get(order) > 0) {
                 stock.put(order, stock.get(order) - 1);
-                profit += prices.get(order);
-                newRating = randomHelper.getValueFromList(NORMAL_RATING_OPTIONS);
+                profit += currentPrices.get(order);
+                newRating = generateRating(NORMAL_RATING_UPPER_BOUND, RATING_LOWER_BOUND, waiterEffect);
             } else {
-                newRating = randomHelper.getValueFromList(NO_STOCK_RATING_OPTIONS);
+                newRating = generateRating(NO_STOCK_RATING_UPPER_BOUND, RATING_LOWER_BOUND, waiterEffect);
             }
             ratings.add(newRating); // TODO Figure out how to calculate rating using employee wages
             ratingsSum += newRating;
         }
 
+
+        int newDay = curDay + 1;
         // TODO Remove print statements
         System.out.println("Revenue: " + profit);
         System.out.println("Ratings:");
-        for (int rating: ratings ) {
+
+        // Saving reviews
+        for (double rating: ratings ) {
+            ReviewEntity reviewEntity = new ReviewEntity(rating, newDay);
+            reviewManagerDataAccessObject.addReview(reviewEntity);
             System.out.println(rating);
         }
+
+        // Saving stock
+        pantryDataAccessObject.saveStock(stock);
         System.out.println("Final stock:");
         for (String dish: stock.keySet() ) {
             System.out.println("Dish " + dish + ": " + stock.get(dish));
@@ -89,14 +115,20 @@ public class SimulateInteractor implements SimulateInputBoundary {
         currentBalance -= expenses;
         System.out.println("Expenses: "+ expenses);
 
-        int avgRating = 3;
+        double avgRating = 3;
         if (!ratings.isEmpty()) {
             avgRating = ratingsSum / ratings.size();
         }
         System.out.println("Average rating: " + avgRating);
 
-        int newDay = simulateInputData.getCurrentDay() + 1;
-        // Do sth to save new day number, profit, expenses, customer count, average rating
+
+        // Saving player balance
+        Player player = playerDataAccessObject.getPlayer();
+        player.setBalance(currentBalance);
+        playerDataAccessObject.savePlayer(player);
+
+        // TODO sth to save new day number, profit, expenses, customer count, average rating
+
 
         SimulateOutputData outputData = new SimulateOutputData(newDay, currentBalance, customerCount);
         simulatePresenter.prepareSuccessView(outputData);
@@ -105,31 +137,106 @@ public class SimulateInteractor implements SimulateInputBoundary {
     }
 
 
-    /* Randomize the number of customers for the day depending on the rating of the restaurant and the cooks*/
-    private int getCustomerCount(int rating, int cookEffect, int pastCustomerCount) {
+
+    private double roundToOneDecimalPlace(double number) {
+        return (double) Math.round(number * 10.0) / 10.0;
+    }
+
+
+    /**
+     * Get the average rating of a list of ratings. Default is 3 if no ratings exist
+     * @param ratings list of ratings
+     * @return
+     */
+    private double getAverageRating(ArrayList<Double> ratings) {
+        if (ratings == null || ratings.isEmpty()) {
+            return 3;
+        }
+        double sum = 0;
+        for (double rating: ratings) {
+            sum += rating;
+        }
+
+        return roundToOneDecimalPlace(sum/ratings.size());
+    }
+
+
+    /**
+     * Get a multiplier to impact customer count based on current rating
+     * @param rating
+     * @return multiplier to use on the randomized customer count
+     */
+    private double generateRatingMultiplier(double rating) {
+        if (rating == 3.0) {
+            return 1.0;
+        }
+        else if (rating > 3.0) {
+            return 0.5*(rating - 3.0) + 1.0;
+        } else {
+            return 0.25*(rating - 3.0) + 1.0;
+        }
+    }
+
+
+    /** Randomize the number of customers for the day depending on the
+     * rating of the restaurant and the cook effect.
+     * Assumes 1 <= rating <= 5
+     * */
+    private int getCustomerCount(double rating, double cookEffect, int pastCustomerCount) {
         int lowerBound = Math.max(1, pastCustomerCount - CUSTOMER_RANGE);
         int upperBound = pastCustomerCount + CUSTOMER_RANGE;
-        int customerCount = randomHelper.generateRandomInt(upperBound, lowerBound);
+        double customerCount = randomHelper.generateRandomInt(upperBound, lowerBound);
         if (rating > 0) {
-            customerCount *= (int) RATING_MULTIPLIER[rating - 1];
+            System.out.println("prev cus count");
+            System.out.println(customerCount);
+            System.out.println("result of rating");
+            System.out.println(generateRatingMultiplier(rating));
+            customerCount *= generateRatingMultiplier(rating);
+            System.out.println("new cus count");
+            System.out.println(customerCount);
         }
-        return customerCount + cookEffect;
+
+
+        return (int) (customerCount * cookEffect);
     }
 
     /* Randomize the customer orders */
-    private ArrayList<String> getOrders(int customerCount, ArrayList<String> dishes) {
+    private ArrayList<String> getOrders(int customerCount, String[] dishes) {
         int min = 0;
-        int max = dishes.size() - 1;
+        int max = dishes.length - 1;
         ArrayList<String> orders = new ArrayList<>();
         while (customerCount > 0) {
             customerCount --;
             int idx = randomHelper.generateRandomInt(max, min);
-            System.out.println("Index: " + idx + ", Dishes: " + dishes.get(idx));
-            String dish = dishes.get(idx);
+            System.out.println("Index: " + idx + ", Dishes: " + dishes[idx]);
+            String dish = dishes[idx];
             orders.add(dish);
         }
         return orders;
     }
+
+
+
+    /**
+     * Generate a customer rating given a range between 1 and 5.
+     * @param waiterEffect the waiter effect that impacts customer rating
+     * @return rating the rating
+     */
+    private double generateRating(int max, int min, double waiterEffect) {
+        int number = randomHelper.generateRandomInt(max*10, min*10);
+        double rating = number / 10; // the value will range be in the list [1.0, 1.1, ... 5.0] if range given is 1-5
+        System.out.println("iniital rating" + rating);
+        rating *= waiterEffect;
+        System.out.println("after waiter"+ rating);
+        if (rating > 5.0) {
+            rating = 5.0;
+        }
+        if (rating < 1.0) {
+            rating = 1.0;
+        }
+        return roundToOneDecimalPlace(rating);
+    }
+
 }
 
 class RandomHelper {
@@ -141,10 +248,6 @@ class RandomHelper {
 
     public int generateRandomInt(int max, int min) {
         return randomGenerator.nextInt((max - min) + 1) + min;
-    }
-
-    public int getValueFromList(int[] list) {
-        return list[generateRandomInt(list.length - 1, 0)];
     }
 
 }

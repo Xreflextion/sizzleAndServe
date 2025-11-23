@@ -2,7 +2,7 @@ package interface_adapter.office;
 
 public class OfficeState {
     private int currentDay;
-    private int currentBalance;
+    private double currentBalance;
     private int pastCustomerCount;
 
     public int getCurrentDay() {
@@ -12,11 +12,11 @@ public class OfficeState {
         currentDay = newDay;
     }
 
-    public int getCurrentBalance() {
+    public double getCurrentBalance() {
         return currentBalance;
     }
 
-    public void setCurrentBalance(int newBalance) {
+    public void setCurrentBalance(double newBalance) {
         currentBalance = newBalance;
     }
 

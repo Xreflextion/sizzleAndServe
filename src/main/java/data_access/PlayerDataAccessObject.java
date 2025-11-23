@@ -2,8 +2,9 @@ package data_access;
 
 import entity.Player;
 import use_case.buy_serving.PlayerDataAccessInterface;
+import use_case.simulate.SimulatePlayerDataAccessInterface;
 
-public class PlayerDataAccessObject implements PlayerDataAccessInterface {
+public class PlayerDataAccessObject implements PlayerDataAccessInterface, SimulatePlayerDataAccessInterface {
     private final Player player;
 
     public PlayerDataAccessObject() {

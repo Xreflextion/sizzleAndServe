@@ -1,8 +1,8 @@
 package app;
 
 import data_access.*;
+import entity.Employee;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.ViewModel;
 import interface_adapter.office.OfficeViewModel;
 import interface_adapter.office.SimulateController;
 import interface_adapter.office.SimulatePresenter;
@@ -13,12 +13,8 @@ import interface_adapter.review.ReviewController;
 import interface_adapter.review.ReviewPresenter;
 import interface_adapter.review.ReviewViewModel;
 import use_case.product_prices.ProductPricesInteractor;
-import use_case.product_prices.ProductPricesOutputBoundary;
 import use_case.review.ReviewInteractor;
-import use_case.review.ReviewOutputData;
-import use_case.simulate.SimulateInputBoundary;
-import use_case.simulate.SimulateInteractor;
-import use_case.simulate.SimulateOutputBoundary;
+import use_case.simulate.*;
 import view.OfficeView;
 import view.ProductPricesView;
 import view.ViewManager;
@@ -45,9 +41,19 @@ public class AppBuilder {
     private ProductPricesView productPricesView;
     private ProductPricesViewModel productPricesViewModel;
 
+    private PantryDataAccessObject pantryDataAccessObject;
+    private ReviewDAOHash reviewManagerDataAccessObject;
+    private WageDataAccessObject wageDataAccessObject;
+    private PlayerDataAccessObject playerDataAccessObject;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
+
+        // Initialize data access objects
+        pantryDataAccessObject = new PantryDataAccessObject();
+        reviewManagerDataAccessObject = new ReviewDAOHash(new HashMap<>());
+        wageDataAccessObject = new WageDataAccessObject(new HashMap<>());
+        playerDataAccessObject = new PlayerDataAccessObject();
     }
 
     public AppBuilder addOfficeView() {
@@ -98,8 +104,24 @@ public class AppBuilder {
     public AppBuilder addSimulateUseCase() {
         final SimulateOutputBoundary simulateOutputBoundary = new SimulatePresenter(viewManagerModel,
                 officeViewModel);
-
-        final SimulateInputBoundary simulateInteractor = new SimulateInteractor(simulateOutputBoundary);
+        // hardcoded stuff
+        String[] dishNames = pantryDataAccessObject.getPantry().getDishNames();
+        Map<String, Integer> stock = new HashMap<>();
+        for (String dishName: dishNames) {
+            stock.put(dishName, 50);
+        }
+        pantryDataAccessObject.saveStock(stock);
+        Employee employee = new Employee(3, "Cook");
+        Employee employee1 = new Employee(3, "Waiter");
+        wageDataAccessObject.save(employee);
+        wageDataAccessObject.save(employee1);
+        final SimulateInputBoundary simulateInteractor = new SimulateInteractor(
+                simulateOutputBoundary,
+                pantryDataAccessObject,
+                reviewManagerDataAccessObject,
+                wageDataAccessObject,
+                playerDataAccessObject
+        );
 
         SimulateController controller = new SimulateController(simulateInteractor);
         officeView.setSimulationController(controller);
@@ -113,7 +135,7 @@ public class AppBuilder {
         application.setResizable(false);
 
         viewManagerModel.setState(officeView.getViewName());
-        officeViewModel.getState().setCurrentBalance(INITIAL_BALANCE);
+        officeViewModel.getState().setCurrentBalance(playerDataAccessObject.getPlayer().getBalance());
         officeViewModel.getState().setCurrentDay(INITIAL_DAY);
         officeViewModel.getState().setPastCustomerCount(INITIAL_PAST_CUSTOMER_COUNT);
         officeViewModel.firePropertyChange();
