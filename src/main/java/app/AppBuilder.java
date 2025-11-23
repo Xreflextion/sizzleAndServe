@@ -45,6 +45,8 @@ public class AppBuilder {
     private ProductPricesView productPricesView;
     private ProductPricesViewModel productPricesViewModel;
 
+    private ReviewDAOHash reviewDAO;
+
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -79,13 +81,13 @@ public class AppBuilder {
         ReviewPresenter reviewPresenter = new ReviewPresenter(reviewViewModel);
 
         // Creates a reviewDAO
-        ReviewDAOHash reviewDAO = new ReviewDAOHash(new HashMap<>());
+        this.reviewDAO = new ReviewDAOHash(new HashMap<>());
 
         // Creates a review interactor
-        ReviewInteractor  reviewInteractor = new ReviewInteractor(reviewDAO, reviewViewModel);
+        ReviewInteractor  reviewInteractor = new ReviewInteractor(reviewDAO, reviewPresenter);
 
         // Creates a review controller
-        ReviewController  reviewController = new ReviewController(reviewInteractor, reviewPresenter);
+        ReviewController  reviewController = new ReviewController(reviewInteractor);
 
         // Initializes View and add it to card panel
         ReviewView reviewView = new ReviewView(reviewController, reviewViewModel);
