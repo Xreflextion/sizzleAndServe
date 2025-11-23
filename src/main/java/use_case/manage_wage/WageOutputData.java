@@ -23,15 +23,6 @@ public class WageOutputData {
 
     }
 
-
-    public WageOutputData(int totalWage, double currentBalance) {
-        this.position = null;
-        this.wageAfter = 0;
-        this.wageEffectAfter = 0f;
-        this.totalWage = totalWage;
-        this.currentBalance = currentBalance;
-    }
-
     public String getPosition() { return position; }
 
     public int getWageAfter() { return wageAfter; }

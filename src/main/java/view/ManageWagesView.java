@@ -26,7 +26,6 @@ public class ManageWagesView extends JPanel implements ActionListener, PropertyC
     private JButton cookAdd;
     private JButton waiterMinus;
     private JButton cookMinus;
-    private JButton applyButton;
 
     private final int layOut1 = 20;
     private final int layOut2 = 10;
@@ -40,7 +39,6 @@ public class ManageWagesView extends JPanel implements ActionListener, PropertyC
         final JLabel title = new JLabel(ViewName);
         setLayout(new GridLayout(2, 1));
         /*Employee Panel
-
          */
         JPanel employeePanel = new JPanel();
         /* Cook Panel
@@ -73,14 +71,12 @@ public class ManageWagesView extends JPanel implements ActionListener, PropertyC
         totalWage.setFont(new Font("Arial", Font.BOLD, 18));
         currentBalance = new JLabel("Balance: " + wageViewModel.getState().getCurrentBalance());
         currentBalance.setFont(new Font("Arial", Font.BOLD, 18));
-        applyButton = new JButton("Apply");
 
         totalWagePanel.add(new JLabel("Total Wage: "));
         totalWagePanel.add(totalWage);
         totalWagePanel.add(Box.createHorizontalStrut(16));
         totalWagePanel.add(currentBalance);
         totalWagePanel.add(Box.createHorizontalStrut(16));
-        totalWagePanel.add(applyButton);
 
 
         employeePanel.add(cookPanel);
@@ -94,7 +90,6 @@ public class ManageWagesView extends JPanel implements ActionListener, PropertyC
         cookMinus.addActionListener(this);
         waiterAdd.addActionListener(this);
         waiterMinus.addActionListener(this);
-        applyButton.addActionListener(this);
     }
 
     // ✅ Setter for Controller
@@ -114,8 +109,6 @@ public class ManageWagesView extends JPanel implements ActionListener, PropertyC
             wageController.waiterIncrease();
         } else if (e.getSource() == waiterMinus) {
             wageController.waiterDecrease();
-        } else if (e.getSource() == applyButton) {
-            wageController.apply();
         }
     }
 

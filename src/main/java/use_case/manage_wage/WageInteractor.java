@@ -66,27 +66,4 @@ public class WageInteractor implements WageInputBoundary {
                         playerDataAccess.getPlayer().getBalance())
         );
     }
-
-    @Override
-    public void applyWages () {
-        Player player = playerDataAccess.getPlayer();
-        int total = Employee.getTotalWage();
-        double balance = player.getBalance();
-
-        if (total <= balance) {
-            player.setBalance(balance - total); // assumes Player has setBalance(int)
-            playerDataAccess.savePlayer(player);
-
-            presenter.prepareSuccessView(
-                    new WageOutputData(total, player.getBalance())
-            );
-        } else {
-            presenter.prepareErrorView("exceed current balance");
-            presenter.prepareSuccessView(
-                    new WageOutputData(total, balance)
-            );
-        }
-    }
-
-
     }

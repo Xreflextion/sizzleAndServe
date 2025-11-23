@@ -19,15 +19,13 @@ import java.util.Map;
 public class ManageWageAppBuilder {
     public static void main(String[] args) {
         final JPanel cardPanel = new JPanel();
-        // 1) Initialize the player
+        // 1) Initialize the playerDAO
         WagePlayerDataAccessInterface playerDataAccess= new PlayerDataAccessObject();
-        Player hardPlayer = new Player("test",100);
-        playerDataAccess.savePlayer(hardPlayer);
         // 2) Initialize the two employees with wage=0, effect=1 on every run
-        Map<String, Employee> employees = new HashMap<>();
-        employees.put("Cook", new Employee(0, "Cook"));
-        employees.put("Waiter", new Employee(0, "Waiter"));
-
+        Map<String, Employee> employees = new HashMap<>() {{
+            put("Cook", new Employee(1, "Cook"));
+            put("Waiter", new Employee(1, "Waiter"));
+        }};
         // 3) ViewModel + seed initial state so labels are correct immediately
         WageViewModel wageViewModel = new WageViewModel();
         WageState state = wageViewModel.getState();
@@ -50,6 +48,7 @@ public class ManageWageAppBuilder {
         wageView.setController(controller);
 
         JFrame application = new JFrame("Sizzle and Serve");
+        application.setSize(400, 300);
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         application.add(cardPanel);
         application.setContentPane(wageView);
