@@ -4,6 +4,7 @@ import app.AppBuilder;
 import interface_adapter.review.ReviewController;
 import interface_adapter.ViewModel;
 import interface_adapter.review.ReviewController;
+import interface_adapter.review.ReviewState;
 import interface_adapter.review.ReviewViewModel;
 import use_case.review.ReviewOutputData;
 
@@ -80,7 +81,7 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
         subtitle.setAlignmentX(CENTER_ALIGNMENT);
 
         // Button to select an overall review for restaurant
-        overallButton = new JButton(OVERALL_PANEL);
+        overallButton = new JButton("Overall");
         overallButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         overallButton.setFont(new Font(FONT, Font.PLAIN, BUTTON_FONT_SIZE));
         overallButton.addActionListener(this);
@@ -210,7 +211,7 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
 
         // Makes the overall button work
         if(e.getSource() == overallButton){
-            controller.getReviewOverall();
+            controller.getReview(null);
             cl.show(this, OVERALL_PANEL);
 
         }
@@ -231,12 +232,12 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        ReviewOutputData data = viewModel.getState();
-        if (data == null) return;
+        ReviewState state = viewModel.getState();
+        if (state == null) return;
 
         // Use the same data for whichever panel was just updated
-        String text = "Currently " + data.getRating() + " out of 5 stars";
-        String emoji = data.getEmoji();
+        String text = "Currently " + state.getRating() + " out of 5 stars";
+        String emoji = state.getEmoji();
 
         overallLabel.setText(text);
         overallEmoji.setText(emoji);
