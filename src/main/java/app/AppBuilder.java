@@ -50,6 +50,8 @@ public class AppBuilder {
     private BuyServingViewModel buyServingViewModel;
     private BuyServingView buyServingView;
 
+    PlayerDataAccessObject playerDAO = new PlayerDataAccessObject(INITIAL_BALANCE);
+    PantryDataAccessObject pantryDAO = new PantryDataAccessObject();
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -74,9 +76,7 @@ public class AppBuilder {
         return this;
     }
 
-    public AppBuilder addBuyServingView() {
-        PlayerDataAccessObject playerDAO = new PlayerDataAccessObject(INITIAL_BALANCE);
-        PantryDataAccessObject pantryDAO = new PantryDataAccessObject();
+    public AppBuilder addBuyServingViewAndUseCase() {
 
         buyServingViewModel = new BuyServingViewModel();
         buyServingViewModel.setNewBalance(playerDAO.getPlayer().getBalance());
