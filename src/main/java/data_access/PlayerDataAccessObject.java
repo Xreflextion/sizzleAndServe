@@ -6,8 +6,8 @@ import use_case.buy_serving.PlayerDataAccessInterface;
 public class PlayerDataAccessObject implements PlayerDataAccessInterface {
     private final Player player;
 
-    public PlayerDataAccessObject() {
-        this.player = new Player("Name", 100);
+    public PlayerDataAccessObject(double balance) {
+        this.player = new Player("Name", balance);
     }
 
     @Override

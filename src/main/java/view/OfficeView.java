@@ -1,6 +1,7 @@
 package view;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.buy_serving.BuyServingViewModel;
 import interface_adapter.manage_wages.WageViewModel;
 import interface_adapter.office.OfficeState;
 import interface_adapter.office.OfficeViewModel;
@@ -58,7 +59,7 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
                 {
                     if (evt.getSource().equals(inventoryButton)) {
                         System.out.println("Go to inventory");
-//                        this.viewManagerModel.setState(BuyServingViewModel.VIEW_NAME);
+                        this.viewManagerModel.setState(BuyServingViewModel.VIEW_NAME);
                         this.viewManagerModel.firePropertyChange();
                     }
                 }

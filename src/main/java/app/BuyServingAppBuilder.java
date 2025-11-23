@@ -12,9 +12,11 @@ import use_case.buy_serving.BuyServingInteractor;
 import javax.swing.JFrame;
 
 public class BuyServingAppBuilder {
+    public static final int INITIAL_BALANCE = 500;
+
     public static void main(String[] args) {
         // Initialize DAO, ViewModel, Presenter, Interactor
-        PlayerDataAccessObject playerDAO = new PlayerDataAccessObject();
+        PlayerDataAccessObject playerDAO = new PlayerDataAccessObject(INITIAL_BALANCE);
         PantryDataAccessObject pantryDAO = new PantryDataAccessObject();
 
         BuyServingViewModel viewModel = new BuyServingViewModel();
