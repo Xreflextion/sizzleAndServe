@@ -13,10 +13,4 @@ public interface WagePlayerDataAccessInterface {
      * @return the Player entity
      */
     Player getPlayer();
-    /**
-     * Saves the updated player information.
-     *
-     * @param player the Player entity with updated balance
-     */
-    void savePlayer(Player player);
 }

@@ -1,7 +1,6 @@
 package use_case.manage_wage;
 
 import entity.Employee;
-import entity.Player;
 
 import java.util.Map;
 /**
