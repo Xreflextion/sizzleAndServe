@@ -42,16 +42,15 @@ public class AppBuilder {
     private ProductPricesViewModel productPricesViewModel;
 
     private PantryDataAccessObject pantryDataAccessObject;
-    private ReviewDAOHash reviewManagerDataAccessObject;
     private WageDataAccessObject wageDataAccessObject;
     private PlayerDataAccessObject playerDataAccessObject;
+    private ReviewDAOHash reviewDAO;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
 
         // Initialize data access objects
         pantryDataAccessObject = new PantryDataAccessObject();
-        reviewManagerDataAccessObject = new ReviewDAOHash(new HashMap<>());
         wageDataAccessObject = new WageDataAccessObject(new HashMap<>());
         playerDataAccessObject = new PlayerDataAccessObject();
     }
@@ -85,13 +84,13 @@ public class AppBuilder {
         ReviewPresenter reviewPresenter = new ReviewPresenter(reviewViewModel);
 
         // Creates a reviewDAO
-        ReviewDAOHash reviewDAO = new ReviewDAOHash(new HashMap<>());
+        this.reviewDAO = new ReviewDAOHash(new HashMap<>());
 
         // Creates a review interactor
-        ReviewInteractor  reviewInteractor = new ReviewInteractor(reviewDAO, reviewViewModel);
+        ReviewInteractor  reviewInteractor = new ReviewInteractor(reviewDAO, reviewPresenter);
 
         // Creates a review controller
-        ReviewController  reviewController = new ReviewController(reviewInteractor, reviewPresenter);
+        ReviewController  reviewController = new ReviewController(reviewInteractor);
 
         // Initializes View and add it to card panel
         ReviewView reviewView = new ReviewView(reviewController, reviewViewModel);
@@ -118,7 +117,7 @@ public class AppBuilder {
         final SimulateInputBoundary simulateInteractor = new SimulateInteractor(
                 simulateOutputBoundary,
                 pantryDataAccessObject,
-                reviewManagerDataAccessObject,
+                reviewDAO,
                 wageDataAccessObject,
                 playerDataAccessObject
         );
