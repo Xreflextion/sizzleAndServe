@@ -20,8 +20,8 @@ public class BuyServingViewModel extends ViewModel<BuyServingViewModel.State> {
         setState(new State());
     }
 
-    public void setDishNames(String[] names) {
-        getState().dishNames = names;
+    public void setDishNames(String[] dishNames) {
+        getState().dishNames = dishNames;
         firePropertyChange();
     }
 

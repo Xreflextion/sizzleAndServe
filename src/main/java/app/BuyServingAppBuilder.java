@@ -32,7 +32,6 @@ public class BuyServingAppBuilder {
             dishCosts[i] = pantryDAO.getPantry().getRecipe(dishNames[i]).getBasePrice();
             dishStocks[i] = pantryDAO.getPantry().getRecipe(dishNames[i]).getStock();
         }
-        viewModel.setDishNames(dishNames);
         viewModel.setDishCosts(dishCosts);
         viewModel.setDishStocks(dishStocks);
 

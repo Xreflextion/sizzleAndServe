@@ -81,7 +81,6 @@ public class AppBuilder {
         buyServingViewModel = new BuyServingViewModel();
         buyServingViewModel.setNewBalance(playerDAO.getPlayer().getBalance());
 
-        // 初始化菜名、成本、库存
         String[] dishNames = pantryDAO.getPantry().getDishNames();
         int[] dishCosts = new int[dishNames.length];
         int[] dishStocks = new int[dishNames.length];
