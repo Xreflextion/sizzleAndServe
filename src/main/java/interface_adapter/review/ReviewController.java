@@ -31,7 +31,7 @@ public class ReviewController {
 
     // Return available days
     public List<Integer> getAvailableDays() {
-        return ((ReviewInteractor) reviewInteractor).getAvailableDays();
+        return reviewInteractor.getAvailableDays();
     }
 }
 

@@ -9,7 +9,7 @@ public class ReviewPresenter implements ReviewOutputBoundary {
     // viewModel is needed since the presenter receives output data then sends to viewModel to update the GUI
     private final ReviewViewModel reviewViewModel;
 
-    public ReviewPresenter(interface_adapter.review.ReviewViewModel reviewViewModel) {
+    public ReviewPresenter(ReviewViewModel reviewViewModel) {
         this.reviewViewModel = reviewViewModel;
     }
 
