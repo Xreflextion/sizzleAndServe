@@ -96,7 +96,7 @@ public class AppBuilder {
         BuyServingInteractor interactor = new BuyServingInteractor(playerDAO, pantryDAO, presenter);
         BuyServingController controller = new BuyServingController(interactor);
 
-        buyServingView = new BuyServingView(controller, buyServingViewModel);
+        buyServingView = new BuyServingView(controller, buyServingViewModel, viewManagerModel);
         cardPanel.add(buyServingView, BuyServingViewModel.VIEW_NAME);
 
         return this;
