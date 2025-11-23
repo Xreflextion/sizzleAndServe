@@ -1,26 +1,26 @@
 package interface_adapter.review;
 
 
+import use_case.review.ReviewOutputBoundary;
 import use_case.review.ReviewOutputData;
 
-public class ReviewPresenter{
+public class ReviewPresenter implements ReviewOutputBoundary {
 
     // viewModel is needed since the presenter receives output data then sends to viewModel to update the GUI
-    private final ReviewViewModel viewModel;
-    public ReviewPresenter(interface_adapter.review.ReviewViewModel viewModel) {
-        this.viewModel = viewModel;
+    private final ReviewViewModel reviewViewModel;
+
+    public ReviewPresenter(interface_adapter.review.ReviewViewModel reviewViewModel) {
+        this.reviewViewModel = reviewViewModel;
     }
 
 
-    // Presents the overall review
-    public void presentOverallReview(ReviewOutputData output){
-        viewModel.setState(output);
-        viewModel.firePropertyChange();
-    }
+    @Override
+    public void present(ReviewOutputData reviewOutputData) {
+        ReviewState state = reviewViewModel.getState();
+        state.setRating(reviewOutputData.getRating());
+        state.setEmoji(reviewOutputData.getEmoji());
 
-    // Presents the overall review by the day
-    public void presentDayReview(int day, ReviewOutputData output) {
-        viewModel.setState(output);
-        viewModel.firePropertyChange();
+        reviewViewModel.setState(state);
+        reviewViewModel.firePropertyChange();
     }
 }
