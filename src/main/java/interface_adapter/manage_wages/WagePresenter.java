@@ -15,15 +15,27 @@ public class WagePresenter implements WageOutputBoundary {
     public void prepareSuccessView(WageOutputData data) {
         WageState state = viewModel.getState();
 
-        if ("Cook".equals(data.getPosition())) {
+        if (data.getPosition()!=null){
+            if ("Cook".equals(data.getPosition())) {
             state.setCookWage(data.getWageAfter());
             state.setCookWageEffect(data.getWageEffectAfter());
         } else if ("Waiter".equals(data.getPosition())) {
             state.setWaiterWage(data.getWageAfter());
             state.setWaiterWageEffect(data.getWageEffectAfter());
-        }
+        }}
+
+        state.setCurrentBalance(data.getCurrentBalance());
+        state.setWarningMessage(null);
         viewModel.setState(state);
         viewModel.firePropertyChange();
 
     }
+
+    public void prepareErrorView(String message) {
+        WageState state = viewModel.getState();
+        state.setWarningMessage(message);
+        viewModel.setState(state);
+        viewModel.firePropertyChange();
+    }
+
 }
