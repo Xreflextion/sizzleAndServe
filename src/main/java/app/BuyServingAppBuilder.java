@@ -1,13 +1,13 @@
 package app;
 
 import data_access.PlayerDataAccessObject;
-import interface_adapter.BuyServing.BuyServingController;
-import interface_adapter.BuyServing.BuyServingPresenter;
-import interface_adapter.BuyServing.BuyServingViewModel;
+import interface_adapter.buy_serving.BuyServingController;
+import interface_adapter.buy_serving.BuyServingPresenter;
+import interface_adapter.buy_serving.BuyServingViewModel;
 import view.BuyServingView;
 import data_access.PantryDataAccessObject;
 
-import use_case.BuyServing.BuyServingInteractor;
+import use_case.buy_serving.BuyServingInteractor;
 
 import javax.swing.JFrame;
 

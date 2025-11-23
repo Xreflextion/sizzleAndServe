@@ -1,4 +1,4 @@
-package use_case.BuyServing;
+package use_case.buy_serving;
 
 public class BuyServingOutputData {
 

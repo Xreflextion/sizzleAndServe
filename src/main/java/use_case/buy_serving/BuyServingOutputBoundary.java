@@ -1,4 +1,4 @@
-package use_case.BuyServing;
+package use_case.buy_serving;
 
 /**
  * The Output Boundary for the Buy Servings Use Case.

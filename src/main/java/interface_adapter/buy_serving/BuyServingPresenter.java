@@ -1,7 +1,7 @@
-package interface_adapter.BuyServing;
+package interface_adapter.buy_serving;
 
-import use_case.BuyServing.BuyServingOutputBoundary;
-import use_case.BuyServing.BuyServingOutputData;
+import use_case.buy_serving.BuyServingOutputBoundary;
+import use_case.buy_serving.BuyServingOutputData;
 
 /**
  * The Presenter for the BuyServing Use Case.
