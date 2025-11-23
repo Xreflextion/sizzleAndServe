@@ -1,7 +1,7 @@
-package interface_adapter.BuyServing;
+package interface_adapter.buy_serving;
 
-import use_case.BuyServing.BuyServingInputBoundary;
-import use_case.BuyServing.BuyServingInputData;
+import use_case.buy_serving.BuyServingInputBoundary;
+import use_case.buy_serving.BuyServingInputData;
 
 public class BuyServingController {
     private final BuyServingInputBoundary interactor;

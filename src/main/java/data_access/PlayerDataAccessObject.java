@@ -1,7 +1,7 @@
 package data_access;
 
 import entity.Player;
-import use_case.BuyServing.PlayerDataAccessInterface;
+import use_case.buy_serving.PlayerDataAccessInterface;
 
 public class PlayerDataAccessObject implements PlayerDataAccessInterface {
     private final Player player;
