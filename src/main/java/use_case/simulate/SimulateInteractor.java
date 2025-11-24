@@ -16,9 +16,9 @@ public class SimulateInteractor implements SimulateInputBoundary {
 
     private final String COOK_POSITION = "Cook";
     private final String WAITER_POSITION = "Waiter";
-    private final double COOK_EFFECT_REDUCTION = 0;
+    private final double COOK_EFFECT_REDUCTION = 2.0;
     // Amount to subtract from cook effect to allow cook effect to impact customer count negatively
-    private final double WAITER_EFFECT_REDUCTION = 1.5;
+    private final double WAITER_EFFECT_REDUCTION = 2.0;
     // Amount to subtract from waiter effect to allow waiter effect to impact reviews negatively
     private final int WAGE_MULTIPLER = 5; // Amount to multiply total wage by to get the expense
 
@@ -189,11 +189,10 @@ public class SimulateInteractor implements SimulateInputBoundary {
         System.out.println("orig cus count");
         System.out.println(customerCount);
         // Step 2: Add some customers to the count based on the cook effect
-        // - We subtract a COOK_EFFECT_REDUCTION from the cookEffect so there is a chance
-        //      of the cook wage negatively impacting the customer count (A)
+        // - We divide a COOK_EFFECT_REDUCTION from the cookEffect so cookEffect is less effective under a threshold
         // - We multiply A by customerCount (B)
         // - We multiply B by 1/(customerCount - 0.7) so if the customerCount was small, we will increase it more
-        double cookEffectAddition = (cookEffect-COOK_EFFECT_REDUCTION)*customerCount*(1/(customerCount - 0.7));
+        double cookEffectAddition = (cookEffect/COOK_EFFECT_REDUCTION)*customerCount*(1/(customerCount - 0.7));
         System.out.println("cook effect addition and result " + cookEffectAddition + " " + customerCount);
         customerCount += cookEffectAddition;
         if (rating > 0) {
