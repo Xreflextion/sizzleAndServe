@@ -23,23 +23,8 @@ public class BuyServingInteractor implements BuyServingInputBoundary{
         int[] servingsToBuy = inputData.getServingsToBuy();
         double totalCost = 0;
 
-        for (int i = 0; i < dishNames.length; i++) {
+        for (int i = 0; i < servingsToBuy.length; i++) {
             Recipe recipe = pantry.getRecipe(dishNames[i]);
-            if (recipe == null) {
-                String[] emptyNames = new String[dishNames.length];
-                int[] emptyCosts = new int[dishNames.length];
-                int[] emptyStocks = new int[dishNames.length];
-                BuyServingOutputData output = new BuyServingOutputData(
-                        false,
-                        "Dish not found: " + dishNames[i],
-                        player.getBalance(),
-                        emptyNames,
-                        emptyCosts,
-                        emptyStocks
-                );
-                outputBoundary.present(output);
-                return;
-            }
             totalCost += recipe.getBasePrice() * servingsToBuy[i];
         }
 
@@ -47,16 +32,12 @@ public class BuyServingInteractor implements BuyServingInputBoundary{
         final double EPSILON = 1e-10;
 
         if (balance + EPSILON < totalCost) {
-            String[] emptyNames = new String[dishNames.length];
-            int[] emptyCosts = new int[dishNames.length];
-            int[] emptyStocks = new int[dishNames.length];
             BuyServingOutputData output = new BuyServingOutputData(
                     false,
                     "Transaction failed.",
                     balance,
-                    emptyNames,
-                    emptyCosts,
-                    emptyStocks
+                    null,
+                    null
             );
             outputBoundary.present(output);
             return;
@@ -72,11 +53,9 @@ public class BuyServingInteractor implements BuyServingInputBoundary{
         playerDao.savePlayer(player);
         pantryDao.savePantry(pantry);
 
-        String[] updatedDishNames = new String[dishNames.length];
         int[] updatedDishCosts = new int[dishNames.length];
         int[] updatedDishStocks = new int[dishNames.length];
         for (int i = 0; i < dishNames.length; i++) {
-            updatedDishNames[i] = dishNames[i];
             Recipe recipe = pantry.getRecipe(dishNames[i]);
             updatedDishCosts[i] = recipe.getBasePrice();
             updatedDishStocks[i] = recipe.getStock();
@@ -86,7 +65,6 @@ public class BuyServingInteractor implements BuyServingInputBoundary{
                 true,
                 "Transaction succeeded.",
                 newBalance,
-                updatedDishNames,
                 updatedDishCosts,
                 updatedDishStocks
         );

@@ -7,8 +7,8 @@ public class PlayerDataAccessObject implements PlayerDataAccessInterface,
         WagePlayerDataAccessInterface {
     private final Player player;
 
-    public PlayerDataAccessObject() {
-        this.player = new Player("Name", 10);
+    public PlayerDataAccessObject(double balance) {
+        this.player = new Player("Name", balance);
     }
 
     @Override

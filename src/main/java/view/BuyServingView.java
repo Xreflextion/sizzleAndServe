@@ -4,11 +4,14 @@ import interface_adapter.buy_serving.BuyServingViewModel;
 import interface_adapter.buy_serving.BuyServingController;
 import java.awt.*;
 import javax.swing.*;
+import interface_adapter.ViewManagerModel;
+import interface_adapter.office.OfficeViewModel;
 
 public class BuyServingView extends JPanel {
 
     private final BuyServingController controller;
     private final BuyServingViewModel viewModel;
+    private final ViewManagerModel viewManagerModel;
 
     private JLabel balanceLabel;
 
@@ -19,9 +22,11 @@ public class BuyServingView extends JPanel {
 
     private int[] quantities;
 
-    public BuyServingView(BuyServingController controller, BuyServingViewModel viewModel) {
+    public BuyServingView(BuyServingController controller, BuyServingViewModel viewModel,
+                          ViewManagerModel viewManagerModel) {
         this.controller = controller;
         this.viewModel = viewModel;
+        this.viewManagerModel = viewManagerModel;
 
         quantities = new int[3];
 
@@ -129,6 +134,17 @@ public class BuyServingView extends JPanel {
         });
         confirmPanel.add(confirmButton);
         this.add(confirmPanel);
+
+        // Back to Office Button Panel
+        JPanel backPanel = new JPanel();
+        backPanel.setLayout(new BoxLayout(backPanel, BoxLayout.X_AXIS));
+        JButton backButton = new JButton("Back to Office");
+        backButton.addActionListener(e -> {
+            viewManagerModel.setState(OfficeViewModel.VIEW_NAME);
+            viewManagerModel.firePropertyChange();
+        });
+        backPanel.add(backButton);
+        this.add(backPanel);
     }
 
     public void updateView() {
