@@ -8,6 +8,7 @@ public class Main {
         JFrame application = appBuilder
                 .addOfficeView()
                 .addProductPricesView()
+                .addBuyServingViewAndUseCase()
                 .addReviewViewAndUseCase()
                 .addManageWageUseCase()
                 .addSimulateUseCase()

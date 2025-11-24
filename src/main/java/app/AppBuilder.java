@@ -14,6 +14,10 @@ import interface_adapter.office.SimulatePresenter;
 import interface_adapter.product_prices.ProductPricesController;
 import interface_adapter.product_prices.ProductPricesPresenter;
 import interface_adapter.product_prices.ProductPricesViewModel;
+import interface_adapter.buy_serving.BuyServingController;
+import interface_adapter.buy_serving.BuyServingPresenter;
+import interface_adapter.buy_serving.BuyServingViewModel;
+import use_case.buy_serving.BuyServingInteractor;
 import interface_adapter.review.ReviewController;
 import interface_adapter.review.ReviewPresenter;
 import interface_adapter.review.ReviewViewModel;
@@ -51,6 +55,11 @@ public class AppBuilder {
     private ProductPricesView productPricesView;
     private ProductPricesViewModel productPricesViewModel;
 
+    private BuyServingViewModel buyServingViewModel;
+    private BuyServingView buyServingView;
+
+    PlayerDataAccessObject playerDAO = new PlayerDataAccessObject(INITIAL_BALANCE);
+    PantryDataAccessObject pantryDAO = new PantryDataAccessObject();
     private ReviewDAOHash reviewDAO;
 
 
@@ -74,6 +83,32 @@ public class AppBuilder {
         ProductPricesController productPricesController = new ProductPricesController(productPricesInteractor);
         productPricesView = new ProductPricesView(productPricesViewModel, productPricesController);
         cardPanel.add(productPricesView, productPricesView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addBuyServingViewAndUseCase() {
+
+        buyServingViewModel = new BuyServingViewModel();
+        buyServingViewModel.setNewBalance(playerDAO.getPlayer().getBalance());
+
+        String[] dishNames = pantryDAO.getPantry().getDishNames();
+        int[] dishCosts = new int[dishNames.length];
+        int[] dishStocks = new int[dishNames.length];
+        for (int i = 0; i < dishNames.length; i++) {
+            dishCosts[i] = pantryDAO.getPantry().getRecipe(dishNames[i]).getBasePrice();
+            dishStocks[i] = pantryDAO.getPantry().getRecipe(dishNames[i]).getStock();
+        }
+        buyServingViewModel.setDishNames(dishNames);
+        buyServingViewModel.setDishCosts(dishCosts);
+        buyServingViewModel.setDishStocks(dishStocks);
+
+        BuyServingPresenter presenter = new BuyServingPresenter(buyServingViewModel);
+        BuyServingInteractor interactor = new BuyServingInteractor(playerDAO, pantryDAO, presenter);
+        BuyServingController controller = new BuyServingController(interactor);
+
+        buyServingView = new BuyServingView(controller, buyServingViewModel, viewManagerModel);
+        cardPanel.add(buyServingView, BuyServingViewModel.VIEW_NAME);
+
         return this;
     }
 

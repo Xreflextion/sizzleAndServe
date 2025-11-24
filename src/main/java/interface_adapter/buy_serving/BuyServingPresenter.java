@@ -19,9 +19,12 @@ public class BuyServingPresenter implements BuyServingOutputBoundary {
         viewModel.setMessage(outputData.getMessage());
         viewModel.setNewBalance(outputData.getNewBalance());
         viewModel.setSuccess(outputData.isSuccess());
-        viewModel.setDishNames(outputData.getDishNames());
-        viewModel.setDishCosts(outputData.getDishCosts());
-        viewModel.setDishStocks(outputData.getDishStocks());
+        if (outputData.getDishCosts() != null) {
+            viewModel.setDishCosts(outputData.getDishCosts());
+        }
+        if (outputData.getDishStocks() != null) {
+            viewModel.setDishStocks(outputData.getDishStocks());
+        }
         viewModel.firePropertyChange("buyServing");
     }
 }
