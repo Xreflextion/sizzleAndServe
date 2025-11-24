@@ -10,6 +10,7 @@ public class Main {
                 .addProductPricesView()
                 .addBuyServingViewAndUseCase()
                 .addReviewViewAndUseCase()
+                .addManageWageViewAndUseCase()
                 .addSimulateUseCase()
                 .build();
 
