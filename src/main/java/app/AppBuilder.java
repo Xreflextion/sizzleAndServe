@@ -105,7 +105,7 @@ public class AppBuilder {
     public AppBuilder addSimulateUseCase() {
         final SimulateOutputBoundary simulateOutputBoundary = new SimulatePresenter(viewManagerModel,
                 officeViewModel);
-        // hardcoded stuff
+        // TODO remove this hardcoded stuff
         String[] dishNames = pantryDataAccessObject.getPantry().getDishNames();
         Map<String, Integer> stock = new HashMap<>();
         for (String dishName: dishNames) {
@@ -139,7 +139,7 @@ public class AppBuilder {
         viewManagerModel.setState(officeView.getViewName());
         officeViewModel.getState().setCurrentBalance(playerDataAccessObject.getPlayer().getBalance());
         officeViewModel.getState().setCurrentDay(INITIAL_DAY);
-        officeViewModel.getState().setPastCustomerCount(INITIAL_PAST_CUSTOMER_COUNT);
+        officeViewModel.getState().setCurrentCustomerCount(INITIAL_PAST_CUSTOMER_COUNT);
         officeViewModel.firePropertyChange();
         viewManagerModel.firePropertyChange();
 

@@ -1,9 +1,9 @@
 package interface_adapter.office;
 
 public class OfficeState {
-    private int currentDay;
-    private double currentBalance;
-    private int pastCustomerCount;
+    private int currentDay; // Simulation has already occurred for this day
+    private double currentBalance; // Balance after simulation has occurred for this day
+    private int currentCustomerCount; // The number of customers that occurred for this day
 
     public int getCurrentDay() {
         return currentDay;
@@ -21,12 +21,12 @@ public class OfficeState {
     }
 
 
-    public int getPastCustomerCount() {
-        return pastCustomerCount;
+    public int getCurrentCustomerCount() {
+        return currentCustomerCount;
     }
 
-    public void setPastCustomerCount(int newCustomerCount) {
-        pastCustomerCount = newCustomerCount;
+    public void setCurrentCustomerCount(int newCustomerCount) {
+        currentCustomerCount = newCustomerCount;
     }
 
 

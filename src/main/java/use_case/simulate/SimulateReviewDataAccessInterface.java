@@ -9,6 +9,4 @@ public interface SimulateReviewDataAccessInterface {
     void addReview(ReviewEntity reviewEntity);
 
     ArrayList<Double> getReviewsByDay(int day);
-
-//    double getAverageRating(int day);
 }

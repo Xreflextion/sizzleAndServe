@@ -23,6 +23,11 @@ import java.util.Map;
         public void save(Employee employee) {
             employees.put(employee.getPosition(), employee);
         }
+
+        @Override
+        public int getTotalWage() {
+            return Employee.getTotalWage();
+        }
     }
 
 

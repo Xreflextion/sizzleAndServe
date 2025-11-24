@@ -1,7 +1,6 @@
 package view;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.manage_wages.WageViewModel;
 import interface_adapter.office.OfficeState;
 import interface_adapter.office.OfficeViewModel;
 import interface_adapter.office.SimulateController;
@@ -130,7 +129,7 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
                         simulationController.execute(
                                 currentState.getCurrentDay(),
                                 currentState.getCurrentBalance(),
-                                currentState.getPastCustomerCount()
+                                currentState.getCurrentCustomerCount()
                         );
                     }
                 }
@@ -161,7 +160,7 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
             final OfficeState state = (OfficeState) evt.getNewValue();
             curDayLabel.setText(OfficeViewModel.CURRENT_DAY_LABEL + state.getCurrentDay());
             curBalanceLabel.setText(OfficeViewModel.CURRENT_BALANCE_LABEL + state.getCurrentBalance());
-            pastCustomerCountLabel.setText(OfficeViewModel.PAST_CUSTOMER_COUNT_LABEL + state.getPastCustomerCount());
+            pastCustomerCountLabel.setText(OfficeViewModel.CURRENT_CUSTOMER_COUNT_LABEL + state.getCurrentCustomerCount());
         }
     }
 
