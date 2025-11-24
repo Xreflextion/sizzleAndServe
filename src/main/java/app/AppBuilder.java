@@ -1,8 +1,12 @@
 package app;
 
 import data_access.*;
+import entity.Employee;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.ViewModel;
+import interface_adapter.manage_wages.WageController;
+import interface_adapter.manage_wages.WagePresenter;
+import interface_adapter.manage_wages.WageState;
+import interface_adapter.manage_wages.WageViewModel;
 import interface_adapter.office.OfficeViewModel;
 import interface_adapter.office.SimulateController;
 import interface_adapter.office.SimulatePresenter;
@@ -16,10 +20,10 @@ import use_case.buy_serving.BuyServingInteractor;
 import interface_adapter.review.ReviewController;
 import interface_adapter.review.ReviewPresenter;
 import interface_adapter.review.ReviewViewModel;
+import use_case.manage_wage.WageInteractor;
+import use_case.manage_wage.WageUserDataAccessInterface;
 import use_case.product_prices.ProductPricesInteractor;
-import use_case.product_prices.ProductPricesOutputBoundary;
 import use_case.review.ReviewInteractor;
-import use_case.review.ReviewOutputData;
 import use_case.simulate.SimulateInputBoundary;
 import use_case.simulate.SimulateInteractor;
 import use_case.simulate.SimulateOutputBoundary;
@@ -53,6 +57,12 @@ public class AppBuilder {
     PlayerDataAccessObject playerDAO = new PlayerDataAccessObject(INITIAL_BALANCE);
     PantryDataAccessObject pantryDAO = new PantryDataAccessObject();
     private ReviewDAOHash reviewDAO;
+
+    private ManageWagesView wageView;
+    WageUserDataAccessInterface wageDAO;
+    private WageViewModel wageViewModel;
+    private Map<String, Employee> employees = new HashMap<>();
+
 
 
     public AppBuilder() {
@@ -126,6 +136,37 @@ public class AppBuilder {
         ReviewView reviewView = new ReviewView(reviewController, reviewViewModel, viewManagerModel);
         cardPanel.add(reviewView, ReviewViewModel.VIEW_NAME);
 
+        return this;
+    }
+
+    // Adds the ManageWageView to the app builder
+    public AppBuilder addManageWageViewAndUseCase() {
+
+        // 1) Initialize the two employees with wage=1, effect=1 on every run
+       employees.put("Cook", new Employee(1, "Cook"));
+       employees.put("Waiter", new Employee(1, "Waiter"));
+
+        // 2) ViewModel + seed initial state so labels are correct immediately
+        wageViewModel = new WageViewModel();
+        WageState state = wageViewModel.getState();
+        state.setCookWage(employees.get("Cook").getWage());                // 0
+        state.setCookWageEffect(employees.get("Cook").getWageEffect());    // 1.0
+        state.setWaiterWage(employees.get("Waiter").getWage());            // 0
+        state.setWaiterWageEffect(employees.get("Waiter").getWageEffect());// 1.0
+        state.setCurrentBalance(playerDAO.getPlayer().getBalance());
+        wageViewModel.setState(state); // fires property change
+
+        // 3) WageDataAccess + Presenter + Controller
+        wageDAO = new WageDataAccessObject(employees);
+        WagePresenter presenter = new WagePresenter(wageViewModel);
+        WageController controller =
+                new WageController(new WageInteractor(wageDAO, playerDAO, presenter, employees));
+
+        // 4) Build the view and inject the controller
+        wageView = new ManageWagesView(wageViewModel,viewManagerModel);
+        wageView.setController(controller);
+        // 5) Add view to the cardPanel
+        cardPanel.add(wageView,wageViewModel.getViewName());
         return this;
     }
 
