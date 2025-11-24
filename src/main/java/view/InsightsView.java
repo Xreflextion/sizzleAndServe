@@ -3,47 +3,70 @@ package view;
 // import org.json.JSONArray;
 // import org.json.JSONObject;
 
+import interface_adapter.insight.InsightsState;
+import interface_adapter.insight.InsightsViewModel;
+import interface_adapter.insight.PerformanceCalculationController;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 
-public class InsightsView extends JPanel {
+public class InsightsView extends JPanel implements PropertyChangeListener {
 
+    private final InsightsViewModel viewModel;
+    private final PerformanceCalculationController controller;
 
-    public InsightsView() {
+    private JLabel revenueValueLabel;
+    private JLabel expensesValueLabel;
+    private JLabel profitValueLabel;
+    private JLabel averageRatingValueLabel;
+
+    private JPanel drillDownPanel;
+
+    public InsightsView(InsightsViewModel viewModel, PerformanceCalculationController controller) {
+        this.viewModel = viewModel;
+        this.controller = controller;
+        this.viewModel.addPropertyChangeListener(this);
+
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         add(buildPerformanceSummaryPanel());
-        add(buildChartPanel());
+        // add(buildChartPanel());
         add(buildDrillDownPanel());
         add(buildBackToMainPanel());
+
+        controller.displayInsights();
     }
 
     private JPanel buildPerformanceSummaryPanel() {
 
         JPanel revenuePanel = new JPanel();
         revenuePanel.add(new JLabel("Revenue: $"));
-        JLabel revenueValue = new JLabel(" - ");
-        revenuePanel.add(revenueValue);
+        revenueValueLabel = new JLabel(" - ");
+        revenuePanel.add(revenueValueLabel);
 
         JPanel expensesPanel = new JPanel();
         expensesPanel.add(new JLabel("Expenses: $"));
-        JLabel expensesValue = new JLabel(" - ");
-        expensesPanel.add(expensesValue);
+        expensesValueLabel = new JLabel(" - ");
+        expensesPanel.add(expensesValueLabel);
 
         JPanel profitPanel = new JPanel();
         profitPanel.add(new JLabel("Profit: $"));
-        JLabel profitValue = new JLabel(" - ");
-        profitPanel.add(profitValue);
+        profitValueLabel = new JLabel(" - ");
+        profitPanel.add(profitValueLabel);
 
         JPanel averageRatingPanel = new JPanel();
         averageRatingPanel.add(new JLabel("Average Rating: "));
-        JLabel averageRatingValue = new JLabel(" - ");
-        averageRatingPanel.add(averageRatingValue);
+        averageRatingValueLabel = new JLabel(" - ");
+        averageRatingPanel.add(averageRatingValueLabel);
 
         JPanel performanceSummaryPanel = new JPanel();
-        JLabel titleLabel = new JLabel("Today's Performance Summary");
+        JLabel titleLabel = new JLabel("Overall Performance Summary");
         performanceSummaryPanel.add(titleLabel);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         performanceSummaryPanel.setLayout(new BoxLayout(performanceSummaryPanel, BoxLayout.Y_AXIS));
         performanceSummaryPanel.add(revenuePanel);
         performanceSummaryPanel.add(expensesPanel);
@@ -53,19 +76,17 @@ public class InsightsView extends JPanel {
         return performanceSummaryPanel;
     }
 
-    private JPanel buildChartPanel() {
-        JPanel panel = new JPanel();
-        panel.add(new JLabel("TO BE COMPLETED -- ADD TREND CHART"));
-        return panel;
-    }
+//    private JPanel buildChartPanel() {
+//        JPanel panel = new JPanel();
+//        panel.add(new JLabel("TO BE COMPLETED -- ADD TREND CHART"));
+//        return panel;
+//    }
 
     private JPanel buildDrillDownPanel() {
         JPanel panel = new JPanel();
         panel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        // to be corrected to LOOP based on # of days passed
-        panel.add(new JButton("Day 1"));
-        panel.add(new JButton("Day 2"));
-        panel.add(new JButton("Day 3"));
+
+        updateDrillDownButtons(viewModel.getState());
         return panel;
     }
 
@@ -77,17 +98,41 @@ public class InsightsView extends JPanel {
 
     }
 
-//     public static void main(String[] args) {
-//         SwingUtilities.invokeLater(() -> {
-//             JFrame frame = new JFrame("Insights View");
-//             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//
-//             InsightsView insightsView = new InsightsView();
-//             frame.setContentPane(insightsView);
-//
-//             frame.setSize(900, 600);
-//             frame.setLocationRelativeTo(null); // center on screen
-//             frame.setVisible(true);
-//         });
-//     }
+    @Override
+    public void propertyChange(PropertyChangeEvent event) {
+        InsightsState state = viewModel.getState();
+        updateFromState(state);
+    }
+
+    private void updateFromState(InsightsState state) {
+        if (state == null) {
+            return;
+        }
+
+        revenueValueLabel.setText(String.valueOf(state.getTotalRevenue()));
+        expensesValueLabel.setText(String.valueOf(state.getTotalExpenses()));
+        profitValueLabel.setText(String.valueOf(state.getTotalProfits()));
+        averageRatingValueLabel.setText(String.valueOf(state.getAverageRating()));
+
+        updateDrillDownButtons(state);
+    }
+
+    private void updateDrillDownButtons(InsightsState state) {
+        if (drillDownPanel == null||state==null) {
+            return;
+        }
+        drillDownPanel.removeAll();
+        int numberOfDays = state.getNumberOfDays();
+        if (numberOfDays <= 0) {
+            drillDownPanel.add(new JLabel("No days to show yet"));
+        } else{
+            for (int i=1; i<=numberOfDays; i++) {
+                JButton drillDownDayButton = new JButton("Day "+i);
+                drillDownPanel.add(drillDownDayButton);
+            }
+        }
+        drillDownPanel.revalidate();
+        drillDownPanel.repaint();
+    }
+
 }
