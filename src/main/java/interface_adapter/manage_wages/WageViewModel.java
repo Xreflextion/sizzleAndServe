@@ -4,7 +4,7 @@ import interface_adapter.ViewModel;
 
 public class WageViewModel extends ViewModel<WageState> {
 
-    public static final String TITLE = "Manage Employees' Wages";
+    public static final String VIEW_NAME = "Manage Employees' Wages";
     public static final String WAITER = "Waiter";
     public static final String WAGE = "Wage";
     public static final String COOK = "Cook";
@@ -13,7 +13,7 @@ public class WageViewModel extends ViewModel<WageState> {
     public static final String COOK_WAGE_EFFECT = "Number of Customers alters by 20%";
 
     public WageViewModel() {
-        super("Manage Wage");
+        super(VIEW_NAME);
         setState(new WageState());
     }
 
