@@ -7,7 +7,7 @@ public class Employee {
    every 1 increase in waiter's wage leads to 20 percentage point increase in rating
    every 1 increase in cook's wage leads to -20 percentage point preparation time needed
     */
-    private static final int MIN_WAGE = 1;
+    private static final int MIN_WAGE = 50;
     private static int totalWage = 0;
     /*
     a static variable that is responsible for counting total wages and should be used in daily expense
@@ -32,16 +32,16 @@ public class Employee {
     }
 
     public void increaseWage() {
-        this.wage++;
+        this.wage += 10;
         this.wageEffect += 0.2f;
-        totalWage++;
+        totalWage += 10;
     }
 
     public void decreaseWage() {
         if (this.wage > MIN_WAGE) {
-            this.wage--;
+            this.wage -= 10;
             this.wageEffect -= 0.2f;
-            totalWage--;
+            totalWage -= 10;
         }
     }
 
