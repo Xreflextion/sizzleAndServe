@@ -45,8 +45,6 @@ public class AppBuilder {
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
     private ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
-    private final PantryDataAccessObject pantryDataAccessObject = new PantryDataAccessObject();
-
     private OfficeViewModel officeViewModel;
     private OfficeView officeView;
 
@@ -79,11 +77,11 @@ public class AppBuilder {
     }
 
     public AppBuilder addProductPricesView() {
-        Map<String, Recipe> recipes = pantryDataAccessObject.getPantry().getPantry();
+        Map<String, Recipe> recipes = pantryDAO.getPantry().getPantry();
         productPricesViewModel = new ProductPricesViewModel(recipes);
         ProductPricesPresenter productPricesPresenter = new ProductPricesPresenter(productPricesViewModel,
                 viewManagerModel);
-        ProductPricesInteractor productPricesInteractor = new ProductPricesInteractor(pantryDataAccessObject,
+        ProductPricesInteractor productPricesInteractor = new ProductPricesInteractor(pantryDAO,
                 productPricesPresenter);
         ProductPricesController productPricesController = new ProductPricesController(productPricesInteractor);
         productPricesView = new ProductPricesView(productPricesViewModel, productPricesController, viewManagerModel);
