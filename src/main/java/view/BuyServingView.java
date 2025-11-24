@@ -1,7 +1,7 @@
 package view;
 
-import interface_adapter.BuyServing.BuyServingViewModel;
-import interface_adapter.BuyServing.BuyServingController;
+import interface_adapter.buy_serving.BuyServingViewModel;
+import interface_adapter.buy_serving.BuyServingController;
 import java.awt.*;
 import javax.swing.*;
 
