@@ -55,13 +55,13 @@ public class AppBuilder {
     private BuyServingViewModel buyServingViewModel;
     private BuyServingView buyServingView;
 
-    PlayerDataAccessObject playerDAO = new PlayerDataAccessObject(INITIAL_BALANCE);
-    PantryDataAccessObject pantryDAO = new PantryDataAccessObject();
+    private PlayerDataAccessObject playerDAO = new PlayerDataAccessObject(INITIAL_BALANCE);
+    private PantryDataAccessObject pantryDAO = new PantryDataAccessObject();
     private ReviewDAOHash reviewDAO;
     private DayRecordsDataAccessObject dayRecordsDataAccessObject;
 
     private ManageWagesView wageView;
-    WageUserDataAccessInterface wageDAO;
+    private WageDataAccessObject wageDAO;
     private WageViewModel wageViewModel;
     private Map<String, Employee> employees = new HashMap<>();
 
@@ -70,7 +70,6 @@ public class AppBuilder {
         cardPanel.setLayout(cardLayout);
 
         // Initialize data access objects
-        wageDAO = new WageDataAccessObject(new HashMap<>());
         dayRecordsDataAccessObject = new DayRecordsDataAccessObject();
     }
 
@@ -181,10 +180,6 @@ public class AppBuilder {
         final SimulateOutputBoundary simulateOutputBoundary = new SimulatePresenter(viewManagerModel,
                 officeViewModel);
 
-        Employee employee = new Employee(3, "Cook");
-        Employee employee1 = new Employee(3, "Waiter");
-        wageDAO.save(employee);
-        wageDAO.save(employee1);
         final SimulateInputBoundary simulateInteractor = new SimulateInteractor(
                 simulateOutputBoundary,
                 pantryDAO,

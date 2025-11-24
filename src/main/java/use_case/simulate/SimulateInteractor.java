@@ -66,6 +66,8 @@ public class SimulateInteractor implements SimulateInputBoundary {
 
         double cookEffect = wageDataAccessObject.getEmployee(COOK_POSITION).getWageEffect();
         double waiterEffect = wageDataAccessObject.getEmployee(WAITER_POSITION).getWageEffect();
+        System.out.println("cookEffect: " + cookEffect);
+        System.out.println("waiterEffect: " + waiterEffect);
 
         // get customer count & orders
         int customerCount = getCustomerCount(curRating, cookEffect, pastCustomerCount);
