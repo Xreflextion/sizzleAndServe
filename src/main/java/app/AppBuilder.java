@@ -157,7 +157,7 @@ public class AppBuilder {
         wageViewModel.setState(state); // fires property change
 
         // 3) WageDataAccess + Presenter + Controller
-        wageDAO = new data_access.WageDataAccessObject(employees);
+        wageDAO = new WageDataAccessObject(employees);
         WagePresenter presenter = new WagePresenter(wageViewModel);
         WageController controller =
                 new WageController(new WageInteractor(wageDAO, playerDAO, presenter, employees));
