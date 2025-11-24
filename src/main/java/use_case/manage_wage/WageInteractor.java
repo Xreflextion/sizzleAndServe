@@ -12,6 +12,7 @@ public class WageInteractor implements WageInputBoundary {
     private final WagePlayerDataAccessInterface playerDataAccess;
     private final WageOutputBoundary presenter;
     private final Map<String, Employee> employees;
+    private final int WAGE_CHANGE = 10;
 
     public WageInteractor(WageUserDataAccessInterface dataAccess,
                           WagePlayerDataAccessInterface playerDataAccess,
@@ -24,9 +25,10 @@ public class WageInteractor implements WageInputBoundary {
     }
 
     private boolean canAffordIncrease() {
-        int prospectiveTotal = Employee.getTotalWage() + 1;
+        int prospectiveTotal = Employee.getTotalWage() + WAGE_CHANGE;
         double balance = playerDataAccess.getPlayer().getBalance();
         return prospectiveTotal <= balance;}
+
     @Override
     public void increaseWage (String position){
         Employee currentEmployee = employees.get(position);
