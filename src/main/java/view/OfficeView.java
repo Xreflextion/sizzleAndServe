@@ -1,8 +1,11 @@
 package view;
 
+import interface_adapter.ViewManagerModel;
+import interface_adapter.manage_wages.WageViewModel;
 import interface_adapter.office.OfficeState;
 import interface_adapter.office.OfficeViewModel;
 import interface_adapter.office.SimulateController;
+import interface_adapter.review.ReviewViewModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,14 +17,16 @@ import java.beans.PropertyChangeListener;
 public class OfficeView extends JPanel implements ActionListener, PropertyChangeListener {
     private final OfficeViewModel officeViewModel;
     private SimulateController simulationController;
+    private final ViewManagerModel viewManagerModel;
 
     private final JLabel curDayLabel;
     private final JLabel curBalanceLabel;
     private final JLabel pastCustomerCountLabel;
 
-    public OfficeView(OfficeViewModel officeViewModel) {
+    public OfficeView(OfficeViewModel officeViewModel, ViewManagerModel viewManagerModel) {
         this.officeViewModel = officeViewModel;
         officeViewModel.addPropertyChangeListener(this);
+        this.viewManagerModel = viewManagerModel;
 
         this.setLayout(new GridBagLayout());
         this.setPreferredSize(new Dimension(OfficeViewModel.WIDTH, OfficeViewModel.HEIGHT));
@@ -49,14 +54,64 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
 
         final JButton inventoryButton = new JButton(OfficeViewModel.INVENTORY_BUTTON_LABEL);
         editButtonSize(inventoryButton);
+        inventoryButton.addActionListener(
+                evt ->
+                {
+                    if (evt.getSource().equals(inventoryButton)) {
+                        System.out.println("Go to inventory");
+//                        this.viewManagerModel.setState(BuyServingViewModel.VIEW_NAME);
+                        this.viewManagerModel.firePropertyChange();
+                    }
+                }
+        );
         final JButton priceButton = new JButton(OfficeViewModel.PRICE_MANAGER_BUTTON_LABEL);
         editButtonSize(priceButton);
+        priceButton.addActionListener(
+                evt ->
+                {
+                    if (evt.getSource().equals(priceButton)) {
+                        System.out.println("Go to prices");
+//                        this.viewManagerModel.setState(ProductPricesViewModel.VIEW_NAME);
+                        this.viewManagerModel.firePropertyChange();
+                    }
+                }
+        );
         final JButton reviewButton = new JButton(OfficeViewModel.REVIEW_MANAGER_BUTTON_LABEL);
         editButtonSize(reviewButton);
+        reviewButton.addActionListener(
+                evt ->
+                {
+                    if (evt.getSource().equals(reviewButton)) {
+                        System.out.println("Go to reviews");
+                        this.viewManagerModel.setState(ReviewViewModel.VIEW_NAME);
+                        this.viewManagerModel.firePropertyChange();
+                    }
+                }
+        );
         final JButton insightsButton = new JButton(OfficeViewModel.INSIGHTS_BUTTON_LABEL);
         editButtonSize(insightsButton);
+        insightsButton.addActionListener(
+                evt ->
+                {
+                    if (evt.getSource().equals(insightsButton)) {
+                        System.out.println("Go to insights");
+//                        this.viewManagerModel.setState(InsightsViewModel.VIEW_NAME);
+                        this.viewManagerModel.firePropertyChange();
+                    }
+                }
+        );
         final JButton employeeButton = new JButton(OfficeViewModel.EMPLOYEE_BUTTON_LABEL);
         editButtonSize(employeeButton);
+        employeeButton.addActionListener(
+                evt ->
+                {
+                    if (evt.getSource().equals(employeeButton)) {
+                        System.out.println("Go to wages");
+//                        this.viewManagerModel.setState(WageViewModel.VIEW_NAME);
+                        this.viewManagerModel.firePropertyChange();
+                    }
+                }
+        );
 
         midLeftPanel.add(inventoryButton);
         midLeftPanel.add(reviewButton);

@@ -1,23 +1,56 @@
 package use_case.review;
 
-import data_access.ReviewDAOHash;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+
+import interface_adapter.ViewModel;
 import entity.ReviewEntity;
+import data_access.ReviewDAOHash;
+import interface_adapter.review.ReviewViewModel;
 
 
-public class ReviewInteractor {
+public class ReviewInteractor implements ReviewInputBoundary{
 
     // Creates a DAO hashmap
     private final ReviewDAOHash reviewDAOHash;
 
-    public ReviewInteractor(ReviewDAOHash reviewDAOHash) {
+    // Creates the presenter which is bounded by the output boundary
+    private final ReviewOutputBoundary presenter;
+
+    public ReviewInteractor(ReviewDAOHash reviewDAOHash, ReviewOutputBoundary presenter) {
         this.reviewDAOHash = reviewDAOHash;
+        this.presenter = presenter;
+    }
+
+    @Override
+    public void execute(ReviewInputData input){
+
+        Integer day = input.getDay();
+        double averageRating;
+
+        if (day != null){
+            // For the day average
+            averageRating = getAverageReviewDay(day);
+
+        }
+        else{
+            averageRating = getAverageOverall();
+        }
+
+        String emoji = getEmoji(averageRating);
+
+        ReviewOutputData output = new ReviewOutputData(averageRating, emoji);
+
+        presenter.present(output);
     }
 
     // adds a review to the DAO
     public void addReview(ReviewEntity review){
         reviewDAOHash.addReview(review);
     }
-
 
     // This will get the total number of reviews of the entire restaurant
     // It will iterate through the values of the hashmap
@@ -56,7 +89,7 @@ public class ReviewInteractor {
             return Math.round(avg * 10.0) / 10.0;
         }
         else{
-            return 0;
+            return 0.0;
         }
 
     }
@@ -74,23 +107,32 @@ public class ReviewInteractor {
             return Math.round(avg * 10.0) / 10.0;
         }
         else{
-            return 0;
+            return 0.0;
         }
 
     }
 
+
     // Returns emoji
     public String getEmoji(double rating){
 
-        if(rating < 2.0){
+        if(rating <= 2.0){
             return "\uD83D\uDE22";
         }
-        else if(rating < 3.0){
-            return "\uD83D\uDE04";
+        else if(rating <= 3.0){
+            return "\uD83D\uDE10";
         }
         else{
             return "\uD83D\uDE01";
         }
+    }
+
+    // Gets all the days the user has completed
+    public List<Integer> getAvailableDays() {
+        Set<Integer> dayKeys = reviewDAOHash.getAllDays();
+        List<Integer> days = new ArrayList<>(dayKeys);
+        Collections.sort(days);
+        return days;
     }
 
 

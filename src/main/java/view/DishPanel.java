@@ -2,6 +2,7 @@ package view;
 
 import entity.Recipe;
 import interface_adapter.product_prices.ProductPricesController;
+import constants.Constants;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -36,8 +37,10 @@ public class DishPanel extends JPanel {
         basePriceLabel = new JLabel("Base Price: " + (double) recipe.getBasePrice());
         currentPriceLabel = new JLabel("Current Price: " + (double) recipe.getBasePrice()); // placeholder
 
-        // image (placeholder)
-        ImageIcon icon = new ImageIcon("src/main/resources/images/sample.jpg");
+        String imagePath = Constants.DIR_PATH
+                + dishName.replaceAll(Constants.REGEX_CHARACTERS, Constants.REPLACEMENT_CHARACTER)
+                + Constants.FILE_TYPE;
+        ImageIcon icon = new ImageIcon(imagePath);
         Image scaled = icon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
         imageLabel = new JLabel(new ImageIcon(scaled));
 
