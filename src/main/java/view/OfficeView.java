@@ -107,7 +107,7 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
                 {
                     if (evt.getSource().equals(employeeButton)) {
                         System.out.println("Go to wages");
-//                        this.viewManagerModel.setState(WageViewModel.VIEW_NAME);
+                        this.viewManagerModel.setState(WageViewModel.VIEW_NAME);
                         this.viewManagerModel.firePropertyChange();
                     }
                 }

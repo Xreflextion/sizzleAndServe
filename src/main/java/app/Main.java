@@ -9,6 +9,7 @@ public class Main {
                 .addOfficeView()
                 .addProductPricesView()
                 .addReviewViewAndUseCase()
+                .addManageWageUseCase()
                 .addSimulateUseCase()
                 .build();
 

@@ -1,9 +1,11 @@
 package view;
 
 
+import interface_adapter.ViewManagerModel;
 import interface_adapter.manage_wages.WageController;
 import interface_adapter.manage_wages.WageState;
 import interface_adapter.manage_wages.WageViewModel;
+import interface_adapter.office.OfficeViewModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +19,7 @@ public class ManageWagesView extends JPanel implements ActionListener, PropertyC
 
     private final WageViewModel wageViewModel;
     private WageController wageController = null;
+    private final ViewManagerModel viewManagerModel;
 
     private JLabel waiterWage;
     private JLabel cookWage;
@@ -26,21 +29,24 @@ public class ManageWagesView extends JPanel implements ActionListener, PropertyC
     private JButton cookAdd;
     private JButton waiterMinus;
     private JButton cookMinus;
+    private JButton backToOffice;
 
     private final int layOut1 = 20;
     private final int layOut2 = 10;
     private final int font = 18;
 
 
-    public ManageWagesView(WageViewModel wageViewModel) {
+    public ManageWagesView(WageViewModel wageViewModel, ViewManagerModel viewManagerModel) {
         this.wageViewModel = wageViewModel;
         this.wageViewModel.addPropertyChangeListener(this);
+        this.viewManagerModel = viewManagerModel;
 
         final JLabel title = new JLabel(ViewName);
-        setLayout(new GridLayout(2, 1));
+        setLayout(new GridLayout(2, 2));
         /*Employee Panel
          */
         JPanel employeePanel = new JPanel();
+        employeePanel.setLayout(new BoxLayout(employeePanel, BoxLayout.Y_AXIS));
         /* Cook Panel
          */
         JPanel cookPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, layOut1, layOut2));
@@ -59,7 +65,7 @@ public class ManageWagesView extends JPanel implements ActionListener, PropertyC
         waiterMinus = new JButton("−");
         waiterAdd = new JButton("+");
         waiterWage = new JLabel(String.valueOf(wageViewModel.getState().getWaiterWage()));
-        waiterWage.setFont(new Font("Arial", Font.BOLD, 18));
+        waiterWage.setFont(new Font("Arial", Font.BOLD, font));
         waiterPanel.add(waiterMinus);
         waiterPanel.add(waiterWage);
         waiterPanel.add(waiterAdd);
@@ -68,9 +74,9 @@ public class ManageWagesView extends JPanel implements ActionListener, PropertyC
         JPanel totalWagePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, layOut1, layOut2));
         totalWagePanel.setBorder(BorderFactory.createTitledBorder("Total Wage"));
         totalWage = new JLabel(String.valueOf(wageViewModel.getState().getTotalWage()));
-        totalWage.setFont(new Font("Arial", Font.BOLD, 18));
+        totalWage.setFont(new Font("Arial", Font.BOLD, font));
         currentBalance = new JLabel("Balance: " + wageViewModel.getState().getCurrentBalance());
-        currentBalance.setFont(new Font("Arial", Font.BOLD, 18));
+        currentBalance.setFont(new Font("Arial", Font.BOLD, font));
 
         totalWagePanel.add(new JLabel("Total Wage: "));
         totalWagePanel.add(totalWage);
@@ -78,11 +84,19 @@ public class ManageWagesView extends JPanel implements ActionListener, PropertyC
         totalWagePanel.add(currentBalance);
         totalWagePanel.add(Box.createHorizontalStrut(16));
 
+        /*Back to office button
+         */
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, layOut1, layOut2));
+        backToOffice= new JButton("Back to Office");
+        backToOffice.setFont(new Font("Arial", Font.BOLD, font));
+        bottomPanel.add(backToOffice);
+
 
         employeePanel.add(cookPanel);
         employeePanel.add(waiterPanel);
         add(totalWagePanel);
         add(employeePanel);
+        add(bottomPanel);
 
 
         // Add listeners
@@ -90,6 +104,7 @@ public class ManageWagesView extends JPanel implements ActionListener, PropertyC
         cookMinus.addActionListener(this);
         waiterAdd.addActionListener(this);
         waiterMinus.addActionListener(this);
+        backToOffice.addActionListener(this);
     }
 
     // ✅ Setter for Controller
@@ -109,6 +124,10 @@ public class ManageWagesView extends JPanel implements ActionListener, PropertyC
             wageController.waiterIncrease();
         } else if (e.getSource() == waiterMinus) {
             wageController.waiterDecrease();
+        }
+        else if (e.getSource() == backToOffice) {
+            viewManagerModel.setState(OfficeViewModel.VIEW_NAME);
+            viewManagerModel.firePropertyChange();
         }
     }
 
