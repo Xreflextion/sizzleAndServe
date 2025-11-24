@@ -2,6 +2,7 @@ package data_access;
 
 import entity.Player;
 import use_case.buy_serving.PlayerDataAccessInterface;
+import use_case.manage_wage.WagePlayerDataAccessInterface;
 
 public class PlayerDataAccessObject implements PlayerDataAccessInterface,
         WagePlayerDataAccessInterface {

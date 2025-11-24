@@ -1,4 +1,4 @@
-package use_case;
+package use_case.manage_wage;
 
 import data_access.WageDataAccessObject;
 import entity.Employee;
@@ -9,9 +9,6 @@ import interface_adapter.manage_wages.WageState;
 import interface_adapter.manage_wages.WageViewModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import use_case.manage_wage.WageInteractor;
-import use_case.manage_wage.WagePlayerDataAccessInterface;
-import use_case.manage_wage.WageUserDataAccessInterface;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +22,6 @@ public class ManageWageTest {
         private Player player;
         FakePlayerDAO(int balance) { this.player = new Player("Tester", balance); }
         @Override public Player getPlayer() { return player; }
-        @Override public void savePlayer(Player player) { this.player = player; }
     }
 
     private WageController controller;
