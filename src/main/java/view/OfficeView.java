@@ -6,6 +6,7 @@ import interface_adapter.manage_wages.WageViewModel;
 import interface_adapter.office.OfficeState;
 import interface_adapter.office.OfficeViewModel;
 import interface_adapter.office.SimulateController;
+import interface_adapter.product_prices.ProductPricesViewModel;
 import interface_adapter.review.ReviewViewModel;
 
 import javax.swing.*;
@@ -71,8 +72,7 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
                 evt ->
                 {
                     if (evt.getSource().equals(priceButton)) {
-                        System.out.println("Go to prices");
-//                        this.viewManagerModel.setState(ProductPricesViewModel.VIEW_NAME);
+                        this.viewManagerModel.setState(ProductPricesViewModel.VIEW_NAME);
                         this.viewManagerModel.firePropertyChange();
                     }
                 }
