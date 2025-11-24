@@ -123,7 +123,7 @@ public class AppBuilder {
         ReviewController  reviewController = new ReviewController(reviewInteractor);
 
         // Initializes View and add it to card panel
-        ReviewView reviewView = new ReviewView(reviewController, reviewViewModel);
+        ReviewView reviewView = new ReviewView(reviewController, reviewViewModel, viewManagerModel);
         cardPanel.add(reviewView, ReviewViewModel.VIEW_NAME);
 
         return this;
