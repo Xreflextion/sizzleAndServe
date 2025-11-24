@@ -3,7 +3,6 @@ package app;
 import data_access.*;
 import entity.Employee;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.ViewModel;
 import interface_adapter.manage_wages.WageController;
 import interface_adapter.manage_wages.WagePresenter;
 import interface_adapter.manage_wages.WageState;
@@ -22,12 +21,9 @@ import interface_adapter.review.ReviewController;
 import interface_adapter.review.ReviewPresenter;
 import interface_adapter.review.ReviewViewModel;
 import use_case.manage_wage.WageInteractor;
-import use_case.manage_wage.WagePlayerDataAccessInterface;
 import use_case.manage_wage.WageUserDataAccessInterface;
 import use_case.product_prices.ProductPricesInteractor;
-import use_case.product_prices.ProductPricesOutputBoundary;
 import use_case.review.ReviewInteractor;
-import use_case.review.ReviewOutputData;
 import use_case.simulate.SimulateInputBoundary;
 import use_case.simulate.SimulateInteractor;
 import use_case.simulate.SimulateOutputBoundary;
@@ -61,6 +57,12 @@ public class AppBuilder {
     PlayerDataAccessObject playerDAO = new PlayerDataAccessObject(INITIAL_BALANCE);
     PantryDataAccessObject pantryDAO = new PantryDataAccessObject();
     private ReviewDAOHash reviewDAO;
+
+    private ManageWagesView wageView;
+    WageUserDataAccessInterface wageDAO;
+    private WageViewModel wageViewModel;
+    private Map<String, Employee> employees = new HashMap<>();
+
 
 
     public AppBuilder() {
@@ -138,34 +140,32 @@ public class AppBuilder {
     }
 
     // Adds the ManageWageView to the app builder
-    public AppBuilder addManageWageUseCase() {
-        // 1) Initialize the playerDAO
-        WagePlayerDataAccessInterface playerDataAccess= new PlayerDataAccessObject();
-        // 2) Initialize the two employees with wage=0, effect=1 on every run
-        Map<String, Employee> employees = new HashMap<>() {{
-            put("Cook", new Employee(1, "Cook"));
-            put("Waiter", new Employee(1, "Waiter"));
-        }};
-        // 3) ViewModel + seed initial state so labels are correct immediately
-        WageViewModel wageViewModel = new WageViewModel();
+    public AppBuilder addManageWageViewAndUseCase() {
+
+        // 1) Initialize the two employees with wage=1, effect=1 on every run
+       employees.put("Cook", new Employee(1, "Cook"));
+       employees.put("Waiter", new Employee(1, "Waiter"));
+
+        // 2) ViewModel + seed initial state so labels are correct immediately
+        wageViewModel = new WageViewModel();
         WageState state = wageViewModel.getState();
         state.setCookWage(employees.get("Cook").getWage());                // 0
         state.setCookWageEffect(employees.get("Cook").getWageEffect());    // 1.0
         state.setWaiterWage(employees.get("Waiter").getWage());            // 0
         state.setWaiterWageEffect(employees.get("Waiter").getWageEffect());// 1.0
-        state.setCurrentBalance(playerDataAccess.getPlayer().getBalance());
+        state.setCurrentBalance(playerDAO.getPlayer().getBalance());
         wageViewModel.setState(state); // fires property change
 
-        // 4) WageDataAccess + Presenter + Controller
-        WageUserDataAccessInterface dataAccess = new data_access.WageDataAccessObject(employees);
+        // 3) WageDataAccess + Presenter + Controller
+        wageDAO = new data_access.WageDataAccessObject(employees);
         WagePresenter presenter = new WagePresenter(wageViewModel);
         WageController controller =
-                new WageController(new WageInteractor(dataAccess, playerDataAccess, presenter, employees));
+                new WageController(new WageInteractor(wageDAO, playerDAO, presenter, employees));
 
-        // 5) Build the view and inject the controller
-        ManageWagesView wageView = new ManageWagesView(wageViewModel,viewManagerModel);
+        // 4) Build the view and inject the controller
+        wageView = new ManageWagesView(wageViewModel,viewManagerModel);
         wageView.setController(controller);
-        // 6) Add view to the cardPanel
+        // 5) Add view to the cardPanel
         cardPanel.add(wageView,wageViewModel.getViewName());
         return this;
     }
