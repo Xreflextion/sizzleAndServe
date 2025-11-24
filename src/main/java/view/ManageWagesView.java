@@ -20,6 +20,8 @@ public class ManageWagesView extends JPanel implements ActionListener, PropertyC
 
     private JLabel waiterWage;
     private JLabel cookWage;
+    private JLabel totalWage;
+    private JLabel currentBalance;
     private JButton waiterAdd;
     private JButton cookAdd;
     private JButton waiterMinus;
@@ -36,8 +38,11 @@ public class ManageWagesView extends JPanel implements ActionListener, PropertyC
 
         final JLabel title = new JLabel(ViewName);
         setLayout(new GridLayout(2, 1));
+        /*Employee Panel
+         */
+        JPanel employeePanel = new JPanel();
         /* Cook Panel
-        */
+         */
         JPanel cookPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, layOut1, layOut2));
         cookPanel.setBorder(BorderFactory.createTitledBorder("Cook Wage"));
         cookMinus = new JButton("−");
@@ -48,7 +53,7 @@ public class ManageWagesView extends JPanel implements ActionListener, PropertyC
         cookPanel.add(cookWage);
         cookPanel.add(cookAdd);
         /* Waiter Panel
-        */
+         */
         JPanel waiterPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, layOut1, layOut2));
         waiterPanel.setBorder(BorderFactory.createTitledBorder("Waiter Wage"));
         waiterMinus = new JButton("−");
@@ -58,15 +63,34 @@ public class ManageWagesView extends JPanel implements ActionListener, PropertyC
         waiterPanel.add(waiterMinus);
         waiterPanel.add(waiterWage);
         waiterPanel.add(waiterAdd);
-        add(cookPanel);
-        add(waiterPanel);
+        /* Total wage & balance panel
+         */
+        JPanel totalWagePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, layOut1, layOut2));
+        totalWagePanel.setBorder(BorderFactory.createTitledBorder("Total Wage"));
+        totalWage = new JLabel(String.valueOf(wageViewModel.getState().getTotalWage()));
+        totalWage.setFont(new Font("Arial", Font.BOLD, 18));
+        currentBalance = new JLabel("Balance: " + wageViewModel.getState().getCurrentBalance());
+        currentBalance.setFont(new Font("Arial", Font.BOLD, 18));
 
-            // Add listeners
+        totalWagePanel.add(new JLabel("Total Wage: "));
+        totalWagePanel.add(totalWage);
+        totalWagePanel.add(Box.createHorizontalStrut(16));
+        totalWagePanel.add(currentBalance);
+        totalWagePanel.add(Box.createHorizontalStrut(16));
+
+
+        employeePanel.add(cookPanel);
+        employeePanel.add(waiterPanel);
+        add(totalWagePanel);
+        add(employeePanel);
+
+
+        // Add listeners
         cookAdd.addActionListener(this);
         cookMinus.addActionListener(this);
         waiterAdd.addActionListener(this);
         waiterMinus.addActionListener(this);
-        }
+    }
 
     // ✅ Setter for Controller
     public void setController(WageController controller) {
@@ -75,26 +99,35 @@ public class ManageWagesView extends JPanel implements ActionListener, PropertyC
 
 
     @Override
-        public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e) {
         if (wageController == null) return;
         if (e.getSource() == cookAdd) {
-                wageController.cookIncrease();
-            } else if (e.getSource() == cookMinus) {
-                wageController.cookDecrease();
-            } else if (e.getSource() == waiterAdd) {
-                wageController.waiterIncrease();
-            } else if (e.getSource() == waiterMinus) {
-                wageController.waiterDecrease();
-            }
+            wageController.cookIncrease();
+        } else if (e.getSource() == cookMinus) {
+            wageController.cookDecrease();
+        } else if (e.getSource() == waiterAdd) {
+            wageController.waiterIncrease();
+        } else if (e.getSource() == waiterMinus) {
+            wageController.waiterDecrease();
         }
-
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            if ("state".equals(evt.getPropertyName())) {
-                WageState newState = (WageState) evt.getNewValue();
-                cookWage.setText(String.valueOf(newState.getCookWage()));
-                waiterWage.setText(String.valueOf(newState.getWaiterWage()));
-            }
-        }
-
     }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ("state".equals(evt.getPropertyName())) {
+            WageState newState = (WageState) evt.getNewValue();
+            cookWage.setText(String.valueOf(newState.getCookWage()));
+            waiterWage.setText(String.valueOf(newState.getWaiterWage()));
+            totalWage.setText(String.valueOf(newState.getTotalWage()));
+            currentBalance.setText("Balance: " + newState.getCurrentBalance());
+            if (newState.getWarningMessage() != null) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        newState.getWarningMessage(),
+                        "Warning",
+                        JOptionPane.WARNING_MESSAGE
+                );
+            }
+        }
+    }
+}

@@ -20,7 +20,6 @@ public class WageViewModel extends ViewModel<WageState> {
     @Override
     public void setState(WageState state) {
         super.setState(state);
-        firePropertyChange();
     }
 }
 

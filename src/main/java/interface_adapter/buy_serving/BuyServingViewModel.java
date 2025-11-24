@@ -4,6 +4,8 @@ import interface_adapter.ViewModel;
 
 public class BuyServingViewModel extends ViewModel<BuyServingViewModel.State> {
 
+    public static final String VIEW_NAME = "buyServing";
+
     public static class State{
         public String message = "";
         public double balance = 0;
@@ -18,8 +20,8 @@ public class BuyServingViewModel extends ViewModel<BuyServingViewModel.State> {
         setState(new State());
     }
 
-    public void setDishNames(String[] names) {
-        getState().dishNames = names;
+    public void setDishNames(String[] dishNames) {
+        getState().dishNames = dishNames;
         firePropertyChange();
     }
 
