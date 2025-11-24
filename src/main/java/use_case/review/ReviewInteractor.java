@@ -89,7 +89,7 @@ public class ReviewInteractor implements ReviewInputBoundary{
             return Math.round(avg * 10.0) / 10.0;
         }
         else{
-            return 0;
+            return 0.0;
         }
 
     }
@@ -107,7 +107,7 @@ public class ReviewInteractor implements ReviewInputBoundary{
             return Math.round(avg * 10.0) / 10.0;
         }
         else{
-            return 0;
+            return 0.0;
         }
 
     }
