@@ -45,6 +45,7 @@ public class AppBuilder {
     private WageDataAccessObject wageDataAccessObject;
     private PlayerDataAccessObject playerDataAccessObject;
     private ReviewDAOHash reviewDAO;
+    private DayRecordsDataAccessObject dayRecordsDataAccessObject;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -53,6 +54,7 @@ public class AppBuilder {
         pantryDataAccessObject = new PantryDataAccessObject();
         wageDataAccessObject = new WageDataAccessObject(new HashMap<>());
         playerDataAccessObject = new PlayerDataAccessObject();
+        dayRecordsDataAccessObject = new DayRecordsDataAccessObject();
     }
 
     public AppBuilder addOfficeView() {
@@ -119,7 +121,8 @@ public class AppBuilder {
                 pantryDataAccessObject,
                 reviewDAO,
                 wageDataAccessObject,
-                playerDataAccessObject
+                playerDataAccessObject,
+                dayRecordsDataAccessObject
         );
 
         SimulateController controller = new SimulateController(simulateInteractor);

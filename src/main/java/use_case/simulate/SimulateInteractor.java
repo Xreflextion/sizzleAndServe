@@ -1,6 +1,7 @@
 package use_case.simulate;
 
 import entity.Pantry;
+import entity.PerDayRecord;
 import entity.Player;
 import entity.ReviewEntity;
 
@@ -22,6 +23,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
     private SimulateReviewDataAccessInterface reviewManagerDataAccessObject;
     private SimulateWageDataAccessInterface wageDataAccessObject;
     private SimulatePlayerDataAccessInterface playerDataAccessObject;
+    private SimulateDayRecordsDataAccessInterface dayRecordsDataAccessInterface;
 
     private final RandomHelper randomHelper;
 
@@ -30,12 +32,14 @@ public class SimulateInteractor implements SimulateInputBoundary {
             SimulatePantryDataAccessInterface pantryDataAccessInterface,
             SimulateReviewDataAccessInterface reviewManagerDataAccessInterface,
             SimulateWageDataAccessInterface wageDataAccessInterface,
-            SimulatePlayerDataAccessInterface playerDataAccessInterface) {
+            SimulatePlayerDataAccessInterface playerDataAccessInterface,
+            SimulateDayRecordsDataAccessInterface dayRecordsDataAccessInterface) {
         this.simulatePresenter = simulateOutputBoundary;
         this.pantryDataAccessObject = pantryDataAccessInterface;
         this.reviewManagerDataAccessObject = reviewManagerDataAccessInterface;
         this.wageDataAccessObject = wageDataAccessInterface;
         this.playerDataAccessObject = playerDataAccessInterface;
+        this.dayRecordsDataAccessInterface = dayRecordsDataAccessInterface;
         randomHelper = new RandomHelper();
     }
 
@@ -63,22 +67,19 @@ public class SimulateInteractor implements SimulateInputBoundary {
         ArrayList<String> orders = getOrders(customerCount, dishes);
         ArrayList<Double> ratings = new ArrayList<>();
         double ratingsSum = 0;
-        int profit = 0;
-        int expenses = 0;
+        double profit = 0;
+        double revenue = 0;
+        double expenses = 0;
 
         // TODO Remove print statements
-        System.out.println("Initial stock:");
-        for (String dish: stock.keySet() ) {
-            System.out.println("Dish " + dish + ": " + stock.get(dish));
-        }
-
+        System.out.println(pantryDataAccessObject.getStock());
 
         for (String order: orders) {
             double newRating;
 
             if (stock.get(order) > 0) {
                 stock.put(order, stock.get(order) - 1);
-                profit += currentPrices.get(order);
+                revenue += currentPrices.get(order);
                 newRating = generateRating(NORMAL_RATING_UPPER_BOUND, RATING_LOWER_BOUND, waiterEffect);
             } else {
                 newRating = generateRating(NO_STOCK_RATING_UPPER_BOUND, RATING_LOWER_BOUND, waiterEffect);
@@ -90,7 +91,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
 
         int newDay = curDay + 1;
         // TODO Remove print statements
-        System.out.println("Revenue: " + profit);
+        System.out.println("Revenue: " + revenue);
         System.out.println("Ratings:");
 
         // Saving reviews
@@ -102,16 +103,12 @@ public class SimulateInteractor implements SimulateInputBoundary {
 
         // Saving stock
         pantryDataAccessObject.saveStock(stock);
-        System.out.println("Final stock:");
-        for (String dish: stock.keySet() ) {
-            System.out.println("Dish " + dish + ": " + stock.get(dish));
-        }
 
         // Managing expenses
         expenses += 20; // hardcoded
 
         // Changing current balance
-        currentBalance += profit;
+        currentBalance += revenue;
         currentBalance -= expenses;
         System.out.println("Expenses: "+ expenses);
 
@@ -127,11 +124,16 @@ public class SimulateInteractor implements SimulateInputBoundary {
         player.setBalance(currentBalance);
         playerDataAccessObject.savePlayer(player);
 
-        // TODO sth to save new day number, profit, expenses, customer count, average rating
+        // Saving day record
+        PerDayRecord newDayRecord = new PerDayRecord(revenue, expenses, avgRating);
+        dayRecordsDataAccessInterface.saveNewData(newDayRecord);
 
-
+        // Generating output data
         SimulateOutputData outputData = new SimulateOutputData(newDay, currentBalance, customerCount);
         simulatePresenter.prepareSuccessView(outputData);
+
+        System.out.println(playerDataAccessObject.getPlayer().getBalance());
+        System.out.println(pantryDataAccessObject.getStock());
 
         System.out.println("****");
     }
@@ -208,7 +210,6 @@ public class SimulateInteractor implements SimulateInputBoundary {
         while (customerCount > 0) {
             customerCount --;
             int idx = randomHelper.generateRandomInt(max, min);
-            System.out.println("Index: " + idx + ", Dishes: " + dishes[idx]);
             String dish = dishes[idx];
             orders.add(dish);
         }
