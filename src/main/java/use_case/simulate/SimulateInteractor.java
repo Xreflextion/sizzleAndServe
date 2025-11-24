@@ -57,7 +57,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
         Map<String, Double> currentPrices = pantryDataAccessObject.getCurrentPrices();
         System.out.println(pantryDataAccessObject.getCurrentPrices());
 
-        double currentBalance = simulateInputData.getCurrentBalance();
+        double currentBalance = playerDataAccessObject.getPlayer().getBalance();
         int curDay = simulateInputData.getCurrentDay();
         int pastCustomerCount = simulateInputData.getCurrentCustomerCount();
 

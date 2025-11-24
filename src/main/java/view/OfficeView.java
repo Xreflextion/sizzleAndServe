@@ -131,7 +131,6 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
 
                         simulationController.execute(
                                 currentState.getCurrentDay(),
-                                currentState.getCurrentBalance(),
                                 currentState.getCurrentCustomerCount()
                         );
                     }

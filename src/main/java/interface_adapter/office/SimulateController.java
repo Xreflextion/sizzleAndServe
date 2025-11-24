@@ -19,8 +19,8 @@ public class SimulateController {
     /**
      * Executes the Simulate Use Case.
      */
-    public void execute(int currentDay, double currentBalance, int currentCustomerCount) {
-        final SimulateInputData simulateInputData = new SimulateInputData(currentDay, currentBalance, currentCustomerCount);
+    public void execute(int currentDay, int currentCustomerCount) {
+        final SimulateInputData simulateInputData = new SimulateInputData(currentDay, currentCustomerCount);
 
         simulateUseCaseInteractor.execute(simulateInputData);
     }
