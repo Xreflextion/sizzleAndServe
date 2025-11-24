@@ -16,11 +16,10 @@ public class SimulateInteractor implements SimulateInputBoundary {
 
     private final String COOK_POSITION = "Cook";
     private final String WAITER_POSITION = "Waiter";
-    private final double COOK_EFFECT_REDUCTION = 2.0;
+    private final double COOK_EFFECT_REDUCTION = 1.2;
     // Amount to subtract from cook effect to allow cook effect to impact customer count negatively
-    private final double WAITER_EFFECT_REDUCTION = 2.0;
+    private final double WAITER_EFFECT_REDUCTION = 1.6;
     // Amount to subtract from waiter effect to allow waiter effect to impact reviews negatively
-    private final int WAGE_MULTIPLER = 5; // Amount to multiply total wage by to get the expense
 
     private final SimulateOutputBoundary simulatePresenter;
 
@@ -110,7 +109,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
         pantryDataAccessObject.saveStock(stock);
 
         // Managing expenses
-        expenses += wageDataAccessObject.getTotalWage() * WAGE_MULTIPLER;
+        expenses += wageDataAccessObject.getTotalWage();
 
         // Changing current balance
         currentBalance += revenue;
