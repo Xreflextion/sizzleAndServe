@@ -1,14 +1,12 @@
 package view;
 
-import data_access.PantryDataAccessObject;
-import entity.Recipe;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.buy_serving.BuyServingViewModel;
 import interface_adapter.manage_wages.WageViewModel;
 import interface_adapter.office.OfficeState;
 import interface_adapter.office.OfficeViewModel;
 import interface_adapter.office.SimulateController;
-import interface_adapter.product_prices.ProductPricesState;
-import interface_adapter.product_prices.ProductPricesViewModel;
+import interface_adapter.review.ReviewViewModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,14 +14,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Map;
 
 public class OfficeView extends JPanel implements ActionListener, PropertyChangeListener {
     private final OfficeViewModel officeViewModel;
     private SimulateController simulationController;
     private final ViewManagerModel viewManagerModel;
-
-    private final PantryDataAccessObject pantryDataAccessObject = new PantryDataAccessObject();
 
     private final JLabel curDayLabel;
     private final JLabel curBalanceLabel;
@@ -65,7 +60,7 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
                 {
                     if (evt.getSource().equals(inventoryButton)) {
                         System.out.println("Go to inventory");
-//                        this.viewManagerModel.setState(BuyServingViewModel.VIEW_NAME);
+                        this.viewManagerModel.setState(BuyServingViewModel.VIEW_NAME);
                         this.viewManagerModel.firePropertyChange();
                     }
                 }
@@ -76,15 +71,8 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
                 evt ->
                 {
                     if (evt.getSource().equals(priceButton)) {
-
-                        Map<String, Recipe> recipes = pantryDataAccessObject.getPantry().getPantry();
-
-                        ProductPricesState productPricesState = new ProductPricesState(recipes);
-
-                        ProductPricesViewModel productPricesViewModel = new ProductPricesViewModel(recipes);
-                        productPricesViewModel.setState(productPricesState);
-
-                        this.viewManagerModel.setState(ProductPricesViewModel.VIEW_NAME);
+                        System.out.println("Go to prices");
+//                        this.viewManagerModel.setState(ProductPricesViewModel.VIEW_NAME);
                         this.viewManagerModel.firePropertyChange();
                     }
                 }
@@ -96,7 +84,7 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
                 {
                     if (evt.getSource().equals(reviewButton)) {
                         System.out.println("Go to reviews");
-//                        this.viewManagerModel.setState(ReviewViewModel.VIEW_NAME);
+                        this.viewManagerModel.setState(ReviewViewModel.VIEW_NAME);
                         this.viewManagerModel.firePropertyChange();
                     }
                 }

@@ -12,29 +12,45 @@ import data_access.ReviewDAOHash;
 import interface_adapter.review.ReviewViewModel;
 
 
-public class ReviewInteractor {
+public class ReviewInteractor implements ReviewInputBoundary{
 
     // Creates a DAO hashmap
-    private ReviewDAOHash reviewDAOHash;
+    private final ReviewDAOHash reviewDAOHash;
 
-    //Creates instance of viewModel
-    private final ReviewViewModel viewModel;
+    // Creates the presenter which is bounded by the output boundary
+    private final ReviewOutputBoundary presenter;
 
-    public ReviewInteractor(ReviewDAOHash reviewDAOHash, ReviewViewModel viewModel) {
+    public ReviewInteractor(ReviewDAOHash reviewDAOHash, ReviewOutputBoundary presenter) {
         this.reviewDAOHash = reviewDAOHash;
-        this.viewModel = viewModel;
+        this.presenter = presenter;
+    }
+
+    @Override
+    public void execute(ReviewInputData input){
+
+        Integer day = input.getDay();
+        double averageRating;
+
+        if (day != null){
+            // For the day average
+            averageRating = getAverageReviewDay(day);
+
+        }
+        else{
+            averageRating = getAverageOverall();
+        }
+
+        String emoji = getEmoji(averageRating);
+
+        ReviewOutputData output = new ReviewOutputData(averageRating, emoji);
+
+        presenter.present(output);
     }
 
     // adds a review to the DAO
     public void addReview(ReviewEntity review){
         reviewDAOHash.addReview(review);
     }
-
-    // gets the view model
-    public ViewModel<ReviewOutputData> getViewModel() {
-        return viewModel;
-    }
-
 
     // This will get the total number of reviews of the entire restaurant
     // It will iterate through the values of the hashmap
@@ -73,7 +89,7 @@ public class ReviewInteractor {
             return Math.round(avg * 10.0) / 10.0;
         }
         else{
-            return 0;
+            return 0.0;
         }
 
     }
@@ -91,7 +107,7 @@ public class ReviewInteractor {
             return Math.round(avg * 10.0) / 10.0;
         }
         else{
-            return 0;
+            return 0.0;
         }
 
     }

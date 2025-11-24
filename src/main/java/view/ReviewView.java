@@ -1,9 +1,12 @@
 package view;
 
 import app.AppBuilder;
+import interface_adapter.ViewManagerModel;
+import interface_adapter.office.OfficeViewModel;
 import interface_adapter.review.ReviewController;
 import interface_adapter.ViewModel;
 import interface_adapter.review.ReviewController;
+import interface_adapter.review.ReviewState;
 import interface_adapter.review.ReviewViewModel;
 import use_case.review.ReviewOutputData;
 
@@ -35,6 +38,7 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
 
     private final interface_adapter.review.ReviewController controller;
     private final ReviewViewModel viewModel;
+    private final ViewManagerModel viewManagerModel;
 
     // UI components
     private JButton overallButton;
@@ -46,12 +50,15 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
     private JLabel dayLabel;
     private JLabel overallEmoji;
     private JLabel overallLabel;
+    private JButton backToOfficeButton;
 
 
 
-    public ReviewView(interface_adapter.review.ReviewController controller, ReviewViewModel viewModel) {
+    public ReviewView(interface_adapter.review.ReviewController controller, ReviewViewModel viewModel,
+                      ViewManagerModel viewManagerModel) {
         this.controller = controller;
         this.viewModel = viewModel;
+        this.viewManagerModel = viewManagerModel;
 
         this.viewModel.addPropertyChangeListener(this);
 
@@ -80,7 +87,7 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
         subtitle.setAlignmentX(CENTER_ALIGNMENT);
 
         // Button to select an overall review for restaurant
-        overallButton = new JButton(OVERALL_PANEL);
+        overallButton = new JButton("Overall");
         overallButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         overallButton.setFont(new Font(FONT, Font.PLAIN, BUTTON_FONT_SIZE));
         overallButton.addActionListener(this);
@@ -91,6 +98,13 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
         dayButton.setFont(new Font(FONT, Font.PLAIN, BUTTON_FONT_SIZE));
         dayButton.addActionListener(this);
 
+        // Adding the back to office button
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        backToOfficeButton = new JButton("Back to Office");
+        backToOfficeButton.setFont(new Font(FONT, Font.PLAIN, BUTTON_FONT_SIZE));
+        backToOfficeButton.addActionListener(this);
+        bottomPanel.add(backToOfficeButton);
+
         // Provides spacing for the menuPanel
         menuPanel.add(Box.createVerticalStrut(30));
         menuPanel.add(title);
@@ -100,8 +114,7 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
         menuPanel.add(overallButton);
         menuPanel.add(Box.createVerticalStrut(10));
         menuPanel.add(dayButton);
-
-
+        menuPanel.add(bottomPanel);
 
 
         // Creating the overall panel
@@ -194,6 +207,8 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
         dayPanel.add(Box.createVerticalStrut(10));
         dayPanel.add(inLine);
 
+
+
         // adds the panels to the card layout
         add(menuPanel, MENU_PANEL);
         add(overallPanel, OVERALL_PANEL);
@@ -210,7 +225,7 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
 
         // Makes the overall button work
         if(e.getSource() == overallButton){
-            controller.getReviewOverall();
+            controller.getReview(null);
             cl.show(this, OVERALL_PANEL);
 
         }
@@ -227,16 +242,22 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
             cl.show(this, MENU_PANEL);
         }
 
+        // Makes the back to office button work
+        if (e.getSource() == backToOfficeButton) {
+            viewManagerModel.setState(OfficeViewModel.VIEW_NAME);
+            viewManagerModel.firePropertyChange();
+        }
+
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        ReviewOutputData data = viewModel.getState();
-        if (data == null) return;
+        ReviewState state = viewModel.getState();
+        if (state == null) return;
 
         // Use the same data for whichever panel was just updated
-        String text = "Currently " + data.getRating() + " out of 5 stars";
-        String emoji = data.getEmoji();
+        String text = "Currently " + state.getRating() + " out of 5 stars";
+        String emoji = state.getEmoji();
 
         overallLabel.setText(text);
         overallEmoji.setText(emoji);
@@ -248,5 +269,3 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
 
 
 }
-
-

@@ -4,6 +4,7 @@ public class ReviewOutputData {
     private final double rating;  // could be day average OR overall average
     private final String emoji;
 
+
     public ReviewOutputData(double rating, String emoji) {
         this.rating = rating;
         this.emoji = emoji;
@@ -16,4 +17,5 @@ public class ReviewOutputData {
     public String getEmoji() {
         return emoji;
     }
+
 }

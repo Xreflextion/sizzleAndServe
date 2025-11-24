@@ -1,7 +1,7 @@
-package interface_adapter.BuyServing;
+package interface_adapter.buy_serving;
 
-import use_case.BuyServing.BuyServingOutputBoundary;
-import use_case.BuyServing.BuyServingOutputData;
+import use_case.buy_serving.BuyServingOutputBoundary;
+import use_case.buy_serving.BuyServingOutputData;
 
 /**
  * The Presenter for the BuyServing Use Case.
@@ -19,9 +19,12 @@ public class BuyServingPresenter implements BuyServingOutputBoundary {
         viewModel.setMessage(outputData.getMessage());
         viewModel.setNewBalance(outputData.getNewBalance());
         viewModel.setSuccess(outputData.isSuccess());
-        viewModel.setDishNames(outputData.getDishNames());
-        viewModel.setDishCosts(outputData.getDishCosts());
-        viewModel.setDishStocks(outputData.getDishStocks());
+        if (outputData.getDishCosts() != null) {
+            viewModel.setDishCosts(outputData.getDishCosts());
+        }
+        if (outputData.getDishStocks() != null) {
+            viewModel.setDishStocks(outputData.getDishStocks());
+        }
         viewModel.firePropertyChange("buyServing");
     }
 }
