@@ -1,6 +1,7 @@
 package app;
 
 import data_access.*;
+import entity.Recipe;
 import entity.Employee;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.manage_wages.WageController;
@@ -39,7 +40,6 @@ public class AppBuilder {
     public static final int INITIAL_DAY = 0;
     public static final int INITIAL_PAST_CUSTOMER_COUNT = 0;
 
-
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
@@ -77,13 +77,14 @@ public class AppBuilder {
     }
 
     public AppBuilder addProductPricesView() {
-        productPricesViewModel = new ProductPricesViewModel();
+        Map<String, Recipe> recipes = pantryDAO.getPantry().getPantry();
+        productPricesViewModel = new ProductPricesViewModel(recipes);
         ProductPricesPresenter productPricesPresenter = new ProductPricesPresenter(productPricesViewModel,
                 viewManagerModel);
-        ProductPricesInteractor productPricesInteractor = new ProductPricesInteractor(new PantryDataAccessObject(),
+        ProductPricesInteractor productPricesInteractor = new ProductPricesInteractor(pantryDAO,
                 productPricesPresenter);
         ProductPricesController productPricesController = new ProductPricesController(productPricesInteractor);
-        productPricesView = new ProductPricesView(productPricesViewModel, productPricesController);
+        productPricesView = new ProductPricesView(productPricesViewModel, productPricesController, viewManagerModel);
         cardPanel.add(productPricesView, productPricesView.getViewName());
         return this;
     }
@@ -157,7 +158,7 @@ public class AppBuilder {
         wageViewModel.setState(state); // fires property change
 
         // 3) WageDataAccess + Presenter + Controller
-        wageDAO = new data_access.WageDataAccessObject(employees);
+        wageDAO = new WageDataAccessObject(employees);
         WagePresenter presenter = new WagePresenter(wageViewModel);
         WageController controller =
                 new WageController(new WageInteractor(wageDAO, playerDAO, presenter, employees));

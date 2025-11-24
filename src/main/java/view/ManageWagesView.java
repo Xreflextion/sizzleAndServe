@@ -92,7 +92,7 @@ public class ManageWagesView extends JPanel implements ActionListener, PropertyC
         explanationPanel.setBorder(BorderFactory.createTitledBorder("Explanation"));
         JLabel explanationLabel = new JLabel(
                 "<html>You can manage your employee's wage here.<br>" +
-                        "Increasing cook's wage increases serving speed.<br>" +
+                        "Increasing cook's wage increases number of customers per day.<br>" +
                         "Increasing waiter's wage improves review.</html>"
         );
         explanationLabel.setFont(new Font("Arial", Font.PLAIN, FONT_2));
