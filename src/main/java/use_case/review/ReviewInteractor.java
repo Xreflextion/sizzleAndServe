@@ -9,6 +9,7 @@ import java.util.Set;
 import interface_adapter.ViewModel;
 import entity.ReviewEntity;
 import data_access.ReviewDAOHash;
+import interface_adapter.review.ReviewState;
 import interface_adapter.review.ReviewViewModel;
 
 
@@ -43,6 +44,12 @@ public class ReviewInteractor implements ReviewInputBoundary{
         String emoji = getEmoji(averageRating);
 
         ReviewOutputData output = new ReviewOutputData(averageRating, emoji);
+
+        List<Integer> days = getAvailableDays();
+        ReviewState reviewState = new ReviewState();
+        reviewState.setRating(averageRating);
+        reviewState.setEmoji(emoji);
+        reviewState.setAvailableDays(days);
 
         presenter.present(output);
     }

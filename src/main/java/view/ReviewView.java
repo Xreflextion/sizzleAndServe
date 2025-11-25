@@ -45,7 +45,7 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
     private JButton dayButton;
     private JButton backOverall;
     private JButton backDay;
-    private JComboBox daySelect;
+    private JComboBox<String> daySelect;
     private JLabel dayEmoji;
     private JLabel dayLabel;
     private JLabel overallEmoji;
@@ -165,17 +165,8 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
         dayEmoji.setFont(new Font("Segoe UI Emoji", Font.PLAIN, EMOJI_FONT_SIZE));
         dayEmoji.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Creates the dropdown and formats it
-        ArrayList<Integer> availableDays = (ArrayList<Integer>) controller.getAvailableDays(); // add this method in your interactor
-        String[] dayStrings = new String[availableDays.size()];
-        // To get the values from the dropdown
-        for (int i = 0; i < availableDays.size(); i++) {
-            dayStrings[i] = String.valueOf(availableDays.get(i)); // convert int to String
-        }
-
-
         // formatting the dropdown
-        daySelect = new JComboBox<>(dayStrings);
+        daySelect = new JComboBox<>();
         daySelect.setMaximumSize(new Dimension(100, 30));
         // This listener changes the day for the average review
         daySelect.addActionListener(e -> {
@@ -198,6 +189,9 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
         inLine.add(daySelect);
         inLine.add(Box.createHorizontalStrut(10));
         inLine.add(backDay);
+
+        dayPanel = new JPanel();
+        dayPanel.setLayout(new BoxLayout(dayPanel, BoxLayout.Y_AXIS));
 
         // Formats the day panel to have vertical spacing
         dayPanel.add(Box.createVerticalStrut(20));
@@ -232,9 +226,18 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
 
         // Makes the day button work
         if (e.getSource() == dayButton) {
-            int day = Integer.parseInt((String) daySelect.getSelectedItem());
-            controller.getReview(day);
+            ArrayList<Integer> availableDays = (ArrayList<Integer>) controller.getAvailableDays();
+            if(availableDays.isEmpty()){
+                // placeholder
+                availableDays.add(0);
+            }
+            daySelect.removeAllItems();
+            for(int d: availableDays){
+                daySelect.addItem(String.valueOf(d));
+            }
+
             cl.show(this, DAY_PANEL);
+            controller.getReview(availableDays.get(0));
         }
 
         // Makes the back buttons work
