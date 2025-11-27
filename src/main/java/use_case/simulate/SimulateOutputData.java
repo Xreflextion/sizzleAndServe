@@ -6,13 +6,13 @@ public class SimulateOutputData {
     private final int currentDay;
     private final double currentBalance;
     private final int currentCustomerCount;
-    private final Map<String, Integer> stocks;
+    private final Map<String, Integer> stock;
 
-    public SimulateOutputData(int currentDay, double currentBalance, int currentCustomerCount, Map<String, Integer>  stocks) {
+    public SimulateOutputData(int currentDay, double currentBalance, int currentCustomerCount, Map<String, Integer>  stock) {
         this.currentDay = currentDay;
         this.currentBalance = currentBalance;
         this.currentCustomerCount = currentCustomerCount;
-        this.stocks = stocks;
+        this.stock = stock;
     }
 
     public int getCurrentDay() {
@@ -23,8 +23,8 @@ public class SimulateOutputData {
     }
     public int getCurrentCustomerCount() {return currentCustomerCount;}
 
-    public Map<String, Integer> getStocks() {
-        return stocks;
+    public Map<String, Integer> getStock() {
+        return stock;
     }
 
 }
