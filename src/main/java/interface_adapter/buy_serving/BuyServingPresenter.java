@@ -1,5 +1,7 @@
 package interface_adapter.buy_serving;
 
+import interface_adapter.manage_wages.WageViewModel;
+import interface_adapter.office.OfficeViewModel;
 import use_case.buy_serving.BuyServingOutputBoundary;
 import use_case.buy_serving.BuyServingOutputData;
 
@@ -9,9 +11,15 @@ import use_case.buy_serving.BuyServingOutputData;
 public class BuyServingPresenter implements BuyServingOutputBoundary {
 
     private final BuyServingViewModel viewModel;
+    private final OfficeViewModel officeViewModel;
+    private final WageViewModel wageViewModel;
 
-    public BuyServingPresenter(BuyServingViewModel viewModel) {
+    public BuyServingPresenter(BuyServingViewModel viewModel,
+                                OfficeViewModel officeViewModel,
+                               WageViewModel wageViewModel) {
         this.viewModel = viewModel;
+        this.officeViewModel = officeViewModel;
+        this.wageViewModel = wageViewModel;
     }
 
     @Override
@@ -26,5 +34,10 @@ public class BuyServingPresenter implements BuyServingOutputBoundary {
             viewModel.setDishStocks(outputData.getDishStocks());
         }
         viewModel.firePropertyChange("buyServing");
+
+        wageViewModel.getState().setCurrentBalance(outputData.getNewBalance());
+        wageViewModel.firePropertyChange();
+        officeViewModel.getState().setCurrentBalance(outputData.getNewBalance());
+        officeViewModel.firePropertyChange();
     }
 }
