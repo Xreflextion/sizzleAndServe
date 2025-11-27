@@ -32,6 +32,7 @@ public class Pantry {
         return recipes.get(dish);
     }
 
+
     /**
      * Adds the amount of quantity to the stock of the given dish
      * @param dish the name of the dish

@@ -2,10 +2,11 @@ package data_access;
 
 import use_case.manage_wage.WageUserDataAccessInterface;
 import entity.Employee;
+import use_case.simulate.SimulateWageDataAccessInterface;
 
 import java.util.Map;
 
-    public class WageDataAccessObject implements WageUserDataAccessInterface {
+    public class WageDataAccessObject implements WageUserDataAccessInterface, SimulateWageDataAccessInterface {
 
         private final Map<String, Employee> employees;
 
