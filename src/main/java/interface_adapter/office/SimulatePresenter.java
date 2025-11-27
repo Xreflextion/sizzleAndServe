@@ -35,8 +35,8 @@ public class SimulatePresenter implements SimulateOutputBoundary {
         int[] stocks = new int[dishNames.length];
         for (int i = 0; i < dishNames.length; i ++) {
             stocks[i] = 0;
-            if (outputData.getStocks().containsKey(dishNames[i])) {
-                stocks[i] = outputData.getStocks().get(dishNames[i]);
+            if (outputData.getStock().containsKey(dishNames[i])) {
+                stocks[i] = outputData.getStock().get(dishNames[i]);
             }
         }
         buyServingViewModel.setDishStocks(stocks);
