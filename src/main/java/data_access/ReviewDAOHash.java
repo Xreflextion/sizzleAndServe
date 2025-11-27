@@ -2,11 +2,14 @@ package data_access;
 
 import use_case.review.ReviewDAO;
 import entity.ReviewEntity;
+import use_case.simulate.SimulateReviewDataAccessInterface;
 
 import java.util.*;
 
 
-public class ReviewDAOHash implements ReviewDAO {
+
+public class ReviewDAOHash implements ReviewDAO, SimulateReviewDataAccessInterface {
+
     /**
      * Review manager add reviews by a mapping with the key being the number day (for example
      * 1) and having a list of integers being the ratings you are able to get the average review
