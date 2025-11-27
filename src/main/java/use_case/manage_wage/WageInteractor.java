@@ -32,7 +32,6 @@ public class WageInteractor implements WageInputBoundary {
     @Override
     public void increaseWage (String position){
         Employee currentEmployee = employees.get(position);
-        if (currentEmployee == null) return;
 
         if (canAffordIncrease()) {
             currentEmployee.increaseWage();
@@ -56,7 +55,6 @@ public class WageInteractor implements WageInputBoundary {
     @Override
     public void decreaseWage (String position){
         Employee currentEmployee = employees.get(position);
-        if (currentEmployee == null) return;
 
         currentEmployee.decreaseWage();
         dataAccess.save(currentEmployee);

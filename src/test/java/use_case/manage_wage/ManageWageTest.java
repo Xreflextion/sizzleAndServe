@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ManageWageTest {
 
-    /** Fake Player DAO fixed at balance = 10. */
+    /** Fake Player DAO fixed at balance = 500. */
     private static class FakePlayerDAO implements WagePlayerDataAccessInterface {
         private Player player;
         FakePlayerDAO(int balance) { this.player = new Player("Tester", balance); }
@@ -25,6 +25,7 @@ public class ManageWageTest {
     }
 
     private WageController controller;
+    private WageInteractor interactor;
     private WageViewModel viewModel;
     private WageState state;
     private WageUserDataAccessInterface wageDAO;
@@ -57,17 +58,17 @@ public class ManageWageTest {
         // 1) Reset static total wage so each test starts clean
         resetTotalWageStatic();
 
-        // 2) Create employees at MIN_WAGE = 1 (Cook=1, Waiter=1)
+        // 2) Create employees
         employees = new HashMap<>();
-        employees.put("Cook", new Employee(1, "Cook"));
-        employees.put("Waiter", new Employee(1, "Waiter"));
+        employees.put("Cook", new Employee(230, "Cook"));
+        employees.put("Waiter", new Employee(230, "Waiter"));
         // totalWage is now 2
 
         // 3) Real Wage DAO over the map
         wageDAO = new WageDataAccessObject(employees);
 
-        // 4) Fake Player DAO with balance = 10 (your requirement)
-        playerDAO = new FakePlayerDAO(10);
+        // 4) Fake Player DAO with balance = 500 (your requirement)
+        playerDAO = new FakePlayerDAO(500);
 
         // 5) View stack
         viewModel = new WageViewModel();
@@ -80,54 +81,52 @@ public class ManageWageTest {
 
         // 6) Presenter + Interactor + Controller
         WagePresenter presenter = new WagePresenter(viewModel);
-        WageInteractor interactor = new WageInteractor(wageDAO, playerDAO, presenter, employees);
+        interactor = new WageInteractor(wageDAO, playerDAO, presenter, employees);
         controller = new WageController(interactor);
     }
 
     @Test
     void successIncrease() {
-        // Given: total = 2, balance = 10 -> increases allowed while total < balance
-        controller.cookIncrease();   // total: 3 (cook: 2)
-        controller.waiterIncrease(); // total: 4 (waiter: 2)
+        // Given: total = 460, balance = 500 -> increases allowed while total < balance
+        controller.cookIncrease();   // total: 470 (cook: 240)
+        controller.waiterIncrease(); // total: 480 (waiter: 240)
 
-        assertEquals(2, viewModel.getState().getCookWage(), "Cook wage should be 2 after one increase");
-        assertEquals(2, viewModel.getState().getWaiterWage(), "Waiter wage should be 2 after one increase");
-        assertEquals(4, viewModel.getState().getTotalWage(), "Total wage should be 4 after two increases");
+        assertEquals(240, viewModel.getState().getCookWage(), "Cook wage should be 250 after one increase");
+        assertEquals(240, viewModel.getState().getWaiterWage(), "Waiter wage should be 250 after one increase");
+        assertEquals(480, viewModel.getState().getTotalWage(), "Total wage should be 500 after two increases");
+        assertEquals((float)37.2, viewModel.getState().getCookWageEffect(),"Cook's wage effect increased by 10%");
+        assertNull(viewModel.getState().getWarningMessage(), "No warning should occur on successful increase");
     }
 
     @Test
     void successDecrease() {
         // Increase once then decrease back
-        controller.cookIncrease();    // total: 3 (cook: 2)
-        controller.cookDecrease();    // total: 2 (cook: 1)
+        controller.cookIncrease();    // total: 470 (cook: 240)
+        controller.cookDecrease();    // total: 460 (cook: 230)
 
-        assertEquals(1, viewModel.getState().getCookWage(), "Cook wage should return to 1 after decrease");
-        assertEquals(2, viewModel.getState().getTotalWage(), "Total wage should return to 2 after decrease");
+        assertEquals(230, viewModel.getState().getCookWage(), "Cook wage should return to 1 after decrease");
+        assertEquals(460, viewModel.getState().getTotalWage(), "Total wage should return to 2 after decrease");
+        assertNull(viewModel.getState().getWarningMessage(), "No warning should occur on successful increase");
     }
 
     @Test
     void failIncrease() {
-        // Push total to exactly 10 (allowed while total < 10; last step from 9->10 is allowed)
-        for (int i = 0; i < 8; i++) {
-            controller.waiterIncrease(); // total: 3..10
-        }
-        assertEquals(10, viewModel.getState().getTotalWage(), "Total wage should be 10 after allowed increases");
-
-        // At total == balance, checkCurrentBalance() => 10 < 10 is false => block further increases
-        controller.cookIncrease(); // should be blocked
-
-        assertEquals(10, viewModel.getState().getTotalWage(), "Total wage should remain 10 when increase is blocked");
-        assertEquals(1, viewModel.getState().getCookWage(), "Cook wage should remain 1 when blocked at balance");
+        for (int i = 0; i < 5; i++) {
+        controller.waiterIncrease();}// total: 500 (waiter: 270)*should not result in more increase to exceed balance
+            controller.cookIncrease(); // total: 500 (cook 230) *should not result in increase
+        assertEquals(270, viewModel.getState().getWaiterWage(), "Waiter wage should not increase anymore");
+        assertEquals(500, viewModel.getState().getTotalWage(), "Total wage should be 500 after unallowed increases");
+        assertEquals(230, viewModel.getState().getCookWage(), "Cook wage should not increase anymore");
     }
 
     @Test
     void failDecrease() {
-        // Both employees at MIN_WAGE=1; decreasing should do nothing
-        controller.cookDecrease();
-        controller.waiterDecrease();
+        for (int i = 0; i< 18; i++) {
+            controller.cookDecrease();} //total: 280 (Cook:50)
+        controller.cookDecrease(); //total: 280 (Cook:0) * no decrease expected
 
-        assertEquals(1, viewModel.getState().getCookWage(), "Cook wage should not go below MIN_WAGE=1");
-        assertEquals(1, viewModel.getState().getWaiterWage(), "Waiter wage should not go below MIN_WAGE=1");
-        assertEquals(2, viewModel.getState().getTotalWage(), "Total wage should remain 2 at minimum wages");
+        assertEquals(50, viewModel.getState().getCookWage(), "Cook wage should not go below MIN_WAGE=50");
+        assertEquals(280, viewModel.getState().getTotalWage(), "Total wage should remain 280 at minimum wages");
     }
+
 }
