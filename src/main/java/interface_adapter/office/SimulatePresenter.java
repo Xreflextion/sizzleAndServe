@@ -20,7 +20,7 @@ public class SimulatePresenter implements SimulateOutputBoundary {
         final OfficeState officeState = officeViewModel.getState();
         officeState.setCurrentBalance(outputData.getCurrentBalance());
         officeState.setCurrentDay(outputData.getCurrentDay());
-        officeState.setPastCustomerCount(outputData.getPastCustomerCount());
+        officeState.setCurrentCustomerCount(outputData.getCurrentCustomerCount());
         officeViewModel.firePropertyChange();
 
         viewManagerModel.setState(officeViewModel.getViewName());
