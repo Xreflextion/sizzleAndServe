@@ -45,13 +45,13 @@ public class ReviewInteractor implements ReviewInputBoundary{
 
     @Override
     public void fetchDays(){
-        Set<Integer> dayKeys = reviewDAOHash.getAllDays();
-        List<Integer> availableDays = new ArrayList<>(dayKeys);
+        List<Integer> availableDays = new ArrayList<>(reviewDAOHash.getAllDays());
+        availableDays.remove(Integer.valueOf(0));
         Collections.sort(availableDays);
+        availableDays.add(0,0);
 
-        ReviewState reviewState = new ReviewState();
-        reviewState.setAvailableDays(availableDays);
-        presenter.presentDays(reviewState);
+        // Pass only the updated list to the presenter
+        presenter.presentAvailableDays(availableDays);
     }
 
     // adds a review to the DAO

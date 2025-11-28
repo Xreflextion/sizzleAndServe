@@ -28,20 +28,20 @@ public class ReviewTest {
     }
 
     // Test output boundary/data to get presenter output
-    static class TestOutputBoundary implements ReviewOutputBoundary{
-        ReviewOutputData reviewOutputBoundary;
-        ReviewState reviewState;
-
-        @Override
-        public void present(ReviewOutputData outputData) {
-            this.reviewOutputBoundary = outputData;
-        }
-
-        @Override
-        public void presentDays(ReviewState state) {
-            this.reviewState = state;
-        }
-    }
+//    static class TestOutputBoundary implements ReviewOutputBoundary{
+//        ReviewOutputData reviewOutputBoundary;
+//        ReviewState reviewState;
+//
+//        @Override
+//        public void present(ReviewOutputData outputData) {
+//            this.reviewOutputBoundary = outputData;
+//        }
+//
+//        @Override
+//        public void presentDays(ReviewState state) {
+//            this.reviewState = state;
+//        }
+//    }
 
     @Test
     void testAverageReviewDay(){
