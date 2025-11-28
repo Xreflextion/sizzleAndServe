@@ -29,10 +29,8 @@ public class ReviewController {
     }
 
 
-    // Return available days
-    public List<Integer> getAvailableDays() {
-        return reviewInteractor.getAvailableDays();
+    // Requests available days
+    public void requestDays() {
+        reviewInteractor.fetchDays();
     }
 }
-
-

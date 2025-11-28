@@ -23,4 +23,11 @@ public class ReviewPresenter implements ReviewOutputBoundary {
         reviewViewModel.setState(state);
         reviewViewModel.firePropertyChange();
     }
+
+    @Override
+    public void presentDays(ReviewState state) {
+        ReviewState reviewState = reviewViewModel.getState();
+        reviewState.setAvailableDays(reviewState.getAvailableDays());
+        reviewViewModel.firePropertyChange();
+    }
 }

@@ -1,11 +1,8 @@
 package use_case.review;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
-
 import interface_adapter.ViewModel;
 import entity.ReviewEntity;
 import data_access.ReviewDAOHash;
@@ -14,33 +11,25 @@ import interface_adapter.review.ReviewViewModel;
 
 
 public class ReviewInteractor implements ReviewInputBoundary{
-
     // Creates a DAO hashmap
     private final ReviewDAOHash reviewDAOHash;
-
     // Creates the presenter which is bounded by the output boundary
     private final ReviewOutputBoundary presenter;
-
     public ReviewInteractor(ReviewDAOHash reviewDAOHash, ReviewOutputBoundary presenter) {
         this.reviewDAOHash = reviewDAOHash;
         this.presenter = presenter;
     }
-
     @Override
     public void execute(ReviewInputData input){
-
         Integer day = input.getDay();
         double averageRating;
-
         if (day != null){
             // For the day average
             averageRating = getAverageReviewDay(day);
-
         }
         else{
             averageRating = getAverageOverall();
         }
-
         String emoji = getEmoji(averageRating);
 
         ReviewOutputData output = new ReviewOutputData(averageRating, emoji);
@@ -54,11 +43,21 @@ public class ReviewInteractor implements ReviewInputBoundary{
         presenter.present(output);
     }
 
+    @Override
+    public void fetchDays(){
+        Set<Integer> dayKeys = reviewDAOHash.getAllDays();
+        List<Integer> availableDays = new ArrayList<>(dayKeys);
+        Collections.sort(availableDays);
+
+        ReviewState reviewState = new ReviewState();
+        reviewState.setAvailableDays(availableDays);
+        presenter.presentDays(reviewState);
+    }
+
     // adds a review to the DAO
     public void addReview(ReviewEntity review){
         reviewDAOHash.addReview(review);
     }
-
     // This will get the total number of reviews of the entire restaurant
     // It will iterate through the values of the hashmap
     // The values it will iterate through are array list since they keep the reviews
@@ -72,14 +71,11 @@ public class ReviewInteractor implements ReviewInputBoundary{
         }
         return counter;
     }
-
     // This will get the total num of reviews for a specific day
     // Uses DAO to get the number of the reviews for said day
     public int getDayTotalNumReview(int day){
         return reviewDAOHash.getReviewsByDay(day).size();
     }
-
-
     // gets the average review by the day
     // For example day 1: 3.5 stars out of 5
     // uses the getReviews for the day to get the number of reviews for that day
@@ -89,7 +85,6 @@ public class ReviewInteractor implements ReviewInputBoundary{
         double totalReviews = reviewDAOHash.getReviewsByDay(day).size();
         for(Double reviews: reviewDAOHash.getReviewsByDay(day)){
             numerator += reviews;
-
         }
         if(totalReviews > 0){
             double avg = numerator / totalReviews;
@@ -98,9 +93,7 @@ public class ReviewInteractor implements ReviewInputBoundary{
         else{
             return 0.0;
         }
-
     }
-
     // gets the average reviews overall for the restaurant
     // uses the get all reviews to iterate through all reviews
     public double getAverageOverall(){
@@ -116,13 +109,9 @@ public class ReviewInteractor implements ReviewInputBoundary{
         else{
             return 0.0;
         }
-
     }
-
-
     // Returns emoji
     public String getEmoji(double rating){
-
         if(rating <= 2.0){
             return "\uD83D\uDE22";
         }
@@ -133,7 +122,6 @@ public class ReviewInteractor implements ReviewInputBoundary{
             return "\uD83D\uDE01";
         }
     }
-
     // Gets all the days the user has completed
     public List<Integer> getAvailableDays() {
         Set<Integer> dayKeys = reviewDAOHash.getAllDays();
@@ -141,7 +129,4 @@ public class ReviewInteractor implements ReviewInputBoundary{
         Collections.sort(days);
         return days;
     }
-
-
 }
-

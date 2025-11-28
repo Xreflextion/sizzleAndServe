@@ -9,5 +9,5 @@ import java.util.List;
 public interface ReviewInputBoundary {
     void execute(ReviewInputData inputData);
 
-    List<Integer> getAvailableDays();
+    void fetchDays();
 }

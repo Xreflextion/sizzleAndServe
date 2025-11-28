@@ -15,15 +15,12 @@ public class ReviewState {
     public double getRating() {
         return this.rating;
     }
-
     public void setRating(double rating) {
         this.rating = rating;
     }
-
     public String getEmoji() {
         return this.emoji;
     }
-
     public void setEmoji(String emoji) {
         this.emoji = emoji;
     }

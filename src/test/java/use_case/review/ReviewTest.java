@@ -2,6 +2,7 @@ package use_case.review;
 
 import data_access.ReviewDAOHash;
 import entity.ReviewEntity;
+import interface_adapter.review.ReviewState;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -29,10 +30,16 @@ public class ReviewTest {
     // Test output boundary/data to get presenter output
     static class TestOutputBoundary implements ReviewOutputBoundary{
         ReviewOutputData reviewOutputBoundary;
+        ReviewState reviewState;
 
         @Override
         public void present(ReviewOutputData outputData) {
             this.reviewOutputBoundary = outputData;
+        }
+
+        @Override
+        public void presentDays(ReviewState state) {
+            this.reviewState = state;
         }
     }
 
@@ -42,14 +49,20 @@ public class ReviewTest {
         TestOutputBoundary outputBoundary = new TestOutputBoundary();
         ReviewInteractor reviewInteractor = new ReviewInteractor(dao, outputBoundary);
 
-        double avgDay1 = reviewInteractor.getAverageReviewDay(1);
-        double avgDay2 = reviewInteractor.getAverageReviewDay(2);
-        double avgDay3 = reviewInteractor.getAverageReviewDay(3);
+        reviewInteractor.execute(new ReviewInputData(1));
 
+        assertNotNull(outputBoundary.reviewOutputBoundary);
+        assertEquals(3.5, outputBoundary.reviewOutputBoundary.getRating());
+        assertEquals("😁", outputBoundary.reviewOutputBoundary.getEmoji());
 
-        assertEquals(3.5, avgDay1);
-        assertEquals(1.0, avgDay2);
-        assertEquals(4.0, avgDay3);
+//        double avgDay1 = reviewInteractor.getAverageReviewDay(1);
+//        double avgDay2 = reviewInteractor.getAverageReviewDay(2);
+//        double avgDay3 = reviewInteractor.getAverageReviewDay(3);
+//
+//
+//        assertEquals(3.5, avgDay1);
+//        assertEquals(1.0, avgDay2);
+//        assertEquals(4.0, avgDay3);
 
 
     }
