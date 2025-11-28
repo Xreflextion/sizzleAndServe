@@ -1,18 +1,26 @@
 package interface_adapter.office;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.buy_serving.BuyServingViewModel;
+import interface_adapter.manage_wages.WageViewModel;
 import use_case.simulate.SimulateOutputBoundary;
 import use_case.simulate.SimulateOutputData;
 
 public class SimulatePresenter implements SimulateOutputBoundary {
 
     private final OfficeViewModel officeViewModel;
+    private final BuyServingViewModel buyServingViewModel;
     private final ViewManagerModel viewManagerModel;
+    private final WageViewModel wageViewModel;
 
     public SimulatePresenter(ViewManagerModel viewManagerModel,
-                           OfficeViewModel officeViewModel) {
+                            OfficeViewModel officeViewModel,
+                             BuyServingViewModel buyServingViewModel,
+                             WageViewModel wageViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.officeViewModel = officeViewModel;
+        this.buyServingViewModel = buyServingViewModel;
+        this.wageViewModel = wageViewModel;
     }
 
     @Override
@@ -22,6 +30,20 @@ public class SimulatePresenter implements SimulateOutputBoundary {
         officeState.setCurrentDay(outputData.getCurrentDay());
         officeState.setCurrentCustomerCount(outputData.getCurrentCustomerCount());
         officeViewModel.firePropertyChange();
+
+        String[] dishNames = buyServingViewModel.getState().dishNames;
+        int[] stocks = new int[dishNames.length];
+        for (int i = 0; i < dishNames.length; i ++) {
+            stocks[i] = 0;
+            if (outputData.getStock().containsKey(dishNames[i])) {
+                stocks[i] = outputData.getStock().get(dishNames[i]);
+            }
+        }
+        buyServingViewModel.setDishStocks(stocks);
+        buyServingViewModel.setNewBalance(outputData.getCurrentBalance());
+        buyServingViewModel.firePropertyChange();
+        wageViewModel.getState().setCurrentBalance(outputData.getCurrentBalance());
+        wageViewModel.firePropertyChange();
 
         viewManagerModel.setState(officeViewModel.getViewName());
         viewManagerModel.firePropertyChange();

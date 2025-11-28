@@ -130,7 +130,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
         dayRecordsDataAccessInterface.saveNewData(newDayRecord);
 
         // Generating output data
-        SimulateOutputData outputData = new SimulateOutputData(newDay, currentBalance, customerCount);
+        SimulateOutputData outputData = new SimulateOutputData(newDay, currentBalance, customerCount, stock);
         simulatePresenter.prepareSuccessView(outputData);
 
         System.out.println(playerDataAccessObject.getPlayer().getBalance());

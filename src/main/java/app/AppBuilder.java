@@ -109,7 +109,7 @@ public class AppBuilder {
         buyServingViewModel.setDishCosts(dishCosts);
         buyServingViewModel.setDishStocks(dishStocks);
 
-        BuyServingPresenter presenter = new BuyServingPresenter(buyServingViewModel);
+        BuyServingPresenter presenter = new BuyServingPresenter(buyServingViewModel, officeViewModel, wageViewModel);
         BuyServingInteractor interactor = new BuyServingInteractor(playerDAO, pantryDAO, presenter);
         BuyServingController controller = new BuyServingController(interactor);
 
@@ -178,7 +178,7 @@ public class AppBuilder {
 
     public AppBuilder addSimulateUseCase() {
         final SimulateOutputBoundary simulateOutputBoundary = new SimulatePresenter(viewManagerModel,
-                officeViewModel);
+                officeViewModel, buyServingViewModel, wageViewModel);
 
         final SimulateInputBoundary simulateInteractor = new SimulateInteractor(
                 simulateOutputBoundary,
