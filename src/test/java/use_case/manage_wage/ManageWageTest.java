@@ -73,9 +73,9 @@ public class ManageWageTest {
         // 5) View stack
         viewModel = new WageViewModel();
         state = viewModel.getState();
-        state.setCookWage(employees.get("Cook").getWage());                 // 1
+        state.setCookWage(employees.get("Cook").getWage());                 // 230
         state.setCookWageEffect(employees.get("Cook").getWageEffect());     // 1.0
-        state.setWaiterWage(employees.get("Waiter").getWage());             // 1
+        state.setWaiterWage(employees.get("Waiter").getWage());             // 230
         state.setWaiterWageEffect(employees.get("Waiter").getWageEffect()); // 1.0
         viewModel.setState(state);
 
@@ -94,7 +94,7 @@ public class ManageWageTest {
         assertEquals(240, viewModel.getState().getCookWage(), "Cook wage should be 250 after one increase");
         assertEquals(240, viewModel.getState().getWaiterWage(), "Waiter wage should be 250 after one increase");
         assertEquals(480, viewModel.getState().getTotalWage(), "Total wage should be 500 after two increases");
-        assertEquals((float)37.2, viewModel.getState().getCookWageEffect(),"Cook's wage effect increased by 10%");
+        assertEquals((float)37.2, viewModel.getState().getCookWageEffect(),"Cook's wage effect increased to 37.2");
         assertNull(viewModel.getState().getWarningMessage(), "No warning should occur on successful increase");
     }
 
@@ -104,8 +104,8 @@ public class ManageWageTest {
         controller.cookIncrease();    // total: 470 (cook: 240)
         controller.cookDecrease();    // total: 460 (cook: 230)
 
-        assertEquals(230, viewModel.getState().getCookWage(), "Cook wage should return to 1 after decrease");
-        assertEquals(460, viewModel.getState().getTotalWage(), "Total wage should return to 2 after decrease");
+        assertEquals(230, viewModel.getState().getCookWage(), "Cook wage should return to 230 after decrease");
+        assertEquals(460, viewModel.getState().getTotalWage(), "Total wage should return to 460 after decrease");
         assertNull(viewModel.getState().getWarningMessage(), "No warning should occur on successful increase");
     }
 
