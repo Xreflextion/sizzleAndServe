@@ -2,7 +2,6 @@ package use_case.review;
 
 import data_access.ReviewDAOHash;
 import entity.ReviewEntity;
-import interface_adapter.review.ReviewState;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -28,49 +27,38 @@ public class ReviewTest {
     }
 
     // Test output boundary/data to get presenter output
-//    static class TestOutputBoundary implements ReviewOutputBoundary{
-//        ReviewOutputData reviewOutputBoundary;
-//        ReviewState reviewState;
-//
-//        @Override
-//        public void present(ReviewOutputData outputData) {
-//            this.reviewOutputBoundary = outputData;
-//        }
-//
-//        @Override
-//        public void presentDays(ReviewState state) {
-//            this.reviewState = state;
-//        }
-//    }
+    static class TestPresenter implements ReviewOutputBoundary{
+        ReviewOutputData reviewOutput;
+        List<Integer> availableDaysList;
+        @Override
+        public void present(ReviewOutputData outputData) {
+            this.reviewOutput = outputData;
+        }
+
+        @Override
+        public void presentAvailableDays(List<Integer> availableDays) {
+            this.availableDaysList = availableDays;
+        }
+    }
 
     @Test
-    void testAverageReviewDay(){
+    void testExecuteDayReview(){
         TestReviewDAO dao = new TestReviewDAO();
-        TestOutputBoundary outputBoundary = new TestOutputBoundary();
-        ReviewInteractor reviewInteractor = new ReviewInteractor(dao, outputBoundary);
+        TestPresenter presenter = new TestPresenter ();
+        ReviewInteractor reviewInteractor = new ReviewInteractor(dao, presenter);
 
         reviewInteractor.execute(new ReviewInputData(1));
 
-        assertNotNull(outputBoundary.reviewOutputBoundary);
-        assertEquals(3.5, outputBoundary.reviewOutputBoundary.getRating());
-        assertEquals("😁", outputBoundary.reviewOutputBoundary.getEmoji());
-
-//        double avgDay1 = reviewInteractor.getAverageReviewDay(1);
-//        double avgDay2 = reviewInteractor.getAverageReviewDay(2);
-//        double avgDay3 = reviewInteractor.getAverageReviewDay(3);
-//
-//
-//        assertEquals(3.5, avgDay1);
-//        assertEquals(1.0, avgDay2);
-//        assertEquals(4.0, avgDay3);
-
+        assertNotNull(presenter.reviewOutput);
+        assertEquals(3.5, presenter.reviewOutput.getRating());
+        assertEquals("\uD83D\uDE01", presenter.reviewOutput.getEmoji());
 
     }
 
     @Test
-    void testAverageOverall(){
+    void testExecuteOverallReview(){
         TestReviewDAO dao = new TestReviewDAO();
-        TestOutputBoundary outputBoundary = new TestOutputBoundary();
+        TestPresenter outputBoundary = new TestPresenter();
         ReviewInteractor reviewInteractor = new ReviewInteractor(dao, outputBoundary);
 
         double overallAvg = reviewInteractor.getAverageOverall();
@@ -79,51 +67,60 @@ public class ReviewTest {
     }
 
     @Test
-    void testGetEmoji(){
+    void testFetchAvailableDays(){
         TestReviewDAO dao = new TestReviewDAO();
-        TestOutputBoundary outputBoundary = new TestOutputBoundary();
+        TestPresenter  outputBoundary = new TestPresenter ();
         ReviewInteractor reviewInteractor = new ReviewInteractor(dao, outputBoundary);
 
-        assertEquals("\uD83D\uDE22", reviewInteractor.getEmoji(1.5)); // sad
-        assertEquals("\uD83D\uDE10", reviewInteractor.getEmoji(2.5)); // normal
-        assertEquals("\uD83D\uDE01", reviewInteractor.getEmoji(4.5)); // happy
+        reviewInteractor.fetchDays();
+
+        assertNotNull(outputBoundary.availableDaysList);
+
+        // Placeholder 0 should be first
+        assertEquals(List.of(0,1,2,3), outputBoundary.availableDaysList);
+    }
+
+    @Test
+    void testGetAverageOverallAndEmoji(){
+        TestReviewDAO dao = new TestReviewDAO();
+        TestPresenter  outputBoundary = new TestPresenter ();
+        ReviewInteractor reviewInteractor = new ReviewInteractor(dao, outputBoundary);
+
+        double overallAvg = reviewInteractor.getAverageOverall();
+        assertEquals(2.6, overallAvg);
+
+        assertEquals("\uD83D\uDE22", reviewInteractor.getEmoji(1.5));
+        assertEquals("\uD83D\uDE10",  reviewInteractor.getEmoji(2.5));
+        assertEquals("\uD83D\uDE01",  reviewInteractor.getEmoji(5.0));
+    }
+
+    @Test
+    void testGetAverageReviewDay(){
+        TestReviewDAO dao = new TestReviewDAO();
+        TestPresenter  outputBoundary = new TestPresenter();
+        ReviewInteractor reviewInteractor = new ReviewInteractor(dao, outputBoundary);
+
+        double avgDay1 = reviewInteractor.getAverageReviewDay(1);
+        double avgDay2 = reviewInteractor.getAverageReviewDay(2);
+        double avgDay3 = reviewInteractor.getAverageReviewDay(3);
+
+        assertEquals(3.5, avgDay1);
+        assertEquals(1.0, avgDay2);
+        assertEquals(4.0, avgDay3);
 
     }
 
     @Test
-    void testGetAvailableDays(){
+    void testGetAvailableDaysDirect(){
         TestReviewDAO dao = new TestReviewDAO();
-        TestOutputBoundary outputBoundary = new TestOutputBoundary();
+        TestPresenter outputBoundary = new TestPresenter();
         ReviewInteractor reviewInteractor = new ReviewInteractor(dao, outputBoundary);
 
         List<Integer> days = reviewInteractor.getAvailableDays();
         assertEquals(List.of(1,2,3), days);
     }
 
-    @Test
-    void testExecuteDayReview(){
-        TestReviewDAO dao = new TestReviewDAO();
-        TestOutputBoundary outputBoundary = new TestOutputBoundary();
-        ReviewInteractor reviewInteractor = new ReviewInteractor(dao, outputBoundary);
 
-        // For day 1
-        reviewInteractor.execute(new ReviewInputData(1));
-        assertNotNull(outputBoundary.reviewOutputBoundary);
-        assertEquals(3.5, outputBoundary.reviewOutputBoundary.getRating());
-        assertEquals("\uD83D\uDE01", outputBoundary.reviewOutputBoundary.getEmoji());
-    }
-
-    @Test
-    void testExecuteOverallReview(){
-        TestReviewDAO dao = new TestReviewDAO();
-        TestOutputBoundary outputBoundary = new TestOutputBoundary();
-        ReviewInteractor reviewInteractor = new ReviewInteractor(dao, outputBoundary);
-
-        reviewInteractor.execute(new ReviewInputData(null));
-        assertNotNull(outputBoundary.reviewOutputBoundary);
-        assertEquals(2.6, outputBoundary.reviewOutputBoundary.getRating());
-        assertEquals("\uD83D\uDE10", outputBoundary.reviewOutputBoundary.getEmoji());
-    }
 
 
 }
