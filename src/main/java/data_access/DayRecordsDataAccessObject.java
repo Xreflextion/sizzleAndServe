@@ -2,11 +2,12 @@ package data_access;
 
 import entity.PerDayRecord;
 import use_case.insights_performance_calculation.DayRecordsDataAccessInterface;
+import use_case.simulate.SimulateDayRecordsDataAccessInterface;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DayRecordsDataAccessObject implements DayRecordsDataAccessInterface {
+public class DayRecordsDataAccessObject implements DayRecordsDataAccessInterface, SimulateDayRecordsDataAccessInterface {
 
     private List<PerDayRecord> dayRecords = new ArrayList<PerDayRecord>();
 

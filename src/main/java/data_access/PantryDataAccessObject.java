@@ -1,7 +1,6 @@
 package data_access;
 
-import use_case.BuyServing.PantryDataAccessInterface;
-import entity.Player;
+import use_case.buy_serving.PantryDataAccessInterface;
 import entity.Pantry;
 import entity.Recipe;
 import okhttp3.*;
@@ -9,14 +8,17 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 import use_case.product_prices.ProductPricesPantryDataAccessInterface;
 import constants.Constants;
+import use_case.simulate.SimulatePantryDataAccessInterface;
 
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
-public class PantryDataAccessObject implements PantryDataAccessInterface, ProductPricesPantryDataAccessInterface {
+public class PantryDataAccessObject implements PantryDataAccessInterface, ProductPricesPantryDataAccessInterface, SimulatePantryDataAccessInterface {
 
     private final Pantry pantry;
 
@@ -53,10 +55,45 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
         }
     }
 
+    public PantryDataAccessObject(Pantry pantry) {
+        this.pantry = pantry;
+    }
+
     @Override
     public Pantry getPantry() {
         return pantry;
     }
+
+     /**
+     * Return a mapping of dish name to integer where
+     * each integer represents the stock of the corresponding dish name
+     */
+    public Map<String, Integer> getStock() {
+        Map<String, Integer> stock = new HashMap<>();
+        for (String dishName: pantry.getDishNames()) {
+            stock.put(dishName, pantry.getRecipe(dishName).getStock());
+        }
+        return stock;
+    }
+
+    /**
+     * Replace the current stock with the stock passed in
+     * @param stock The new stock
+     */
+    public void saveStock(Map<String, Integer> stock) {
+        for (String dishName: stock.keySet()) {
+            pantry.getRecipe(dishName).setStock(stock.get(dishName));
+        }
+    }
+
+    public Map<String, Double> getCurrentPrices() {
+        Map<String, Double> prices = new HashMap<>();
+        for (String dishName: pantry.getDishNames()) {
+            prices.put(dishName, pantry.getRecipe(dishName).getCurrentPrice());
+        }
+        return prices;
+    }
+
 
     @Override
     public void changePrice(Recipe recipe) {

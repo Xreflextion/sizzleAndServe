@@ -7,7 +7,10 @@ public class Main {
         AppBuilder appBuilder = new AppBuilder();
         JFrame application = appBuilder
                 .addOfficeView()
+                .addManageWageViewAndUseCase()
                 .addProductPricesView()
+                .addBuyServingViewAndUseCase()
+                .addReviewViewAndUseCase()
                 .addSimulateUseCase()
                 .addInsightsView()
                 .build();

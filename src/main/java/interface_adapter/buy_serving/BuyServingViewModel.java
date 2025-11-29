@@ -1,10 +1,10 @@
-package interface_adapter.BuyServing;
+package interface_adapter.buy_serving;
 
 import interface_adapter.ViewModel;
 
-import java.util.*;
-
 public class BuyServingViewModel extends ViewModel<BuyServingViewModel.State> {
+
+    public static final String VIEW_NAME = "buyServing";
 
     public static class State{
         public String message = "";
@@ -20,8 +20,8 @@ public class BuyServingViewModel extends ViewModel<BuyServingViewModel.State> {
         setState(new State());
     }
 
-    public void setDishNames(String[] names) {
-        getState().dishNames = names;
+    public void setDishNames(String[] dishNames) {
+        getState().dishNames = dishNames;
         firePropertyChange();
     }
 

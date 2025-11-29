@@ -1,5 +1,7 @@
 package interface_adapter.manage_wages;
 
+import entity.Employee;
+
 public class WageState {
     /**
      * The state for the Wage Management View Model.
@@ -8,6 +10,9 @@ public class WageState {
     private int cookWage;
     private float waiterWageEffect;
     private float cookWageEffect;
+    private double currentBalance;
+    private String warningMessage;
+
 
     public void setWaiterWage(int waiterWage) {
         this.waiterWage = waiterWage;
@@ -20,6 +25,7 @@ public class WageState {
     public void setWaiterWageEffect(float waiterWageEffect) {
         this.waiterWageEffect = waiterWageEffect;
     }
+
     public void setCookWageEffect(float cookWageEffect) {
         this.cookWageEffect = cookWageEffect;
     }
@@ -32,6 +38,10 @@ public class WageState {
         return cookWage;
     }
 
+    public int getTotalWage() {
+        return Employee.getTotalWage();
+    }
+
     public float getWaiterWageEffect() {
         return waiterWageEffect;
     }
@@ -39,4 +49,12 @@ public class WageState {
     public float getCookWageEffect() {
         return cookWageEffect;
     }
+
+    public void setCurrentBalance(double currentBalance) {this.currentBalance = currentBalance;}
+
+    public void setWarningMessage(String warningMessage) {this.warningMessage = warningMessage;}
+
+    public String getWarningMessage() {return warningMessage;}
+
+    public double getCurrentBalance() {return  currentBalance;}
 }
