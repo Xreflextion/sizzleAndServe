@@ -58,7 +58,12 @@ public class ReviewDAOHash implements ReviewDAO, SimulateReviewDataAccessInterfa
     // gets the reviews by the day
     @Override
     public ArrayList<Double> getReviewsByDay(int day) {
-        return storage.get(day);
+
+        ArrayList<Double> reviews = storage.get(day);
+        if(reviews == null){
+            return new ArrayList<>();
+        }
+        return reviews;
     }
 
 
