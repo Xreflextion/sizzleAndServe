@@ -2,17 +2,25 @@ package app;
 
 import data_access.*;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.insight.*;
 import interface_adapter.office.OfficeViewModel;
 import interface_adapter.office.SimulateController;
 import interface_adapter.office.SimulatePresenter;
 import interface_adapter.product_prices.ProductPricesController;
 import interface_adapter.product_prices.ProductPricesPresenter;
 import interface_adapter.product_prices.ProductPricesViewModel;
+import use_case.insights_day_calculation.DayInsightsInputBoundary;
+import use_case.insights_day_calculation.DayInsightsInteractor;
+import use_case.insights_day_calculation.DayInsightsOutputBoundary;
+import use_case.insights_performance_calculation.PerformanceCalculationInputBoundary;
+import use_case.insights_performance_calculation.PerformanceCalculationInteractor;
+import use_case.insights_performance_calculation.PerformanceCalculationOutputBoundary;
 import use_case.product_prices.ProductPricesInteractor;
 import use_case.product_prices.ProductPricesOutputBoundary;
 import use_case.simulate.SimulateInputBoundary;
 import use_case.simulate.SimulateInteractor;
 import use_case.simulate.SimulateOutputBoundary;
+import view.InsightsView;
 import view.OfficeView;
 import view.ProductPricesView;
 
@@ -35,6 +43,9 @@ public class AppBuilder {
 
     private ProductPricesView productPricesView;
     private ProductPricesViewModel productPricesViewModel;
+
+    private InsightsViewModel insightsViewModel;
+    private InsightsView insightsView;
 
     public AppBuilder() {
         cardPanel.setLayout(new CardLayout());
@@ -68,6 +79,22 @@ public class AppBuilder {
         SimulateController controller = new SimulateController(simulateInteractor);
         officeView.setSimulationController(controller);
         return this;
+    }
+
+    public AppBuilder addInsightsView(){
+        insightsViewModel = new InsightsViewModel();
+
+        PerformanceCalculationOutputBoundary performancePresenter = new PerformanceCalculationPresenter (insightsViewModel, viewManagerModel);
+        PerformanceCalculationInputBoundary performanceInteractor = new PerformanceCalculationInteractor(new DayRecordsDataAccessObject(), performancePresenter);
+        PerformanceCalculationController performanceController = new PerformanceCalculationController(performanceInteractor);
+        DayInsightsOutputBoundary dayInsightsPresenter = new DayInsightsPresenter(insightsViewModel, viewManagerModel);
+        DayInsightsInputBoundary dayInsightsInteractor = new DayInsightsInteractor(new DayRecordsDataAccessObject(), dayInsightsPresenter);
+        DayInsightsController dayInsightsController = new DayInsightsController(dayInsightsInteractor);
+
+        insightsView = new InsightsView(insightsViewModel, performanceController,dayInsightsController);
+        cardPanel.add(insightsView, InsightsView.viewName);
+        return this;
+
     }
 
     public JFrame build() {

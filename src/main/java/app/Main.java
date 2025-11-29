@@ -9,6 +9,7 @@ public class Main {
                 .addOfficeView()
                 .addProductPricesView()
                 .addSimulateUseCase()
+                .addInsightsView()
                 .build();
 
         application.pack();
