@@ -1,5 +1,7 @@
 package data_access;
 
+import com.google.gson.JsonObject;
+import constants.Constants;
 import entity.Player;
 import use_case.buy_serving.PlayerDataAccessInterface;
 import use_case.manage_wage.WagePlayerDataAccessInterface;
@@ -8,9 +10,23 @@ import use_case.simulate.SimulatePlayerDataAccessInterface;
 public class PlayerDataAccessObject implements PlayerDataAccessInterface,
         WagePlayerDataAccessInterface, SimulatePlayerDataAccessInterface {
     private final Player player;
+    private FileHelperObject fileHelperObject;
 
-    public PlayerDataAccessObject(double balance) {
-        this.player = new Player("Name", balance);
+    public PlayerDataAccessObject(double balance, FileHelperObject fileHelperObject) {
+
+        this.fileHelperObject = fileHelperObject;
+
+        JsonObject playerObject = fileHelperObject.getObjectFromSaveData(Constants.PLAYER_KEY);
+
+        String name = "Name";
+        if (playerObject.keySet().contains("name")) {
+            name = playerObject.get("name").getAsString();
+        }
+        if (playerObject.keySet().contains("balance")) {
+            balance = playerObject.get("balance").getAsDouble();
+        }
+        this.player = new Player(name, balance);
+
     }
 
     @Override
