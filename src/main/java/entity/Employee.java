@@ -27,8 +27,9 @@ public class Employee {
         totalWage += this.wage;
     }
 
+    // divide wage - MIN_WAGE by 10 since wageEffect increases by 0.2 for every 10 wage increase
     private float calculateInitialEffect(int wage) {
-        return 1 + (wage - MIN_WAGE) * 0.2f;
+        return 1 + (wage - MIN_WAGE)/10 * 0.2f;
     }
 
     public void increaseWage() {

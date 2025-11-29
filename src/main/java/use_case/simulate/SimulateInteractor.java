@@ -8,18 +8,20 @@ import entity.ReviewEntity;
 import java.util.*;
 
 public class SimulateInteractor implements SimulateInputBoundary {
+    public static final int CUSTOMER_RANGE = 2;
     // value to add to yesterday's customer count to determine today's possible range of customers
-    private final int CUSTOMER_RANGE = 2;
+    public static final double COOK_EFFECT_REDUCTION = 1.2;
+    // Amount to subtract from cook effect to allow cook effect to impact customer count negatively
+    public static final double WAITER_EFFECT_REDUCTION = 1.6;
+    // Amount to subtract from waiter effect to allow waiter effect to impact reviews negatively
+    public static final String COOK_POSITION = "Cook";
+    public static final String WAITER_POSITION = "Waiter";
+
+
     private final int NORMAL_RATING_UPPER_BOUND = 5;
     private final int NO_STOCK_RATING_UPPER_BOUND = 2;
     private final int RATING_LOWER_BOUND = 1;
 
-    private final String COOK_POSITION = "Cook";
-    private final String WAITER_POSITION = "Waiter";
-    private final double COOK_EFFECT_REDUCTION = 1.2;
-    // Amount to subtract from cook effect to allow cook effect to impact customer count negatively
-    private final double WAITER_EFFECT_REDUCTION = 1.6;
-    // Amount to subtract from waiter effect to allow waiter effect to impact reviews negatively
 
     private final SimulateOutputBoundary simulatePresenter;
 
@@ -54,7 +56,6 @@ public class SimulateInteractor implements SimulateInputBoundary {
         String[] dishes = pantry.getDishNames();
         Map<String, Integer> stock = pantryDataAccessObject.getStock();
         Map<String, Double> currentPrices = pantryDataAccessObject.getCurrentPrices();
-        System.out.println(pantryDataAccessObject.getCurrentPrices());
 
         double currentBalance = playerDataAccessObject.getPlayer().getBalance();
         int curDay = simulateInputData.getCurrentDay();
@@ -79,7 +80,6 @@ public class SimulateInteractor implements SimulateInputBoundary {
         double expenses = 0;
 
         // TODO Remove print statements
-        System.out.println(pantryDataAccessObject.getStock());
 
         for (String order: orders) {
             double newRating;
@@ -120,10 +120,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
         player.setBalance(currentBalance);
         playerDataAccessObject.savePlayer(player);
 
-        double avgRating = 3;
-        if (!ratings.isEmpty()) {
-            avgRating = ratingsSum / ratings.size();
-        }
+        double avgRating = ratingsSum / ratings.size();
 
         // Saving day record
         PerDayRecord newDayRecord = new PerDayRecord(revenue, expenses, avgRating);
@@ -133,8 +130,6 @@ public class SimulateInteractor implements SimulateInputBoundary {
         SimulateOutputData outputData = new SimulateOutputData(newDay, currentBalance, customerCount, stock);
         simulatePresenter.prepareSuccessView(outputData);
 
-        System.out.println(playerDataAccessObject.getPlayer().getBalance());
-        System.out.println(pantryDataAccessObject.getStock());
         System.out.println("Expenses: " + dayRecordsDataAccessInterface.getDayData(newDay).getExpenses());
         System.out.println("Revenue: " + dayRecordsDataAccessInterface.getDayData(newDay).getRevenue());
         System.out.println("Profit: " + dayRecordsDataAccessInterface.getDayData(newDay).getProfit());
@@ -151,7 +146,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
      * @return average rating
      */
     private double getAverageRating(ArrayList<Double> ratings) {
-        if (ratings == null || ratings.isEmpty()) {
+        if (ratings.isEmpty()) {
             return 3;
         }
         double sum = 0;
@@ -196,17 +191,11 @@ public class SimulateInteractor implements SimulateInputBoundary {
         double cookEffectAddition = (cookEffect/COOK_EFFECT_REDUCTION)*customerCount*(1/(customerCount - 0.7));
         System.out.println("cook effect addition and result " + cookEffectAddition + " " + customerCount);
         customerCount += cookEffectAddition;
-        if (rating > 0) {
-
-            System.out.println("result of rating");
-            System.out.println(generateRatingMultiplier(rating));
-            // Step 3: Multiply the customerCount by a rating multiplier
-            // Follows the function: f(x) = 0.25*(x - 3.0) + 1.0
-            customerCount *= generateRatingMultiplier(rating);
-            System.out.println("new cus count");
-            System.out.println(customerCount);
-        }
-
+        System.out.println("result of rating");
+        System.out.println(generateRatingMultiplier(rating));
+        // Step 3: Multiply the customerCount by a rating multiplier
+        // Follows the function: f(x) = 0.25*(x - 3.0) + 1.0
+        customerCount *= generateRatingMultiplier(rating);
         return (int) customerCount;
     }
 
