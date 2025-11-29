@@ -1,0 +1,20 @@
+{
+  "recipes": [
+    {"name": "name", "stock": 5, "base_price": 10.0, "current_price": 12.0},
+    {"name": "name", "stock": 5, "base_price": 10.0, "current_price": 12.0},
+    {"name": "name", "stock": 5, "base_price": 10.0, "current_price": 12.0}
+  ],
+  "employees": [{
+    "position": "Cook",
+    "wage": 50
+  },{
+    "position": "Waiter",
+    "wage": 50
+  }],
+  "player": {"current_balance": 5, "current_day": 4, "current_customer_count": 20},
+  "days": [
+    {"day_number": 1, "revenue": 100.0, "expenses": 50.0, "rating": 4.5, "ratings_list": [5, 4, 5, 4]},
+    {"day_number": 2, "revenue": 150.0, "expenses": 70.0, "rating": 4.7, "ratings_list": [5, 5, 4, 5]},
+    {"day_number": 3, "revenue": 200.0, "expenses": 90.0, "rating": 4.8, "ratings_list": [5, 5, 5, 4]}
+  ]
+}
