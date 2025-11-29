@@ -67,24 +67,35 @@ public class ReviewTest {
     }
 
     @Test
+    void testExecuteDayNull(){
+        TestReviewDAO dao = new TestReviewDAO();
+        TestPresenter presenter = new TestPresenter();
+        ReviewInteractor reviewInteractor = new ReviewInteractor(dao, presenter);
+
+        reviewInteractor.execute(new ReviewInputData(null));
+        assertEquals(2.6, presenter.reviewOutput.getRating());
+        assertEquals("\uD83D\uDE10", presenter.reviewOutput.getEmoji());
+    }
+
+    @Test
     void testFetchAvailableDays(){
         TestReviewDAO dao = new TestReviewDAO();
-        TestPresenter  outputBoundary = new TestPresenter ();
-        ReviewInteractor reviewInteractor = new ReviewInteractor(dao, outputBoundary);
+        TestPresenter presenter = new TestPresenter ();
+        ReviewInteractor reviewInteractor = new ReviewInteractor(dao, presenter);
 
         reviewInteractor.fetchDays();
 
-        assertNotNull(outputBoundary.availableDaysList);
+        assertNotNull(presenter.availableDaysList);
 
         // Placeholder 0 should be first
-        assertEquals(List.of(0,1,2,3), outputBoundary.availableDaysList);
+        assertEquals(List.of(0,1,2,3), presenter.availableDaysList);
     }
 
     @Test
     void testGetAverageOverallAndEmoji(){
         TestReviewDAO dao = new TestReviewDAO();
-        TestPresenter  outputBoundary = new TestPresenter ();
-        ReviewInteractor reviewInteractor = new ReviewInteractor(dao, outputBoundary);
+        TestPresenter presenter = new TestPresenter ();
+        ReviewInteractor reviewInteractor = new ReviewInteractor(dao, presenter);
 
         double overallAvg = reviewInteractor.getAverageOverall();
         assertEquals(2.6, overallAvg);
