@@ -8,7 +8,7 @@ public interface PerformanceCalculationOutputBoundary {
     /**
      * Called by interactor when there is data in list and insights are successully calculated
      * @param outputData consists of all calculated Insights, including:
-     *                   averageRating, reviewCount,
+     *                   numberOfDays, averageRating, reviewCount,
      *                   totalRevenue, totalExpenses, totalProfits,
      *                   revenueTrend, expensesTrend, and profitTrend
      */

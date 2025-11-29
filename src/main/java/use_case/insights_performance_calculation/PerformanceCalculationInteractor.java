@@ -63,13 +63,16 @@ public class PerformanceCalculationInteractor implements PerformanceCalculationI
             profitTrend.add(dayProfit);
         }
 
-        double averageRating = totalRevenue/reviewCount;
+        double averageRating = sumRating/reviewCount;
+
+        int numberOfDays = allRecords.size();
 
         PerformanceCalculationOutputData outputData = new PerformanceCalculationOutputData(
-                averageRating,reviewCount, totalRevenue, totalExpenses, totalProfits,revenueTrend,expensesTrend, profitTrend);
+                averageRating,reviewCount, totalRevenue, totalExpenses, totalProfits,revenueTrend,expensesTrend, profitTrend, numberOfDays);
 
         presenter.successView(outputData);
     }
+
 
 
 //    public double calculateTotalRevenue(){

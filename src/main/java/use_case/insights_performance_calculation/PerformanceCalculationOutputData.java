@@ -18,8 +18,10 @@ public class PerformanceCalculationOutputData {
         private final List<Double> expensesTrend;
         private final List<Double> profitTrend;
 
+        private final int numberOfDays;
 
-        public PerformanceCalculationOutputData(double averageRating, int reviewCount, double totalRevenue, double totalExpenses, double totalProfit, List<Double> revenueTrend, List<Double> expensesTrend, List<Double> profitTrend) {
+
+        public PerformanceCalculationOutputData(double averageRating, int reviewCount, double totalRevenue, double totalExpenses, double totalProfit, List<Double> revenueTrend, List<Double> expensesTrend, List<Double> profitTrend, int numberOfDays) {
             this.averageRating = averageRating;
             this.reviewCount = reviewCount;
             this.totalRevenue = totalRevenue;
@@ -28,6 +30,7 @@ public class PerformanceCalculationOutputData {
             this.revenueTrend = revenueTrend;
             this.expensesTrend = expensesTrend;
             this.profitTrend = profitTrend;
+            this.numberOfDays = numberOfDays;
         }
 
         public double getAverageRating() {
@@ -61,6 +64,10 @@ public class PerformanceCalculationOutputData {
         }
         public List<Double> getProfitTrend() {
             return profitTrend;
+        }
+
+        public int getNumberOfDays() {
+            return numberOfDays;
         }
 
 

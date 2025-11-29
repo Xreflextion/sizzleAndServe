@@ -2,14 +2,19 @@ package interface_adapter.insight;
 
 import use_case.insights_performance_calculation.PerformanceCalculationOutputBoundary;
 import use_case.insights_performance_calculation.PerformanceCalculationOutputData;
+import view.DrillDownView;
+import view.InsightsView;
+import interface_adapter.ViewManagerModel;
 
 
 public class PerformanceCalculationPresenter implements PerformanceCalculationOutputBoundary {
 
     private final InsightsViewModel viewModel;
+    private final ViewManagerModel viewManagerModel;
 
-    public PerformanceCalculationPresenter(InsightsViewModel viewModel) {
+    public PerformanceCalculationPresenter(InsightsViewModel viewModel, ViewManagerModel viewManagerModel) {
         this.viewModel = viewModel;
+        this.viewManagerModel = viewManagerModel;
     }
 
     @Override
@@ -21,24 +26,27 @@ public class PerformanceCalculationPresenter implements PerformanceCalculationOu
         state.setReviewCount(outputData.getReviewCount());
         state.setTotalRevenue(outputData.getTotalRevenue());
         state.setTotalExpenses(outputData.getTotalExpenses());
-        state.setTotalProfit(outputData.getTotalProfit());
+        state.setTotalProfits(outputData.getTotalProfit());
         state.setRevenueTrend(outputData.getRevenueTrend());
         state.setExpensesTrend(outputData.getExpensesTrend());
         state.setProfitTrend(outputData.getProfitTrend());
 
-        state.setNumberofDays(outputData.getReviewCount());
+        state.setNumberOfDays(outputData.getNumberOfDays());
 
         viewModel.setState(state);
+
+        viewManagerModel.setState(InsightsView.viewName);
+        viewManagerModel.firePropertyChange();
 
     }
 
     @Override
     public void failView(String errorMessage){
-        InsightsState state = new InsightsState();
-
-        state.setErrorMessage(errorMessage);
-
-        viewModel.setState(state);
+//        InsightsState state = new InsightsState();
+//
+//        state.setErrorMessage(errorMessage);
+//
+//        viewModel.setState(state);
 
     }
 

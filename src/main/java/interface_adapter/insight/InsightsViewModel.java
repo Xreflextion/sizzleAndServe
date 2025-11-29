@@ -4,7 +4,7 @@ import interface_adapter.ViewModel;
 
 public class InsightsViewModel extends ViewModel<InsightsState>{
 
-    public static final String viewName = "InsightsViewModel";
+    public static final String viewName = "Insights";
     public InsightsViewModel() {
         super(viewName);
         setState(new InsightsState());

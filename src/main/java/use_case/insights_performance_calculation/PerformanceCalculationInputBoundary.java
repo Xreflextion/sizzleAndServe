@@ -12,4 +12,5 @@ public interface PerformanceCalculationInputBoundary {
      *  - give result to the presenter
      */
     void calculateInsights();
+
 }

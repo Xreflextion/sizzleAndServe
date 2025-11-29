@@ -12,6 +12,11 @@ public class InsightsState {
     private List<Double> revenueTrend;
     private List<Double> expensesTrend;
     private List<Double> profitTrend;
+    private double dayRevenue = 0;
+    private double dayExpenses = 0;
+    private double dayProfits = 0;
+    private double dayRating = 0;
+    private int dayNumber;
     private int numberOfDays;
 
     public double getAverageRating() {
@@ -44,6 +49,26 @@ public class InsightsState {
 
     public List<Double> getProfitTrend() {
         return profitTrend;
+    }
+
+    public double getDayRevenue() {
+        return dayRevenue;
+    }
+
+    public double getDayExpenses() {
+        return dayExpenses;
+    }
+
+    public double getDayProfits() {
+        return dayProfits;
+    }
+
+    public double getDayRating() {
+        return dayRating;
+    }
+
+    public int getDayNumber() {
+        return dayNumber;
     }
 
     public int getNumberOfDays() {
@@ -79,6 +104,26 @@ public class InsightsState {
 
     public void setProfitTrend(List<Double> profitTrend) {
         this.profitTrend = profitTrend;
+    }
+
+    public void setDayRevenue(double dayRevenue) {
+        this.dayRevenue = dayRevenue;
+    }
+
+    public void setDayExpenses(double dayExpenses) {
+        this.dayExpenses = dayExpenses;
+    }
+
+    public void setDayProfits(double dayProfits) {
+        this.dayProfits = dayProfits;
+    }
+
+    public void setDayRating(double dayRating) {
+        this.dayRating = dayRating;
+    }
+
+    public void setDayNumber(int dayNumber) {
+        this.dayNumber = dayNumber;
     }
 
     public void setNumberOfDays(int numberOfDays) {
