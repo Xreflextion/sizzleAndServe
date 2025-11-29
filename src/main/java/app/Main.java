@@ -11,8 +11,8 @@ public class Main {
                 .addProductPricesView()
                 .addBuyServingViewAndUseCase()
                 .addReviewViewAndUseCase()
+                .addInsightsViewAndUseCase()
                 .addSimulateUseCase()
-                .addInsightsView()
                 .build();
 
         application.pack();

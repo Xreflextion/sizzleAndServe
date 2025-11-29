@@ -19,8 +19,6 @@ import java.awt.Color;
 
 public class InsightsView extends JPanel implements PropertyChangeListener {
 
-    public static final String viewName = "Insights";
-
     private final InsightsViewModel viewModel;
     private final PerformanceCalculationController controller;
     private final DayInsightsController dayInsightsController;

@@ -2,6 +2,7 @@ package view;
 
 import interface_adapter.ViewManagerModel;
 import interface_adapter.buy_serving.BuyServingViewModel;
+import interface_adapter.insight.InsightsViewModel;
 import interface_adapter.manage_wages.WageViewModel;
 import interface_adapter.office.OfficeState;
 import interface_adapter.office.OfficeViewModel;
@@ -96,7 +97,7 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
                 {
                     if (evt.getSource().equals(insightsButton)) {
                         System.out.println("Go to insights");
-//                        this.viewManagerModel.setState(InsightsViewModel.VIEW_NAME);
+                        this.viewManagerModel.setState(InsightsViewModel.VIEW_NAME);
                         this.viewManagerModel.firePropertyChange();
                     }
                 }

@@ -4,6 +4,7 @@ import data_access.*;
 import entity.Employee;
 import interface_adapter.ViewManagerModel;
 import entity.Recipe;
+import interface_adapter.insight.*;
 import interface_adapter.manage_wages.WageController;
 import interface_adapter.manage_wages.WagePresenter;
 import interface_adapter.manage_wages.WageState;
@@ -21,6 +22,12 @@ import use_case.buy_serving.BuyServingInteractor;
 import interface_adapter.review.ReviewController;
 import interface_adapter.review.ReviewPresenter;
 import interface_adapter.review.ReviewViewModel;
+import use_case.insights_day_calculation.DayInsightsInputBoundary;
+import use_case.insights_day_calculation.DayInsightsInteractor;
+import use_case.insights_day_calculation.DayInsightsOutputBoundary;
+import use_case.insights_performance_calculation.PerformanceCalculationInputBoundary;
+import use_case.insights_performance_calculation.PerformanceCalculationInteractor;
+import use_case.insights_performance_calculation.PerformanceCalculationOutputBoundary;
 import use_case.manage_wage.WageInteractor;
 import use_case.manage_wage.WageUserDataAccessInterface;
 import use_case.product_prices.ProductPricesInteractor;
@@ -64,6 +71,9 @@ public class AppBuilder {
     private WageDataAccessObject wageDAO;
     private WageViewModel wageViewModel;
     private Map<String, Employee> employees = new HashMap<>();
+
+    private InsightsViewModel insightsViewModel;
+    private InsightsView insightsView;
 
 
     public AppBuilder() {
@@ -132,10 +142,10 @@ public class AppBuilder {
         this.reviewDAO = new ReviewDAOHash(new HashMap<>());
 
         // Creates a review interactor
-        ReviewInteractor  reviewInteractor = new ReviewInteractor(reviewDAO, reviewPresenter);
+        ReviewInteractor reviewInteractor = new ReviewInteractor(reviewDAO, reviewPresenter);
 
         // Creates a review controller
-        ReviewController  reviewController = new ReviewController(reviewInteractor);
+        ReviewController reviewController = new ReviewController(reviewInteractor);
 
         // Initializes View and add it to card panel
         ReviewView reviewView = new ReviewView(reviewController, reviewViewModel, viewManagerModel);
@@ -148,8 +158,8 @@ public class AppBuilder {
     public AppBuilder addManageWageViewAndUseCase() {
 
         // 1) Initialize the two employees with wage=1, effect=1 on every run
-       employees.put("Cook", new Employee(1, "Cook"));
-       employees.put("Waiter", new Employee(1, "Waiter"));
+        employees.put("Cook", new Employee(1, "Cook"));
+        employees.put("Waiter", new Employee(1, "Waiter"));
 
         // 2) ViewModel + seed initial state so labels are correct immediately
         wageViewModel = new WageViewModel();
@@ -168,10 +178,10 @@ public class AppBuilder {
                 new WageController(new WageInteractor(wageDAO, playerDAO, presenter, employees));
 
         // 4) Build the view and inject the controller
-        wageView = new ManageWagesView(wageViewModel,viewManagerModel);
+        wageView = new ManageWagesView(wageViewModel, viewManagerModel);
         wageView.setController(controller);
         // 5) Add view to the cardPanel
-        cardPanel.add(wageView,wageViewModel.getViewName());
+        cardPanel.add(wageView, wageViewModel.getViewName());
         return this;
     }
 
@@ -193,6 +203,30 @@ public class AppBuilder {
         officeView.setSimulationController(controller);
         return this;
     }
+
+    public AppBuilder addInsightsViewAndUseCase() {
+        insightsViewModel = new InsightsViewModel();
+
+        PerformanceCalculationOutputBoundary performancePresenter = new PerformanceCalculationPresenter(
+                insightsViewModel, viewManagerModel);
+        PerformanceCalculationInputBoundary performanceInteractor = new PerformanceCalculationInteractor(
+                dayRecordsDataAccessObject, performancePresenter);
+        PerformanceCalculationController performanceController = new PerformanceCalculationController(
+                performanceInteractor);
+        DayInsightsOutputBoundary dayInsightsPresenter = new DayInsightsPresenter(insightsViewModel, viewManagerModel);
+        DayInsightsInputBoundary dayInsightsInteractor = new DayInsightsInteractor(dayRecordsDataAccessObject, dayInsightsPresenter);
+        DayInsightsController dayInsightsController = new DayInsightsController(dayInsightsInteractor);
+
+        insightsView = new InsightsView(
+                insightsViewModel,
+                performanceController,
+                dayInsightsController
+        );
+        cardPanel.add(insightsView, insightsViewModel.getViewName());
+        return this;
+
+    }
+
 
     public JFrame build() {
         final JFrame application = new JFrame("Sizzle and Serve");
