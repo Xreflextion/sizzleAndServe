@@ -2,10 +2,7 @@ package use_case.simulate;
 import entity.*;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -107,10 +104,10 @@ public class SimulateInteractorTest {
         return new SimulateWageDataAccessInterface() {
             @Override
             public Employee getEmployee(String position) {
-                if (position == SimulateInteractor.COOK_POSITION) {
+                if (position.equals(SimulateInteractor.COOK_POSITION)) {
                     return new Employee(cookWage, SimulateInteractor.COOK_POSITION);
                 }
-                if (position == SimulateInteractor.WAITER_POSITION) {
+                if (position.equals(SimulateInteractor.WAITER_POSITION)) {
                     return new Employee(waiterWage, SimulateInteractor.WAITER_POSITION);
                 }
                 return null;
@@ -337,7 +334,7 @@ public class SimulateInteractorTest {
                 for (String name: outputData.getStock().keySet()) {
                     stockCount += outputData.getStock().get(name);
                 }
-                assertTrue(totalStockCount == stockCount + outputData.getCurrentCustomerCount());
+                assertEquals(totalStockCount, stockCount + outputData.getCurrentCustomerCount());
             }
 
             @Override
