@@ -10,6 +10,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SimulateInteractorTest {
+    private final String UNEXPECTED_FAILURE_MESSAGE = "Use case failure is unexpected: ";
 
     private final int TEST_PLAYER_BALANCE = 100;
     private final int TEST_CUSTOMER_COUNT = 5;
@@ -160,7 +161,7 @@ public class SimulateInteractorTest {
 
             @Override
             public void prepareFailView(String errorMessage) {
-
+                fail(UNEXPECTED_FAILURE_MESSAGE + errorMessage);
             }
         };
 
@@ -198,7 +199,7 @@ public class SimulateInteractorTest {
 
             @Override
             public void prepareFailView(String errorMessage) {
-
+                fail(UNEXPECTED_FAILURE_MESSAGE + errorMessage);
             }
         };
 
@@ -237,7 +238,7 @@ public class SimulateInteractorTest {
 
             @Override
             public void prepareFailView(String errorMessage) {
-
+                fail(UNEXPECTED_FAILURE_MESSAGE + errorMessage);
             }
         };
 
@@ -283,7 +284,7 @@ public class SimulateInteractorTest {
 
             @Override
             public void prepareFailView(String errorMessage) {
-
+                fail(UNEXPECTED_FAILURE_MESSAGE + errorMessage);
             }
         };
 
@@ -341,7 +342,7 @@ public class SimulateInteractorTest {
 
             @Override
             public void prepareFailView(String errorMessage) {
-
+                fail(UNEXPECTED_FAILURE_MESSAGE + errorMessage);
             }
         };
 
@@ -389,7 +390,7 @@ public class SimulateInteractorTest {
 
             @Override
             public void prepareFailView(String errorMessage) {
-
+                fail(UNEXPECTED_FAILURE_MESSAGE + errorMessage);
             }
         };
 
