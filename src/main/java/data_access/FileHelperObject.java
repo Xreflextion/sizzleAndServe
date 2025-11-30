@@ -1,6 +1,7 @@
 package data_access;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.io.*;
@@ -51,5 +52,12 @@ public class FileHelperObject {
             return saveData.getAsJsonObject(key);
         }
         return new JsonObject();
+    }
+
+    public JsonArray getArrayFromSaveData(String key) {
+        if (saveData.keySet().contains(key)) {
+            return saveData.getAsJsonArray(key);
+        }
+        return new JsonArray();
     }
 }

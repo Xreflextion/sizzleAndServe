@@ -1,5 +1,9 @@
 package data_access;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import use_case.buy_serving.PantryDataAccessInterface;
 import entity.Pantry;
 import entity.Recipe;
@@ -14,17 +18,42 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class PantryDataAccessObject implements PantryDataAccessInterface, ProductPricesPantryDataAccessInterface, SimulatePantryDataAccessInterface {
 
     private final Pantry pantry;
+    private FileHelperObject fileHelperObject;
 
-    public PantryDataAccessObject() {
+    public PantryDataAccessObject(FileHelperObject fileHelperObject) {
 
         this.pantry = new Pantry();
+
+        this.fileHelperObject = fileHelperObject;
+        JsonArray recipeArray = fileHelperObject.getArrayFromSaveData(Constants.RECIPE_KEY);
+        if (recipeArray.size() == 3) {
+
+            for (JsonElement element: recipeArray) {
+                JsonObject recipeJsonObject = element.getAsJsonObject();
+                String name = recipeJsonObject.get("name").getAsString();
+                int stock = recipeJsonObject.get("stock").getAsInt();
+                int basePrice = recipeJsonObject.get("base_price").getAsInt();
+                double currentPrice = recipeJsonObject.get("current_price").getAsDouble();
+                Recipe recipe = new Recipe(name, basePrice);
+                recipe.setStock(stock);
+                recipe.setCurrentPrice(currentPrice);
+                pantry.getPantry().put(name, recipe);
+            }
+
+        } else {
+            randomizePantry();
+        }
+
+
+
+    }
+
+    public void randomizePantry() {
         // Fetch three random dishes from API
         OkHttpClient client = new OkHttpClient();
         int max = 15;
@@ -117,7 +146,6 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
         try (InputStream inputStream = url.openStream()) {
             Files.copy(inputStream, tempFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
         }
-        tempFile.deleteOnExit();
 
         return tempFile;
     }
