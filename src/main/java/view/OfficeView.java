@@ -8,7 +8,6 @@ import interface_adapter.office.OfficeViewModel;
 import interface_adapter.office.SimulateController;
 import interface_adapter.product_prices.ProductPricesViewModel;
 import interface_adapter.review.ReviewViewModel;
-import interface_adapter.callback.SaveAllDataListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,14 +15,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.List;
 
 public class OfficeView extends JPanel implements ActionListener, PropertyChangeListener {
     private final OfficeViewModel officeViewModel;
     private SimulateController simulationController;
     private final ViewManagerModel viewManagerModel;
-    private final List<SaveAllDataListener> saveListeners = new ArrayList<>();
 
     private final JLabel curDayLabel;
     private final JLabel curBalanceLabel;
@@ -118,23 +114,8 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
                 }
         );
 
-        final JButton saveButton = new JButton("Save Data");
-        editButtonSize(saveButton);
-        saveButton.addActionListener(
-                evt -> {
-                    if (evt.getSource().equals(saveButton)) {
-                        System.out.println("Saving all data...");
-                        for (SaveAllDataListener listener : saveListeners) {
-                            listener.onSaveAllData();
-                        }
-                        JOptionPane.showMessageDialog(null, "All data saved successfully!");
-                    }
-                }
-        );
-
         midLeftPanel.add(inventoryButton);
         midLeftPanel.add(reviewButton);
-        midLeftPanel.add(saveButton);
         centerPanel.add(employeeButton);
         midRightPanel.add(priceButton);
         midRightPanel.add(insightsButton);
@@ -200,9 +181,5 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
 
     public void setSimulationController(SimulateController simulationController) {
         this.simulationController = simulationController;
-    }
-
-    public void addSaveAllDataListener(SaveAllDataListener listener) {
-        saveListeners.add(listener);
     }
 }

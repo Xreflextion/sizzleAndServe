@@ -82,7 +82,6 @@ public class AppBuilder {
     public AppBuilder addOfficeView() {
         officeViewModel = new OfficeViewModel();
         officeView = new OfficeView(officeViewModel, viewManagerModel);
-        officeView.addSaveAllDataListener(() -> this.saveAllData());
         cardPanel.add(officeView, officeView.getViewName());
         return this;
     }
