@@ -48,10 +48,6 @@ public class WageInteractor implements WageInputBoundary {
         else {
             // Do not change anything; warn and refresh UI
             presenter.prepareErrorView("exceed current balance");
-            presenter.prepareSuccessView(new WageOutputData(currentEmployee,
-                    Employee.getTotalWage(),
-                            playerDataAccess.getPlayer().getBalance())
-            );
         }
     }
 
