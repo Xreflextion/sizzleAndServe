@@ -31,6 +31,6 @@ public class WageOutputData {
 
     public int getTotalWage() { return totalWage; }
 
-    public double getCurrentBalance() { return currentBalance; }
+    public double getCurrentBalance() { return currentBalance;}
 }
 

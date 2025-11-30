@@ -13,7 +13,7 @@ public interface WageUserDataAccessInterface {
      */
     Employee getEmployee(String position);
     /**
-     * Return the total wage of the all the employees in DAO
+     * Return the total wage of the all the employees in DAO.
      * @return the wage of all the employees, adding up together.
      */
     int getTotalWage();
