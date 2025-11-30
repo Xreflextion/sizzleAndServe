@@ -8,5 +8,8 @@ public class Constants {
 
     public static final String FILE_NAME = "src/main/resources/save_data.json";
     public static final String PLAYER_KEY = "player";
+    public static final String DAY_RECORD_KEY = "days";
+    public static final String EMPLOYEE_KEY = "employees";
+    public static final String RECIPE_KEY = "recipes";
 
 }
