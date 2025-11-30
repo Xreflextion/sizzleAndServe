@@ -32,7 +32,6 @@ import view.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
 import java.util.Map;
 
 public class AppBuilder {
@@ -54,7 +53,7 @@ public class AppBuilder {
 
     private PlayerDataAccessObject playerDAO;
     private PantryDataAccessObject pantryDAO;
-    private ReviewDAOHash reviewDAO;
+    private ReviewDataAccessObject reviewDAO;
     private DayRecordsDataAccessObject dayRecordsDAO;
     private WageDataAccessObject wageDAO;
 
@@ -72,7 +71,7 @@ public class AppBuilder {
 
         playerDAO = new PlayerDataAccessObject(INITIAL_BALANCE, fileHelperObject);
         pantryDAO = new PantryDataAccessObject(fileHelperObject);
-        reviewDAO = new ReviewDAOHash(fileHelperObject);
+        reviewDAO = new ReviewDataAccessObject(fileHelperObject);
         dayRecordsDAO = new DayRecordsDataAccessObject(fileHelperObject);
         wageDAO = new WageDataAccessObject(fileHelperObject);
         customerCount = reviewDAO.getReviewsByDay(dayRecordsDAO.getNumberOfDays()).size();
