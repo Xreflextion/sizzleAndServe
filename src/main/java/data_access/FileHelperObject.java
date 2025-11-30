@@ -1,6 +1,7 @@
 package data_access;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.io.*;
@@ -51,5 +52,16 @@ public class FileHelperObject {
             return saveData.getAsJsonObject(key);
         }
         return new JsonObject();
+    }
+
+    public void saveArray(String key, JsonArray array) throws IOException {
+        // add or replace the array under the given key in the in-memory saveData
+        saveData.add(key, array);
+        // write the updated saveData back to file
+        try (FileWriter writer = new FileWriter(fileName)) {
+            gson.toJson(saveData, writer);
+        } catch (IOException e) {
+            throw new IOException(e);
+        }
     }
 }

@@ -32,6 +32,7 @@ import view.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,14 +74,15 @@ public class AppBuilder {
         fileHelperObject.loadFromFile();
 
         playerDAO = new PlayerDataAccessObject(INITIAL_BALANCE, fileHelperObject);
-        pantryDAO = new PantryDataAccessObject();
-        reviewDAO = new ReviewDAOHash(new HashMap<>());
+        pantryDAO = new PantryDataAccessObject(fileHelperObject);
+        reviewDAO = new ReviewDAOHash(new HashMap<>(), fileHelperObject);
         dayRecordsDAO = new DayRecordsDataAccessObject();
     }
 
     public AppBuilder addOfficeView() {
         officeViewModel = new OfficeViewModel();
         officeView = new OfficeView(officeViewModel, viewManagerModel);
+        officeView.addSaveAllDataListener(() -> this.saveAllData());
         cardPanel.add(officeView, officeView.getViewName());
         return this;
     }
@@ -210,5 +212,18 @@ public class AppBuilder {
         viewManagerModel.firePropertyChange();
 
         return application;
+    }
+
+    public void saveAllData() {
+        try {
+            pantryDAO.saveToFile();
+            reviewDAO.saveToFile();
+            wageDAO.saveToFile();
+            dayRecordsDAO.saveToFile();
+        } catch (IOException e) {
+            // Show error message
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Failed to save data: " + e.getMessage());
+        }
     }
 }
