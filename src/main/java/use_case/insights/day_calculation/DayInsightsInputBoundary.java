@@ -1,4 +1,4 @@
-package use_case.insights_day_calculation;
+package use_case.insights.day_calculation;
 
 public interface DayInsightsInputBoundary {
     /**
