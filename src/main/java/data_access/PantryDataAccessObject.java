@@ -1,5 +1,9 @@
 package data_access;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import use_case.buy_serving.PantryDataAccessInterface;
 import entity.Pantry;
 import entity.Recipe;
@@ -14,17 +18,18 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
+import java.io.IOException;
 
 public class PantryDataAccessObject implements PantryDataAccessInterface, ProductPricesPantryDataAccessInterface, SimulatePantryDataAccessInterface {
 
     private final Pantry pantry;
+    private FileHelperObject fileHelperObject;
 
-    public PantryDataAccessObject() {
+    public PantryDataAccessObject(FileHelperObject fileHelperObject) {
 
         this.pantry = new Pantry();
+        this.fileHelperObject = fileHelperObject;
         // Fetch three random dishes from API
         OkHttpClient client = new OkHttpClient();
         int max = 15;
@@ -120,5 +125,19 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
         tempFile.deleteOnExit();
 
         return tempFile;
+    }
+
+    public void saveToFile() throws IOException {
+        JsonArray array = new JsonArray();
+        for (String dishName : pantry.getDishNames()) {
+            Recipe recipe = pantry.getRecipe(dishName);
+            JsonObject obj = new JsonObject();
+            obj.addProperty("name", recipe.getName());
+            obj.addProperty("stock", recipe.getStock());
+            obj.addProperty("base_price", recipe.getBasePrice());
+            obj.addProperty("current_price", recipe.getCurrentPrice());
+            array.add(obj);
+        }
+        fileHelperObject.saveArray(Constants.RECIPE_KEY, array);
     }
 }

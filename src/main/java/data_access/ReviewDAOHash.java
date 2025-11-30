@@ -1,5 +1,11 @@
 package data_access;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import constants.Constants;
+import java.io.IOException;
 import use_case.review.ReviewDAO;
 import entity.ReviewEntity;
 import use_case.simulate.SimulateReviewDataAccessInterface;
@@ -28,10 +34,12 @@ public class ReviewDAOHash implements ReviewDAO, SimulateReviewDataAccessInterfa
 
 
     private final Map<Integer, ArrayList<Double>> storage;
+    private final FileHelperObject fileHelperObject;
 
     // This implementation of the ReviewDAO is a hashmap
-    public ReviewDAOHash(Map<Integer, ArrayList<Double>> reviewsByDay) {
+    public ReviewDAOHash(Map<Integer, ArrayList<Double>> reviewsByDay, FileHelperObject fileHelperObject) {
         this.storage = reviewsByDay;
+        this.fileHelperObject = fileHelperObject;
     }
 
 
@@ -81,6 +89,24 @@ public class ReviewDAOHash implements ReviewDAO, SimulateReviewDataAccessInterfa
     public Set<Integer> getAllDays() {
         return storage.keySet();
     }
+
+    public void saveToFile() throws IOException {
+        JsonArray array = new JsonArray();
+        Gson gson = new Gson();
+
+        for (Map.Entry<Integer, ArrayList<Double>> entry : storage.entrySet()) {
+            JsonObject obj = new JsonObject();
+            obj.addProperty("day_number", entry.getKey());
+            JsonArray ratingsArray = new JsonArray();
+            for (Double rating : entry.getValue()) {
+                ratingsArray.add(rating);
+            }
+            obj.add("ratings_list", ratingsArray);
+            array.add(obj);
+        }
+        fileHelperObject.saveArray(Constants.DAY_RECORD_KEY, array);
+    }
+
 }
 
 
