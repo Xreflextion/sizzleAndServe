@@ -38,6 +38,11 @@ public class Recipe {
         return stock;
     }
 
+    /**
+     * Sets the stock price.
+     * @param quantity the quantity of the dish
+     * @throws IllegalArgumentException if the quantity is negative
+     */
     public void setStock(int quantity) {
         if (quantity < 0) {
             throw new IllegalArgumentException("Quantity must be non-negative");
@@ -45,7 +50,7 @@ public class Recipe {
         this.stock = quantity;
     }
 
-    public int getBasePrice(){
+    public int getBasePrice() {
         return basePrice;
     }
 
@@ -53,6 +58,11 @@ public class Recipe {
         return currentPrice;
     }
 
+    /**
+     * Modifies the current price of the dish.
+     * @param newPrice the new value the dish will adjust to
+     * @throws IllegalArgumentException if the price is negative
+     */
     public void setCurrentPrice(double newPrice) {
         if (newPrice < 0) {
             throw new IllegalArgumentException("Price must be positive");
@@ -60,13 +70,21 @@ public class Recipe {
         currentPrice = newPrice;
     }
 
+    /**
+     * Applies the margin to the base price.
+     * @param marginPercentage the percentage that will be applied
+     * @throws IllegalArgumentException if the price is negative
+     */
     public void applyMargin(int marginPercentage) {
         if (marginPercentage < 0) {
             throw new IllegalArgumentException("Price must be positive");
         }
-        currentPrice = Math.round(basePrice * (1 + marginPercentage / 100.0) * 100.0) / 100.0; // rounds it to 2 decimal places
+        currentPrice = Math.round(basePrice * (1 + marginPercentage / 100.0) * 100.0) / 100.0;
     }
 
+    /**
+     * Resets the current price of the dish to its base price.
+     */
     public void resetCurrentPrice() {
         currentPrice = basePrice;
     }

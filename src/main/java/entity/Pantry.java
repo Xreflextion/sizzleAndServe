@@ -1,6 +1,7 @@
 package entity;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple entity representing a Pantry.
@@ -12,6 +13,9 @@ public class Pantry {
 
     /**
      * Creates a new pantry initialized with 3 dishes.
+     * @param dish1 the first dish object
+     * @param dish2 the second dish object
+     * @param dish3 the third dish object
      */
     public Pantry(Recipe dish1, Recipe dish2, Recipe dish3) {
         recipes = new HashMap<>();
@@ -28,19 +32,24 @@ public class Pantry {
         return recipes;
     }
 
+    /**
+     * Provides the recipe object associated with the dish name.
+     * @param dish the name of the dish
+     * @return Recipe
+     */
     public Recipe getRecipe(String dish) {
         return recipes.get(dish);
     }
 
-
     /**
-     * Adds the amount of quantity to the stock of the given dish
+     * Adds the amount of quantity to the stock of the given dish.
      * @param dish the name of the dish
      * @param quantity the quantity of the dish
-     * @throws IllegalArgumentException if the dish is not found in the pantry
+     * @return boolean
+     * @throws NullPointerException if the dish is not found in the pantry
      */
     public boolean addStock(String dish, int quantity) {
-        Recipe recipe = recipes.get(dish);
+        final Recipe recipe = recipes.get(dish);
         if (recipe == null) {
             throw new NullPointerException("Dish does not exist in the Pantry");
         }
@@ -49,23 +58,26 @@ public class Pantry {
     }
 
     /**
-     * Removes the amount of quantity to the stock of the given dish (if there is enough in stock)
+     * Removes the amount of quantity to the stock of the given dish (if there is enough in stock).
      * @param dish the name of the dish
      * @param quantity the quantity of the dish
-     * @throws IllegalArgumentException if the dish is not found in the pantry
+     * @return boolean
+     * @throws NullPointerException if the dish is not found in the pantry
      */
     public boolean consumeStock(String dish, int quantity) {
-        Recipe recipe = getRecipe(dish);
+        final Recipe recipe = getRecipe(dish);
         if (recipe == null) {
             throw new NullPointerException("Dish does not exist in the Pantry");
         }
+        final boolean result;
         if (recipe.getStock() >= quantity) {
             recipe.setStock(recipe.getStock() - quantity);
-            return true;
+            result = true;
         }
         else {
-            return false;
+            result = false;
         }
+        return result;
     }
 
     public String[] getDishNames() {
