@@ -1,6 +1,6 @@
 package interface_adapter.insight;
 
-import use_case.insights_day_calculation.DayInsightsInputBoundary;
+import use_case.insights.day_calculation.DayInsightsInputBoundary;
 
 public class DayInsightsController {
 

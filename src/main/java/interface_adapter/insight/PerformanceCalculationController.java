@@ -1,6 +1,6 @@
 package interface_adapter.insight;
 
-import use_case.insights_performance_calculation.PerformanceCalculationInputBoundary;
+import use_case.insights.performance_calculation.PerformanceCalculationInputBoundary;
 
 public class PerformanceCalculationController {
 

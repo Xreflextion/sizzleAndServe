@@ -1,7 +1,7 @@
 package data_access;
 
 import entity.PerDayRecord;
-import use_case.insights_performance_calculation.DayRecordsDataAccessInterface;
+import use_case.insights.performance_calculation.DayRecordsDataAccessInterface;
 import use_case.simulate.SimulateDayRecordsDataAccessInterface;
 
 import java.util.ArrayList;
