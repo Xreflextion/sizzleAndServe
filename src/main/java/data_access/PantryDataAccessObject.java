@@ -22,7 +22,7 @@ import java.util.*;
 
 public class PantryDataAccessObject implements PantryDataAccessInterface, ProductPricesPantryDataAccessInterface, SimulatePantryDataAccessInterface {
 
-    private final Pantry pantry;
+    private Pantry pantry;
     private FileHelperObject fileHelperObject;
 
     public PantryDataAccessObject(FileHelperObject fileHelperObject) {
@@ -113,6 +113,7 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
         for (String dishName: stock.keySet()) {
             pantry.getRecipe(dishName).setStock(stock.get(dishName));
         }
+        // TODO save
     }
 
     public Map<String, Double> getCurrentPrices() {
@@ -126,12 +127,14 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
 
     @Override
     public void changePrice(Recipe recipe) {
-
+        pantry.getPantry().put(recipe.getName(), recipe);
+        // TODO save
     }
 
     @Override
     public void savePantry(Pantry pantry) {
-
+        this.pantry = pantry;
+        // TODO save
     }
 
     public static File downloadTempImage(String imageURL, String dishName) throws Exception {
