@@ -1,12 +1,12 @@
-package use_case.manage_wage;
+package usecase.manage_wage;
 
-import data_access.WageDataAccessObject;
+import dataaccess.WageDataAccessObject;
 import entity.Employee;
 import entity.Player;
-import interface_adapter.manage_wages.WageController;
-import interface_adapter.manage_wages.WagePresenter;
-import interface_adapter.manage_wages.WageState;
-import interface_adapter.manage_wages.WageViewModel;
+import interfaceadapter.manage_wages.WageController;
+import interfaceadapter.manage_wages.WagePresenter;
+import interfaceadapter.manage_wages.WageState;
+import interfaceadapter.manage_wages.WageViewModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

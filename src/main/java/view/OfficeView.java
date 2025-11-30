@@ -1,13 +1,13 @@
 package view;
 
-import interface_adapter.ViewManagerModel;
-import interface_adapter.buy_serving.BuyServingViewModel;
-import interface_adapter.manage_wages.WageViewModel;
-import interface_adapter.office.OfficeState;
-import interface_adapter.office.OfficeViewModel;
-import interface_adapter.office.SimulateController;
-import interface_adapter.product_prices.ProductPricesViewModel;
-import interface_adapter.review.ReviewViewModel;
+import interfaceadapter.ViewManagerModel;
+import interfaceadapter.buy_serving.BuyServingViewModel;
+import interfaceadapter.manage_wages.WageViewModel;
+import interfaceadapter.office.OfficeState;
+import interfaceadapter.office.OfficeViewModel;
+import interfaceadapter.office.SimulateController;
+import interfaceadapter.product_prices.ProductPricesViewModel;
+import interfaceadapter.review.ReviewViewModel;
 
 import javax.swing.*;
 import java.awt.*;

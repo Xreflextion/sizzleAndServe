@@ -1,6 +1,6 @@
-package use_case.review;
+package usecase.review;
 
-import data_access.ReviewDAOHash;
+import dataaccess.ReviewDAOHash;
 import entity.ReviewEntity;
 import org.junit.jupiter.api.Test;
 

@@ -1,6 +1,6 @@
-package use_case.product_prices;
+package usecase.product_prices;
 
-import data_access.PantryDataAccessObject;
+import dataaccess.PantryDataAccessObject;
 import entity.Pantry;
 import entity.Recipe;
 import org.junit.jupiter.api.Test;

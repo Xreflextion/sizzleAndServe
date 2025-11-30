@@ -1,11 +1,11 @@
-package use_case.insights_testing;
+package usecase.insights_testing;
 
-import interface_adapter.insight.InsightsViewModel;
-import interface_adapter.insight.PerformanceCalculationController;
+import interfaceadapter.insight.InsightsViewModel;
+import interfaceadapter.insight.PerformanceCalculationController;
 import view.InsightsView;
-import interface_adapter.insight.InsightsState;
+import interfaceadapter.insight.InsightsState;
 
-import use_case.insights_performance_calculation.PerformanceCalculationInputBoundary;
+import usecase.insights_performance_calculation.PerformanceCalculationInputBoundary;
 
 import javax.swing.*;
 

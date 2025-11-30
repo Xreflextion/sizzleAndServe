@@ -1,7 +1,7 @@
 package view;
 
 import entity.Recipe;
-import interface_adapter.product_prices.ProductPricesController;
+import interfaceadapter.product_prices.ProductPricesController;
 import constants.Constants;
 
 import javax.swing.*;

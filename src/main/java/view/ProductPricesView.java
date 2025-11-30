@@ -1,15 +1,13 @@
 package view;
 
 import entity.Recipe;
-import interface_adapter.ViewManagerModel;
-import interface_adapter.office.OfficeViewModel;
-import interface_adapter.product_prices.ProductPricesController;
-import interface_adapter.product_prices.ProductPricesState;
-import interface_adapter.product_prices.ProductPricesViewModel;
+import interfaceadapter.ViewManagerModel;
+import interfaceadapter.office.OfficeViewModel;
+import interfaceadapter.product_prices.ProductPricesController;
+import interfaceadapter.product_prices.ProductPricesState;
+import interfaceadapter.product_prices.ProductPricesViewModel;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

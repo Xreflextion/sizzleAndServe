@@ -1,9 +1,9 @@
 package view;
 
-import interface_adapter.insight.DayInsightsController;
-import interface_adapter.insight.InsightsState;
-import interface_adapter.insight.InsightsViewModel;
-import interface_adapter.insight.PerformanceCalculationController;
+import interfaceadapter.insight.DayInsightsController;
+import interfaceadapter.insight.InsightsState;
+import interfaceadapter.insight.InsightsViewModel;
+import interfaceadapter.insight.PerformanceCalculationController;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,11 +1,11 @@
 package view;
 
-import interface_adapter.buy_serving.BuyServingViewModel;
-import interface_adapter.buy_serving.BuyServingController;
+import interfaceadapter.buy_serving.BuyServingViewModel;
+import interfaceadapter.buy_serving.BuyServingController;
 import java.awt.*;
 import javax.swing.*;
-import interface_adapter.ViewManagerModel;
-import interface_adapter.office.OfficeViewModel;
+import interfaceadapter.ViewManagerModel;
+import interfaceadapter.office.OfficeViewModel;
 
 public class BuyServingView extends JPanel {
 

@@ -1,13 +1,9 @@
 package view;
-import app.AppBuilder;
-import interface_adapter.ViewManagerModel;
-import interface_adapter.office.OfficeViewModel;
-import interface_adapter.review.ReviewController;
-import interface_adapter.ViewModel;
-import interface_adapter.review.ReviewController;
-import interface_adapter.review.ReviewState;
-import interface_adapter.review.ReviewViewModel;
-import use_case.review.ReviewOutputData;
+import interfaceadapter.ViewManagerModel;
+import interfaceadapter.office.OfficeViewModel;
+import interfaceadapter.review.ReviewState;
+import interfaceadapter.review.ReviewViewModel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -27,7 +23,7 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
     private static final String MENU_PANEL = "menu";
     private static final String OVERALL_PANEL = "overall";
     private static final String DAY_PANEL = "day";
-    private final interface_adapter.review.ReviewController controller;
+    private final interfaceadapter.review.ReviewController controller;
     private final ReviewViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
     // UI components
@@ -41,7 +37,7 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
     private JLabel overallEmoji;
     private JLabel overallLabel;
     private JButton backToOfficeButton;
-    public ReviewView(interface_adapter.review.ReviewController controller, ReviewViewModel viewModel,
+    public ReviewView(interfaceadapter.review.ReviewController controller, ReviewViewModel viewModel,
                       ViewManagerModel viewManagerModel) {
         this.controller = controller;
         this.viewModel = viewModel;

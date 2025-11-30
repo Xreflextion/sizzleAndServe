@@ -1,4 +1,4 @@
-package use_case.buy_serving;
+package usecase.buy_serving;
 
 import entity.Pantry;
 import entity.Recipe;

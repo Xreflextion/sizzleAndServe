@@ -1,4 +1,4 @@
-package use_case.simulate;
+package usecase.simulate;
 import entity.*;
 import org.junit.jupiter.api.Test;
 

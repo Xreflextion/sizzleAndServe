@@ -1,11 +1,11 @@
 package view;
 
 
-import interface_adapter.ViewManagerModel;
-import interface_adapter.manage_wages.WageController;
-import interface_adapter.manage_wages.WageState;
-import interface_adapter.manage_wages.WageViewModel;
-import interface_adapter.office.OfficeViewModel;
+import interfaceadapter.ViewManagerModel;
+import interfaceadapter.manage_wages.WageController;
+import interfaceadapter.manage_wages.WageState;
+import interfaceadapter.manage_wages.WageViewModel;
+import interfaceadapter.office.OfficeViewModel;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,12 +1,9 @@
 package view;
 
-import interface_adapter.insight.InsightsState;
-import interface_adapter.insight.InsightsViewModel;
-import interface_adapter.insight.PerformanceCalculationController;
+import interfaceadapter.insight.InsightsState;
+import interfaceadapter.insight.InsightsViewModel;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
