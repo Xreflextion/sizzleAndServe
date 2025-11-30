@@ -28,9 +28,11 @@ class ProductPricesInteractorTest {
             public void present(ProductPricesOutputData pantry){
                 assertEquals("Pizza", pizza.getName());
                 assertEquals("Pizza", productPricesRepository.getPantry().getRecipe(pizza.getName()).getName());
+                assertEquals("Pizza", pantry.getName());
                 assertEquals(10, pizza.getBasePrice());
                 assertEquals(10, productPricesRepository.getPantry().getRecipe(pizza.getName()).getBasePrice());
                 assertEquals(11.5, pizza.getCurrentPrice());
+                assertEquals(11.5, pantry.getNewPrice());
                 assertEquals(11.5, productPricesRepository.getPantry().getRecipe(pizza.getName()).getCurrentPrice());
             }
         };
