@@ -76,6 +76,7 @@ public class ReviewDataAccessObject implements ReviewDataAccessInterface, Simula
             storage.get(reviewEntity.getDayNum()).add(reviewEntity.getRating());
 
         }
+        // TODO save
     }
 
     // gets the reviews by the day

@@ -49,6 +49,7 @@ public class DayRecordsDataAccessObject implements DayRecordsDataAccessInterface
             throw new NullPointerException("dayRecord is null");
         }
         dayRecords.add(dayRecord);
+        // TODO save
     }
 
     @Override
