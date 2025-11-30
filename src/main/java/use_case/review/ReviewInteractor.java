@@ -15,10 +15,12 @@ public class ReviewInteractor implements ReviewInputBoundary{
     private final ReviewDAOHash reviewDAOHash;
     // Creates the presenter which is bounded by the output boundary
     private final ReviewOutputBoundary presenter;
+
     public ReviewInteractor(ReviewDAOHash reviewDAOHash, ReviewOutputBoundary presenter) {
         this.reviewDAOHash = reviewDAOHash;
         this.presenter = presenter;
     }
+
     @Override
     public void execute(ReviewInputData input){
         Integer day = input.getDay();
@@ -54,10 +56,6 @@ public class ReviewInteractor implements ReviewInputBoundary{
         presenter.presentAvailableDays(availableDays);
     }
 
-    // adds a review to the DAO
-    public void addReview(ReviewEntity review){
-        reviewDAOHash.addReview(review);
-    }
     // This will get the total number of reviews of the entire restaurant
     // It will iterate through the values of the hashmap
     // The values it will iterate through are array list since they keep the reviews
@@ -71,11 +69,7 @@ public class ReviewInteractor implements ReviewInputBoundary{
         }
         return counter;
     }
-    // This will get the total num of reviews for a specific day
-    // Uses DAO to get the number of the reviews for said day
-    public int getDayTotalNumReview(int day){
-        return reviewDAOHash.getReviewsByDay(day).size();
-    }
+
     // gets the average review by the day
     // For example day 1: 3.5 stars out of 5
     // uses the getReviews for the day to get the number of reviews for that day
@@ -86,13 +80,8 @@ public class ReviewInteractor implements ReviewInputBoundary{
         for(Double reviews: reviewDAOHash.getReviewsByDay(day)){
             numerator += reviews;
         }
-        if(totalReviews > 0){
-            double avg = numerator / totalReviews;
-            return Math.round(avg * 10.0) / 10.0;
-        }
-        else{
-            return 0.0;
-        }
+        double avg = numerator / totalReviews;
+        return Math.round(avg * 10.0) / 10.0;
     }
     // gets the average reviews overall for the restaurant
     // uses the get all reviews to iterate through all reviews
@@ -102,13 +91,8 @@ public class ReviewInteractor implements ReviewInputBoundary{
         for(double review : reviewDAOHash.getAllReviews()){
             numerator += review;
         }
-        if(totalReviews > 0){
-            double avg = numerator / totalReviews;
-            return Math.round(avg * 10.0) / 10.0;
-        }
-        else{
-            return 0.0;
-        }
+        double avg = numerator / totalReviews;
+        return Math.round(avg * 10.0) / 10.0;
     }
     // Returns emoji
     public String getEmoji(double rating){
