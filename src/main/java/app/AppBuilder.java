@@ -38,8 +38,6 @@ import java.util.Map;
 
 public class AppBuilder {
     public static final int INITIAL_BALANCE = 500;
-    public static final int INITIAL_DAY = 0;
-    public static final int INITIAL_PAST_CUSTOMER_COUNT = 0;
 
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
@@ -63,9 +61,9 @@ public class AppBuilder {
 
     private ManageWagesView wageView;
     private WageViewModel wageViewModel;
-    private Map<String, Employee> employees = new HashMap<>();
 
     private FileHelperObject fileHelperObject;
+    private int customerCount = 0;
 
 
     public AppBuilder() {
@@ -75,8 +73,10 @@ public class AppBuilder {
 
         playerDAO = new PlayerDataAccessObject(INITIAL_BALANCE, fileHelperObject);
         pantryDAO = new PantryDataAccessObject(fileHelperObject);
-        reviewDAO = new ReviewDAOHash(new HashMap<>(), fileHelperObject);
-        dayRecordsDAO = new DayRecordsDataAccessObject();
+        reviewDAO = new ReviewDAOHash(fileHelperObject);
+        dayRecordsDAO = new DayRecordsDataAccessObject(fileHelperObject);
+        wageDAO = new WageDataAccessObject(fileHelperObject);
+        customerCount = reviewDAO.getReviewsByDay(dayRecordsDAO.getNumberOfDays()).size();
     }
 
     public AppBuilder addOfficeView() {
@@ -150,12 +150,9 @@ public class AppBuilder {
 
     // Adds the ManageWageView to the app builder
     public AppBuilder addManageWageViewAndUseCase() {
+        Map<String, Employee> employees = wageDAO.getEmployees();
 
-        // 1) Initialize the two employees with wage=1, effect=1 on every run
-       employees.put("Cook", new Employee(1, "Cook"));
-       employees.put("Waiter", new Employee(1, "Waiter"));
-
-        // 2) ViewModel + seed initial state so labels are correct immediately
+        // 1) ViewModel + seed initial state so labels are correct immediately
         wageViewModel = new WageViewModel();
         WageState state = wageViewModel.getState();
         state.setCookWage(employees.get("Cook").getWage());                // 0
@@ -165,16 +162,15 @@ public class AppBuilder {
         state.setCurrentBalance(playerDAO.getPlayer().getBalance());
         wageViewModel.setState(state); // fires property change
 
-        // 3) WageDataAccess + Presenter + Controller
-        wageDAO = new WageDataAccessObject(employees);
+        // 2) Presenter + Controller
         WagePresenter presenter = new WagePresenter(wageViewModel);
         WageController controller =
                 new WageController(new WageInteractor(wageDAO, playerDAO, presenter, employees));
 
-        // 4) Build the view and inject the controller
+        // 3) Build the view and inject the controller
         wageView = new ManageWagesView(wageViewModel,viewManagerModel);
         wageView.setController(controller);
-        // 5) Add view to the cardPanel
+        // 4) Add view to the cardPanel
         cardPanel.add(wageView,wageViewModel.getViewName());
         return this;
     }
@@ -206,8 +202,8 @@ public class AppBuilder {
 
         viewManagerModel.setState(officeView.getViewName());
         officeViewModel.getState().setCurrentBalance(playerDAO.getPlayer().getBalance());
-        officeViewModel.getState().setCurrentDay(INITIAL_DAY);
-        officeViewModel.getState().setCurrentCustomerCount(INITIAL_PAST_CUSTOMER_COUNT);
+        officeViewModel.getState().setCurrentDay(dayRecordsDAO.getNumberOfDays());
+        officeViewModel.getState().setCurrentCustomerCount(customerCount);
         officeViewModel.firePropertyChange();
         viewManagerModel.firePropertyChange();
 

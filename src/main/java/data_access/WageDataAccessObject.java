@@ -32,6 +32,28 @@ import java.util.Map;
             fileHelperObject.saveArray(constants.Constants.EMPLOYEE_KEY, array);
         }
 
+        public WageDataAccessObject(FileHelperObject fileHelperObject) {
+
+            this.fileHelperObject = fileHelperObject;
+            JsonArray employeeArray = fileHelperObject.getArrayFromSaveData(Constants.EMPLOYEE_KEY);
+            if (employeeArray.size() == 2) {
+                Map<String, Employee> savedEmployees = new HashMap<>();
+                for (JsonElement element: employeeArray) {
+                    JsonObject employeeJsonObject = element.getAsJsonObject();
+                    String position = employeeJsonObject.get("position").getAsString();
+                    int wage = employeeJsonObject.get("wage").getAsInt();
+                    Employee employee = new Employee(wage, position);
+                    savedEmployees.put(position, employee);
+                }
+                this.employees = savedEmployees;
+            } else {
+                // Default
+                this.employees = new HashMap<>();
+                employees.put("Cook", new Employee(1, "Cook"));
+                employees.put("Waiter", new Employee(1, "Waiter"));
+            }
+
+        }
 
         @Override
         public Employee getEmployee(String position) {
@@ -46,6 +68,10 @@ import java.util.Map;
         @Override
         public int getTotalWage() {
             return Employee.getTotalWage();
+        }
+
+        public Map<String, Employee> getEmployees() {
+            return employees;
         }
     }
 
