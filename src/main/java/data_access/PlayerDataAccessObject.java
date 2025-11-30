@@ -9,7 +9,7 @@ import use_case.simulate.SimulatePlayerDataAccessInterface;
 
 public class PlayerDataAccessObject implements PlayerDataAccessInterface,
         WagePlayerDataAccessInterface, SimulatePlayerDataAccessInterface {
-    private final Player player;
+    private Player player;
     private FileHelperObject fileHelperObject;
 
     public PlayerDataAccessObject(double balance, FileHelperObject fileHelperObject) {
@@ -35,5 +35,8 @@ public class PlayerDataAccessObject implements PlayerDataAccessInterface,
     }
 
     @Override
-    public void savePlayer(Player player) {}
+    public void savePlayer(Player player) {
+        this.player = player;
+        // TODO save
+    }
 }

@@ -75,6 +75,7 @@ public class ReviewDAOHash implements ReviewDAO, SimulateReviewDataAccessInterfa
             storage.get(reviewEntity.getDayNum()).add(reviewEntity.getRating());
 
         }
+        // TODO save
     }
 
     // gets the reviews by the day
