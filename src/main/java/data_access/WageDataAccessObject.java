@@ -47,11 +47,11 @@ public class WageDataAccessObject implements WageUserDataAccessInterface, Simula
         return employees.get(position);
     }
 
-        @Override
-        public void save(Employee employee) {
-            employees.put(employee.getPosition(), employee);
-            // TODO save
-        }
+    @Override
+    public void save(Employee employee) {
+        employees.put(employee.getPosition(), employee);
+        // TODO save
+    }
 
     @Override
     public int getTotalWage() {
