@@ -53,9 +53,7 @@ public class ReviewDAOHash implements ReviewDAO, SimulateReviewDataAccessInterfa
                 }
             }
         }
-
         this.storage = reviewsByDay;
-        this.fileHelperObject = fileHelperObject;
     }
 
 
@@ -77,6 +75,7 @@ public class ReviewDAOHash implements ReviewDAO, SimulateReviewDataAccessInterfa
             storage.get(reviewEntity.getDayNum()).add(reviewEntity.getRating());
 
         }
+        save();
     }
 
     // gets the reviews by the day
@@ -121,6 +120,14 @@ public class ReviewDAOHash implements ReviewDAO, SimulateReviewDataAccessInterfa
             array.add(obj);
         }
         fileHelperObject.saveArray(Constants.DAY_RECORD_KEY, array);
+    }
+
+    public void save() {
+        try {
+            saveToFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

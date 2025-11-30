@@ -50,6 +50,7 @@ public class DayRecordsDataAccessObject implements DayRecordsDataAccessInterface
             throw new NullPointerException("dayRecord is null");
         }
         dayRecords.add(dayRecord);
+        save();
     }
 
     @Override
@@ -73,12 +74,20 @@ public class DayRecordsDataAccessObject implements DayRecordsDataAccessInterface
     }
 
     public void saveToFile() throws IOException {
-        JsonArray array = new JsonArray();
+        JsonArray recordArray = new JsonArray();
         Gson gson = new Gson();
         for (PerDayRecord record : dayRecords) {
-            array.add(gson.toJsonTree(record).getAsJsonObject());
+            recordArray.add(gson.toJsonTree(record).getAsJsonObject());
         }
-        fileHelperObject.saveArray(Constants.DAY_RECORD_KEY, array);
+        fileHelperObject.saveArray(Constants.DAY_RECORD_KEY, recordArray);
+    }
+
+    public void save() {
+        try {
+            saveToFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
