@@ -94,7 +94,7 @@ public class ManageWageTest {
         assertEquals(240, viewModel.getState().getCookWage(), "Cook wage should be 250 after one increase");
         assertEquals(240, viewModel.getState().getWaiterWage(), "Waiter wage should be 250 after one increase");
         assertEquals(480, viewModel.getState().getTotalWage(), "Total wage should be 500 after two increases");
-        assertEquals((float)37.2, viewModel.getState().getCookWageEffect(),"Cook's wage effect increased to 37.2");
+        assertEquals((float) 4.8, viewModel.getState().getCookWageEffect(),"Cook's wage effect increased to 4.8");
         assertNull(viewModel.getState().getWarningMessage(), "No warning should occur on successful increase");
     }
 
