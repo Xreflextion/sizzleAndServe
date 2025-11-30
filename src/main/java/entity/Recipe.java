@@ -6,6 +6,10 @@ package entity;
  */
 public class Recipe {
 
+    private static final String PRICE_NOT_POSITIVE = "Price must be positive";
+    private static final String STOCK_NOT_NON_NEGATIVE = "Stock must be non-negative";
+    private static final String EMPTY_NAME = "Name cannot be empty";
+    private static final double ONE_HUNDRED = 100.0;
     private final String name;
     private final int basePrice;
     private double currentPrice;
@@ -19,10 +23,10 @@ public class Recipe {
      */
     public Recipe(String name, int basePrice) {
         if ("".equals(name)) {
-            throw new IllegalArgumentException("Name cannot be empty");
+            throw new IllegalArgumentException(EMPTY_NAME);
         }
         if (basePrice <= 0) {
-            throw new IllegalArgumentException("Price must be positive");
+            throw new IllegalArgumentException(PRICE_NOT_POSITIVE);
         }
         this.name = name;
         this.basePrice = basePrice;
@@ -45,7 +49,7 @@ public class Recipe {
      */
     public void setStock(int quantity) {
         if (quantity < 0) {
-            throw new IllegalArgumentException("Quantity must be non-negative");
+            throw new IllegalArgumentException(STOCK_NOT_NON_NEGATIVE);
         }
         this.stock = quantity;
     }
@@ -65,7 +69,7 @@ public class Recipe {
      */
     public void setCurrentPrice(double newPrice) {
         if (newPrice < 0) {
-            throw new IllegalArgumentException("Price must be positive");
+            throw new IllegalArgumentException(PRICE_NOT_POSITIVE);
         }
         currentPrice = newPrice;
     }
@@ -77,9 +81,9 @@ public class Recipe {
      */
     public void applyMargin(int marginPercentage) {
         if (marginPercentage < 0) {
-            throw new IllegalArgumentException("Price must be positive");
+            throw new IllegalArgumentException(PRICE_NOT_POSITIVE);
         }
-        currentPrice = Math.round(basePrice * (1 + marginPercentage / 100.0) * 100.0) / 100.0;
+        currentPrice = Math.round(basePrice * (1 + marginPercentage / ONE_HUNDRED) * ONE_HUNDRED) / ONE_HUNDRED;
     }
 
     /**

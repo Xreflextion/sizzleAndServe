@@ -9,6 +9,7 @@ import java.util.Map;
  */
 public class Pantry {
 
+    private static final String DISH_NOT_EXIST = "Dish does not exist in the Pantry";
     private final Map<String, Recipe> recipes;
 
     /**
@@ -51,7 +52,7 @@ public class Pantry {
     public boolean addStock(String dish, int quantity) {
         final Recipe recipe = recipes.get(dish);
         if (recipe == null) {
-            throw new NullPointerException("Dish does not exist in the Pantry");
+            throw new NullPointerException(DISH_NOT_EXIST);
         }
         recipe.setStock(recipe.getStock() + quantity);
         return true;
@@ -67,7 +68,7 @@ public class Pantry {
     public boolean consumeStock(String dish, int quantity) {
         final Recipe recipe = getRecipe(dish);
         if (recipe == null) {
-            throw new NullPointerException("Dish does not exist in the Pantry");
+            throw new NullPointerException(DISH_NOT_EXIST);
         }
         final boolean result;
         if (recipe.getStock() >= quantity) {
