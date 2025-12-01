@@ -35,23 +35,6 @@ public class WageDataAccessObject implements WageUserDataAccessInterface, Simula
             }
             this.employees = savedEmployees;
         }
-
-        public void saveToFile() throws IOException {
-            JsonArray array = new JsonArray();
-            for (Map.Entry<String, Employee> entry : employees.entrySet()) {
-                Employee employee = entry.getValue();
-                JsonObject obj = new JsonObject();
-                obj.addProperty("position", employee.getPosition());
-                obj.addProperty("wage", employee.getWage());
-                array.add(obj);
-            }
-            fileHelperObject.saveArray(constants.Constants.EMPLOYEE_KEY, array);
-        }
-
-
-        @Override
-        public Employee getEmployee(String position) {
-            return employees.get(position);
         else {
             // Default
             this.employees = new HashMap<>();
@@ -64,7 +47,7 @@ public class WageDataAccessObject implements WageUserDataAccessInterface, Simula
     public Employee getEmployee(String position) {
         return employees.get(position);
     }
-  
+
     @Override
     public void save(Employee employee) {
          employees.put(employee.getPosition(), employee);
@@ -79,7 +62,7 @@ public class WageDataAccessObject implements WageUserDataAccessInterface, Simula
     public Map<String, Employee> getEmployees() {
         return employees;
     }
-  
+
     public void saveToFile() throws IOException {
         JsonArray wageArray = new JsonArray();
         for (Map.Entry<String, Employee> entry : employees.entrySet()) {
@@ -92,13 +75,14 @@ public class WageDataAccessObject implements WageUserDataAccessInterface, Simula
         fileHelperObject.saveArray(constants.Constants.EMPLOYEE_KEY, wageArray);
     }
 
-    public void save() {
-        if (fileHelperObject != null) {
-            try {
-                saveToFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+  public void save() {
+    if (fileHelperObject != null) {
+        try {
+            saveToFile();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
+
+  }
 }
