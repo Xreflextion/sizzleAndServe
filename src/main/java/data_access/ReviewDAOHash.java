@@ -37,7 +37,23 @@ public class ReviewDAOHash implements ReviewDAO, SimulateReviewDataAccessInterfa
     private final FileHelperObject fileHelperObject;
 
     // This implementation of the ReviewDAO is a hashmap
-    public ReviewDAOHash(Map<Integer, ArrayList<Double>> reviewsByDay, FileHelperObject fileHelperObject) {
+    public ReviewDAOHash(FileHelperObject fileHelperObject) {
+        Map<Integer, ArrayList<Double>> reviewsByDay = new HashMap<>();
+        this.fileHelperObject = fileHelperObject;
+
+        if (fileHelperObject != null) {
+            JsonArray daysArray = fileHelperObject.getArrayFromSaveData(Constants.DAY_RECORD_KEY);
+            for (JsonElement element: daysArray) {
+                JsonObject day = element.getAsJsonObject();
+                int dayNumber = day.getAsJsonPrimitive("day_number").getAsInt();
+                if (day.keySet().contains("ratings_list")) {
+                    Double[] ratingsList = new Gson().fromJson(day.getAsJsonArray("ratings_list"), Double[].class);
+                    ArrayList<Double> ratings = new ArrayList<>(Arrays.asList(ratingsList));
+                    reviewsByDay.put(dayNumber, ratings);
+                }
+            }
+        }
+
         this.storage = reviewsByDay;
         this.fileHelperObject = fileHelperObject;
     }
@@ -61,6 +77,7 @@ public class ReviewDAOHash implements ReviewDAO, SimulateReviewDataAccessInterfa
             storage.get(reviewEntity.getDayNum()).add(reviewEntity.getRating());
 
         }
+        // TODO save
     }
 
     // gets the reviews by the day

@@ -63,5 +63,10 @@ public class FileHelperObject {
         } catch (IOException e) {
             throw new IOException(e);
         }
+    public JsonArray getArrayFromSaveData(String key) {
+        if (saveData.keySet().contains(key)) {
+            return saveData.getAsJsonArray(key);
+        }
+        return new JsonArray();
     }
 }
