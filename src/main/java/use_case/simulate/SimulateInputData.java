@@ -1,21 +1,20 @@
 package use_case.simulate;
 
 public class SimulateInputData {
-    private int currentDay;
-    private int currentCustomerCount;
+    private int previousDay;
+    private int previousCustomerCount;
 
-    public SimulateInputData(int currentDay, int currentCustomerCount) {
-        this.currentDay = currentDay;
-        this.currentCustomerCount = currentCustomerCount;
+    public SimulateInputData(int previousDay, int previousCustomerCount) {
+        this.previousDay = previousDay;
+        this.previousCustomerCount = previousCustomerCount;
     }
 
-    public int getCurrentDay() {
-        return currentDay;
+    public int getPreviousDay() {
+        return previousDay;
     }
 
-    public int getCurrentCustomerCount() {return currentCustomerCount;}
-
-
-
+    public int getPreviousCustomerCount() {
+        return previousCustomerCount;
+    }
 
 }
