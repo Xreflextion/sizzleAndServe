@@ -1,10 +1,25 @@
 package app;
 
+import java.awt.CardLayout;
+import java.util.Map;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+
 import constants.Constants;
-import data_access.*;
+import data_access.DayRecordsDataAccessObject;
+import data_access.FileHelperObject;
+import data_access.PantryDataAccessObject;
+import data_access.PlayerDataAccessObject;
+import data_access.ReviewDAOHash;
+import data_access.WageDataAccessObject;
 import entity.Employee;
-import interface_adapter.ViewManagerModel;
 import entity.Recipe;
+import interface_adapter.ViewManagerModel;
+import interface_adapter.buy_serving.BuyServingController;
+import interface_adapter.buy_serving.BuyServingPresenter;
+import interface_adapter.buy_serving.BuyServingViewModel;
 import interface_adapter.manage_wages.WageController;
 import interface_adapter.manage_wages.WagePresenter;
 import interface_adapter.manage_wages.WageState;
@@ -15,24 +30,22 @@ import interface_adapter.office.SimulatePresenter;
 import interface_adapter.product_prices.ProductPricesController;
 import interface_adapter.product_prices.ProductPricesPresenter;
 import interface_adapter.product_prices.ProductPricesViewModel;
-import interface_adapter.buy_serving.BuyServingController;
-import interface_adapter.buy_serving.BuyServingPresenter;
-import interface_adapter.buy_serving.BuyServingViewModel;
-import use_case.buy_serving.BuyServingInteractor;
 import interface_adapter.review.ReviewController;
 import interface_adapter.review.ReviewPresenter;
 import interface_adapter.review.ReviewViewModel;
+import use_case.buy_serving.BuyServingInteractor;
 import use_case.manage_wage.WageInteractor;
 import use_case.product_prices.ProductPricesInteractor;
 import use_case.review.ReviewInteractor;
 import use_case.simulate.SimulateInputBoundary;
 import use_case.simulate.SimulateInteractor;
 import use_case.simulate.SimulateOutputBoundary;
-import view.*;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.Map;
+import view.BuyServingView;
+import view.ManageWagesView;
+import view.OfficeView;
+import view.ProductPricesView;
+import view.ReviewView;
+import view.ViewManager;
 
 public class AppBuilder {
     public static final int INITIAL_BALANCE = 500;
@@ -55,14 +68,13 @@ public class AppBuilder {
     private PantryDataAccessObject pantryDAO;
     private ReviewDAOHash reviewDAO;
     private DayRecordsDataAccessObject dayRecordsDAO;
-    private WageDataAccessObject wageDAO;
+    private WageDataAccessObject wageDataAccessObject;
 
     private ManageWagesView wageView;
     private WageViewModel wageViewModel;
 
     private FileHelperObject fileHelperObject;
     private int customerCount = 0;
-
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -73,10 +85,9 @@ public class AppBuilder {
         pantryDAO = new PantryDataAccessObject(fileHelperObject);
         reviewDAO = new ReviewDAOHash(fileHelperObject);
         dayRecordsDAO = new DayRecordsDataAccessObject(fileHelperObject);
-        wageDAO = new WageDataAccessObject(fileHelperObject);
+        wageDataAccessObject = new WageDataAccessObject(fileHelperObject);
         customerCount = reviewDAO.getReviewsByDay(dayRecordsDAO.getNumberOfDays()).size();
     }
-
 
     public AppBuilder addOfficeView() {
         officeViewModel = new OfficeViewModel();
@@ -150,33 +161,37 @@ public class AppBuilder {
         return this;
     }
 
-    // Adds the ManageWageView to the app builder
+    /**
+     * Add the ManageWageView to the app builder.
+     * @return Appbuilder of Wage Manager.
+     */
     public AppBuilder addManageWageViewAndUseCase() {
-        Map<String, Employee> employees = wageDAO.getEmployees();
+        final Map<String, Employee> employees = wageDataAccessObject.getEmployees();
 
         // 1) ViewModel + seed initial state so labels are correct immediately
         wageViewModel = new WageViewModel();
-        WageState state = wageViewModel.getState();
-        state.setCookWage(employees.get("Cook").getWage());                // 0
-        state.setCookWageEffect(employees.get("Cook").getWageEffect());    // 1.0
-        state.setWaiterWage(employees.get("Waiter").getWage());            // 0
-        state.setWaiterWageEffect(employees.get("Waiter").getWageEffect());// 1.0
+        final WageState state = wageViewModel.getState();
+        state.setCookWage(employees.get("Cook").getWage());
+        state.setCookWageEffect(employees.get("Cook").getWageEffect());
+        state.setWaiterWage(employees.get("Waiter").getWage());
+        state.setWaiterWageEffect(employees.get("Waiter").getWageEffect());
         state.setCurrentBalance(playerDAO.getPlayer().getBalance());
-        wageViewModel.setState(state); // fires property change
+        wageViewModel.setState(state);
+        // fires property change
 
         // 2) Presenter + Controller
-        WagePresenter presenter = new WagePresenter(wageViewModel);
-        WageController controller =
-                new WageController(new WageInteractor(wageDAO, playerDAO, presenter, employees));
+        final WagePresenter presenter = new WagePresenter(wageViewModel);
+        final WageController controller =
+                new WageController(new WageInteractor(wageDataAccessObject, playerDAO, presenter, employees));
 
         // 3) Build the view and inject the controller
-        wageView = new ManageWagesView(wageViewModel,viewManagerModel);
+        wageView = new ManageWagesView(wageViewModel, viewManagerModel);
         wageView.initializePanels();
         wageView.setPanels();
         wageView.setActionListener();
         wageView.setController(controller);
         // 4) Add view to the cardPanel
-        cardPanel.add(wageView,wageViewModel.getViewName());
+        cardPanel.add(wageView, wageViewModel.getViewName());
         return this;
     }
 
@@ -196,7 +211,7 @@ public class AppBuilder {
                 simulateOutputBoundary,
                 pantryDAO,
                 reviewDAO,
-                wageDAO,
+                wageDataAccessObject,
                 playerDAO,
                 dayRecordsDAO
         );
