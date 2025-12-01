@@ -23,7 +23,7 @@ public class PlayerDataAccessObject implements PlayerDataAccessInterface,
 
         JsonObject playerObject = new JsonObject();
 
-        if (playerObjectArray.size() >= 1) {
+        if (!playerObjectArray.isEmpty()) {
             playerObject = playerObjectArray.get(0).getAsJsonObject();
         }
 
@@ -59,10 +59,12 @@ public class PlayerDataAccessObject implements PlayerDataAccessInterface,
     }
 
     public void save() {
-        try {
-            saveToFile();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (fileHelperObject != null) {
+            try {
+                saveToFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

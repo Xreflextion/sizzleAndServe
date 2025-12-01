@@ -83,11 +83,12 @@ public class DayRecordsDataAccessObject implements DayRecordsDataAccessInterface
     }
 
     public void save() {
-        try {
-            saveToFile();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (fileHelperObject != null) {
+            try {
+                saveToFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
-
 }

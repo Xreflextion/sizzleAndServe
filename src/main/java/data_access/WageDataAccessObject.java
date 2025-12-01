@@ -75,11 +75,13 @@ public class WageDataAccessObject implements WageUserDataAccessInterface, Simula
         fileHelperObject.saveArray(constants.Constants.EMPLOYEE_KEY, wageArray);
     }
 
-  public void save() {
-    try {
-      saveToFile();
-    } catch (IOException e) {
-      e.printStackTrace();
+    public void save() {
+        if (fileHelperObject != null) {
+            try {
+                saveToFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
-  }
 }
