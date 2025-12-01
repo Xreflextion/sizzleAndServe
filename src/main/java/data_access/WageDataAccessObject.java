@@ -35,6 +35,23 @@ public class WageDataAccessObject implements WageUserDataAccessInterface, Simula
             }
             this.employees = savedEmployees;
         }
+
+        public void saveToFile() throws IOException {
+            JsonArray array = new JsonArray();
+            for (Map.Entry<String, Employee> entry : employees.entrySet()) {
+                Employee employee = entry.getValue();
+                JsonObject obj = new JsonObject();
+                obj.addProperty("position", employee.getPosition());
+                obj.addProperty("wage", employee.getWage());
+                array.add(obj);
+            }
+            fileHelperObject.saveArray(constants.Constants.EMPLOYEE_KEY, array);
+        }
+
+
+        @Override
+        public Employee getEmployee(String position) {
+            return employees.get(position);
         else {
             // Default
             this.employees = new HashMap<>();
