@@ -1,7 +1,12 @@
 package app;
 
 import constants.Constants;
-import data_access.*;
+import data_access.DayRecordsDataAccessObject;
+import data_access.FileHelperObject;
+import data_access.PantryDataAccessObject;
+import data_access.PlayerDataAccessObject;
+import data_access.ReviewDataAccessObject;
+import data_access.WageDataAccessObject;
 import entity.Employee;
 import interface_adapter.ViewManagerModel;
 import entity.Recipe;
@@ -28,12 +33,19 @@ import use_case.review.ReviewInteractor;
 import use_case.simulate.SimulateInputBoundary;
 import use_case.simulate.SimulateInteractor;
 import use_case.simulate.SimulateOutputBoundary;
+import view.BuyServingView;
+import view.ManageWagesView;
+import view.OfficeView;
+import view.ProductPricesView;
+import view.ReviewView;
+import view.ViewManager;
 import view.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
 import java.util.Map;
+import view.InsightsView;
+import view.DrillDownView;
 
 public class AppBuilder {
     public static final int INITIAL_BALANCE = 500;
@@ -54,7 +66,7 @@ public class AppBuilder {
 
     private PlayerDataAccessObject playerDAO;
     private PantryDataAccessObject pantryDAO;
-    private ReviewDAOHash reviewDAO;
+    private ReviewDataAccessObject reviewDAO;
     private DayRecordsDataAccessObject dayRecordsDAO;
     private WageDataAccessObject wageDAO;
 
@@ -72,7 +84,7 @@ public class AppBuilder {
 
         playerDAO = new PlayerDataAccessObject(INITIAL_BALANCE, fileHelperObject);
         pantryDAO = new PantryDataAccessObject(fileHelperObject);
-        reviewDAO = new ReviewDAOHash(fileHelperObject);
+        reviewDAO = new ReviewDataAccessObject(fileHelperObject);
         dayRecordsDAO = new DayRecordsDataAccessObject(fileHelperObject);
         wageDAO = new WageDataAccessObject(fileHelperObject);
         customerCount = reviewDAO.getReviewsByDay(dayRecordsDAO.getNumberOfDays()).size();
