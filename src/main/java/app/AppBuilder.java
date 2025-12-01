@@ -1,5 +1,6 @@
 package app;
 
+import constants.Constants;
 import data_access.*;
 import entity.Employee;
 import interface_adapter.ViewManagerModel;
@@ -29,10 +30,8 @@ import use_case.insights_performance_calculation.PerformanceCalculationInputBoun
 import use_case.insights_performance_calculation.PerformanceCalculationInteractor;
 import use_case.insights_performance_calculation.PerformanceCalculationOutputBoundary;
 import use_case.manage_wage.WageInteractor;
-import use_case.manage_wage.WageUserDataAccessInterface;
 import use_case.product_prices.ProductPricesInteractor;
 import use_case.review.ReviewInteractor;
-import use_case.simulate.*;
 import use_case.simulate.SimulateInputBoundary;
 import use_case.simulate.SimulateInteractor;
 import use_case.simulate.SimulateOutputBoundary;
@@ -62,15 +61,17 @@ public class AppBuilder {
     private BuyServingViewModel buyServingViewModel;
     private BuyServingView buyServingView;
 
-    private PlayerDataAccessObject playerDAO = new PlayerDataAccessObject(INITIAL_BALANCE);
-    private PantryDataAccessObject pantryDAO = new PantryDataAccessObject();
+    private PlayerDataAccessObject playerDAO;
+    private PantryDataAccessObject pantryDAO;
     private ReviewDAOHash reviewDAO;
-    private DayRecordsDataAccessObject dayRecordsDataAccessObject;
+    private DayRecordsDataAccessObject dayRecordsDAO;
+    private WageDataAccessObject wageDAO;
 
     private ManageWagesView wageView;
-    private WageDataAccessObject wageDAO;
     private WageViewModel wageViewModel;
     private Map<String, Employee> employees = new HashMap<>();
+
+    private FileHelperObject fileHelperObject;
 
     private InsightsViewModel insightsViewModel;
     private InsightsView insightsView;
@@ -78,9 +79,13 @@ public class AppBuilder {
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
+        fileHelperObject = new FileHelperObject(Constants.FILE_NAME);
+        fileHelperObject.loadFromFile();
 
-        // Initialize data access objects
-        dayRecordsDataAccessObject = new DayRecordsDataAccessObject();
+        playerDAO = new PlayerDataAccessObject(INITIAL_BALANCE, fileHelperObject);
+        pantryDAO = new PantryDataAccessObject();
+        reviewDAO = new ReviewDAOHash(new HashMap<>());
+        dayRecordsDAO = new DayRecordsDataAccessObject();
     }
 
     public AppBuilder addOfficeView() {
@@ -138,9 +143,6 @@ public class AppBuilder {
         // Creates a presenter
         ReviewPresenter reviewPresenter = new ReviewPresenter(reviewViewModel);
 
-        // Creates a reviewDAO
-        this.reviewDAO = new ReviewDAOHash(new HashMap<>());
-
         // Creates a review interactor
         ReviewInteractor reviewInteractor = new ReviewInteractor(reviewDAO, reviewPresenter);
 
@@ -196,7 +198,7 @@ public class AppBuilder {
                 reviewDAO,
                 wageDAO,
                 playerDAO,
-                dayRecordsDataAccessObject
+                dayRecordsDAO
         );
 
         SimulateController controller = new SimulateController(simulateInteractor);
@@ -211,7 +213,7 @@ public class AppBuilder {
         PerformanceCalculationOutputBoundary performancePresenter = new PerformanceCalculationPresenter(
                 insightsViewModel, viewManagerModel);
         PerformanceCalculationInputBoundary performanceInteractor = new PerformanceCalculationInteractor(
-                dayRecordsDataAccessObject, performancePresenter);
+                dayRecordsDAO, performancePresenter);
         PerformanceCalculationController performanceController = new PerformanceCalculationController(
                 performanceInteractor);
 
@@ -219,7 +221,7 @@ public class AppBuilder {
             officeView.setPerformanceCalculationController(performanceController);
         }
         DayInsightsOutputBoundary dayInsightsPresenter = new DayInsightsPresenter(insightsViewModel, viewManagerModel);
-        DayInsightsInputBoundary dayInsightsInteractor = new DayInsightsInteractor(dayRecordsDataAccessObject, dayInsightsPresenter);
+        DayInsightsInputBoundary dayInsightsInteractor = new DayInsightsInteractor(dayRecordsDAO, dayInsightsPresenter);
         DayInsightsController dayInsightsController = new DayInsightsController(dayInsightsInteractor);
 
         insightsView = new InsightsView(
