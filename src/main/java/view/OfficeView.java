@@ -267,8 +267,4 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
     public void setSimulationController(SimulateController simulationController) {
         this.simulationController = simulationController;
     }
-
-    public void addSaveAllDataListener(SaveAllDataListener listener) {
-        saveListeners.add(listener);
-    }
 }

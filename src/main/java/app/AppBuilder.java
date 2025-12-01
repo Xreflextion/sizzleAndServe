@@ -238,16 +238,4 @@ public class AppBuilder {
         return application;
     }
 
-    public void saveAllData() {
-        try {
-            pantryDAO.saveToFile();
-            reviewDAO.saveToFile();
-            wageDAO.saveToFile();
-            dayRecordsDAO.saveToFile();
-        } catch (IOException e) {
-            // Show error message
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Failed to save data: " + e.getMessage());
-        }
-    }
 }
