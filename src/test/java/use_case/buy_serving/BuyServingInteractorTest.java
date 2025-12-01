@@ -3,7 +3,12 @@ package use_case.buy_serving;
 import entity.Pantry;
 import entity.Recipe;
 import entity.Player;
+import entity.PerDayRecord;
 import org.junit.jupiter.api.Test;
+import use_case.insights.performance_calculation.DayRecordsDataAccessInterface;
+
+import java.util.ArrayList;
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BuyServingInteractorTest {
@@ -36,6 +41,34 @@ class BuyServingInteractorTest {
         public void savePantry(Pantry pantry) {}
     }
 
+    static class TestDayRecordsDAO implements DayRecordsDataAccessInterface {
+        List<PerDayRecord> records = new ArrayList<>();
+
+        @Override
+        public int getNumberOfDays() { return records.size(); }
+
+        @Override
+        public PerDayRecord getDayData(int day) {
+            if (day < 1 || day > records.size()) return null;
+            return records.get(day - 1);
+        }
+
+        @Override
+        public void saveNewData(PerDayRecord record) {
+            records.add(record);
+        }
+
+        @Override
+        public void updateDayData(int day, PerDayRecord updatedRecord) {
+            records.set(day - 1, updatedRecord);
+        }
+
+        @Override
+        public List<PerDayRecord> getAllData() {
+            return records;
+        }
+    }
+
     // Test Presenter
     static class TestPresenter implements BuyServingOutputBoundary {
         BuyServingOutputData lastOutput;
@@ -50,8 +83,10 @@ class BuyServingInteractorTest {
     void successTest() {
         TestPlayerDAO playerDAO = new TestPlayerDAO();
         TestPantryDAO pantryDAO = new TestPantryDAO();
+        TestDayRecordsDAO dayDAO = new TestDayRecordsDAO();
+        dayDAO.saveNewData(new PerDayRecord(0, 0, 0));
         TestPresenter presenter = new TestPresenter();
-        BuyServingInteractor interactor = new BuyServingInteractor(playerDAO, pantryDAO, presenter);
+        BuyServingInteractor interactor = new BuyServingInteractor(playerDAO, pantryDAO, dayDAO, presenter);
 
         String[] dishNames = pantryDAO.getPantry().getDishNames();
         int[] servingsToBuy = {1, 1, 0};
@@ -73,8 +108,10 @@ class BuyServingInteractorTest {
     void failureTest() {
         TestPlayerDAO playerDAO = new TestPlayerDAO();
         TestPantryDAO pantryDAO = new TestPantryDAO();
+        TestDayRecordsDAO dayDAO = new TestDayRecordsDAO();
+        dayDAO.saveNewData(new PerDayRecord(0, 0, 0));
         TestPresenter presenter = new TestPresenter();
-        BuyServingInteractor interactor = new BuyServingInteractor(playerDAO, pantryDAO, presenter);
+        BuyServingInteractor interactor = new BuyServingInteractor(playerDAO, pantryDAO, dayDAO, presenter);
 
         String[] dishNames = pantryDAO.getPantry().getDishNames();
         int[] servingsToBuy = {2, 2, 0};
@@ -96,8 +133,10 @@ class BuyServingInteractorTest {
     void cumulativeStockTest() {
         TestPlayerDAO playerDAO = new TestPlayerDAO();
         TestPantryDAO pantryDAO = new TestPantryDAO();
+        TestDayRecordsDAO dayDAO = new TestDayRecordsDAO();
+        dayDAO.saveNewData(new PerDayRecord(0, 0, 0));
         TestPresenter presenter = new TestPresenter();
-        BuyServingInteractor interactor = new BuyServingInteractor(playerDAO, pantryDAO, presenter);
+        BuyServingInteractor interactor = new BuyServingInteractor(playerDAO, pantryDAO, dayDAO, presenter);
 
         String[] dishNames = pantryDAO.getPantry().getDishNames();
 
@@ -126,4 +165,3 @@ class BuyServingInteractorTest {
         presenter.lastOutput.getNewBalance();
     }
 }
-

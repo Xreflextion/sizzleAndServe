@@ -41,5 +41,13 @@ public interface DayRecordsDataAccessInterface {
      */
     int getNumberOfDays();
 
+    /**
+     * Updates the performance record of an existing day.
+     *
+     * @param day the day number to update (starting from 1)
+     * @param updatedRecord the new PerDayRecord that replaces the existing record
+     */
+    void updateDayData(int day, PerDayRecord updatedRecord);
+
 
 }

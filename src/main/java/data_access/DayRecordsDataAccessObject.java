@@ -73,6 +73,18 @@ public class DayRecordsDataAccessObject implements DayRecordsDataAccessInterface
         return dayRecords.size();
     }
 
+    @Override
+    public void updateDayData(int day, PerDayRecord updatedRecord){
+        if (updatedRecord == null){
+            throw new NullPointerException("updatedRecord is null");
+        }
+        if (day < 1 || day > dayRecords.size()){
+            throw new IllegalArgumentException("Invalid day number");
+        }
+        dayRecords.set(day - 1, updatedRecord);
+        save();
+    }
+
     public void saveToFile() throws IOException {
         JsonArray recordArray = new JsonArray();
         Gson gson = new Gson();
