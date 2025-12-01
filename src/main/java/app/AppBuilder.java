@@ -146,36 +146,39 @@ public class AppBuilder {
         return this;
     }
 
-    // Adds the ManageWageView to the app builder
+    /**
+     * Add the ManageWageView to the app builder.
+     * @return Appbuilder of Wage Manager.
+     */
     public AppBuilder addManageWageViewAndUseCase() {
-        Map<String, Employee> employees = wageDAO.getEmployees();
+        final Map<String, Employee> employees = wageDAO.getEmployees();
 
         // 1) ViewModel + seed initial state so labels are correct immediately
         wageViewModel = new WageViewModel();
-        WageState state = wageViewModel.getState();
-        state.setCookWage(employees.get("Cook").getWage());                // 0
-        state.setCookWageEffect(employees.get("Cook").getWageEffect());    // 1.0
-        state.setWaiterWage(employees.get("Waiter").getWage());            // 0
-        state.setWaiterWageEffect(employees.get("Waiter").getWageEffect());// 1.0
+        final WageState state = wageViewModel.getState();
+        state.setCookWage(employees.get("Cook").getWage());
+        state.setCookWageEffect(employees.get("Cook").getWageEffect());
+        state.setWaiterWage(employees.get("Waiter").getWage());
+        state.setWaiterWageEffect(employees.get("Waiter").getWageEffect());
         state.setCurrentBalance(playerDAO.getPlayer().getBalance());
-        wageViewModel.setState(state); // fires property change
+        wageViewModel.setState(state);
+        // fires property change
 
         // 2) Presenter + Controller
-        WagePresenter presenter = new WagePresenter(wageViewModel);
-        WageController controller =
+        final WagePresenter presenter = new WagePresenter(wageViewModel);
+        final WageController controller =
                 new WageController(new WageInteractor(wageDAO, playerDAO, presenter, employees));
 
         // 3) Build the view and inject the controller
-        wageView = new ManageWagesView(wageViewModel,viewManagerModel);
+        wageView = new ManageWagesView(wageViewModel, viewManagerModel);
         wageView.initializePanels();
         wageView.setPanels();
         wageView.setActionListener();
         wageView.setController(controller);
         // 4) Add view to the cardPanel
-        cardPanel.add(wageView,wageViewModel.getViewName());
+        cardPanel.add(wageView, wageViewModel.getViewName());
         return this;
     }
-
 
     public AppBuilder addSimulateUseCase() {
         final SimulateOutputBoundary simulateOutputBoundary = new SimulatePresenter(viewManagerModel,
