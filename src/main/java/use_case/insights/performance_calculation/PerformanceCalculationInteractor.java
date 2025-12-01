@@ -20,12 +20,6 @@ public class PerformanceCalculationInteractor implements PerformanceCalculationI
         this.presenter = presenter;
     }
 
-//    public PerDayRecord daySummary(double sales, double ingredientCost, double employeeWage, double rating){
-//        double totalRevenue = sales;
-//        double totalCost = ingredientCost + employeeWage;
-//
-//        return new PerDayRecord(totalRevenue, totalCost, rating);
-//    }
 
     @Override
     public void calculateInsights(){

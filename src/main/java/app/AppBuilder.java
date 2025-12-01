@@ -237,7 +237,7 @@ public class AppBuilder {
                 performanceInteractor);
 
         if (officeView != null){
-            officeView.setPerformanceCalculationController(performanceController);
+            officeView.setPerformanceController(performanceController);
         }
         DayInsightsOutputBoundary dayInsightsPresenter = new DayInsightsPresenter(insightsViewModel, viewManagerModel);
         DayInsightsInputBoundary dayInsightsInteractor = new DayInsightsInteractor(dayRecordsDAO, dayInsightsPresenter);

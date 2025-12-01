@@ -62,7 +62,21 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
         addViewMovementActionListener(reviewButton, ReviewViewModel.VIEW_NAME);
 
         insightsButton = createButton(OfficeViewModel.INSIGHTS_BUTTON_LABEL);
-        // addViewMovementActionListener(insightsButton, InsightsViewModel.VIEW_NAME);
+        insightsButton.addActionListener(
+                evt ->
+                {
+                    if (evt.getSource().equals(insightsButton)) {
+                        System.out.println("===Insights button Clicked===");
+                        if (performanceController != null) {
+                            System.out.println("Triggering insights calculation...");
+                            performanceController.displayInsights();
+                        }
+                        this.viewManagerModel.setState(InsightsViewModel.VIEW_NAME);
+                        this.viewManagerModel.firePropertyChange();
+                    }
+                }
+        );
+        //addViewMovementActionListener(insightsButton, InsightsViewModel.VIEW_NAME);
 
         employeeButton = createButton(OfficeViewModel.EMPLOYEE_BUTTON_LABEL);
         addViewMovementActionListener(employeeButton, WageViewModel.VIEW_NAME);
@@ -336,6 +350,10 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
 
     public void setSimulationController(SimulateController simulationController) {
         this.simulationController = simulationController;
+    }
+
+    public void setPerformanceController(PerformanceCalculationController performanceController) {
+        this.performanceController = performanceController;
     }
 }
 
