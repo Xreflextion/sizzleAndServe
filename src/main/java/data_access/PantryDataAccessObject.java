@@ -30,7 +30,7 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
         SimulatePantryDataAccessInterface {
 
     private static final int REQUIRED_RECIPE_COUNT = 3;
-    private final Pantry pantry;
+    private Pantry pantry;
     private FileHelperObject fileHelperObject;
 
     public PantryDataAccessObject(Pantry pantry) {
@@ -72,8 +72,7 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
         final OkHttpClient client = new OkHttpClient();
         final int max = 15;
         final int min = 1;
-        final int numDishes = 3;
-        for (int i = 0; i < numDishes; i++) {
+        for (int i = 0; i < REQUIRED_RECIPE_COUNT; i++) {
             try {
                 final Request request = new Request.Builder()
                         .url("https://www.themealdb.com/api/json/v1/1/random.php")
@@ -107,7 +106,7 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
     /**
     * Return a mapping of dish name to integer where each integer represents the stock of the corresponding dish name.
     * @return the stock of all dishes
-    **/
+    */
     public Map<String, Integer> getStock() {
         final Map<String, Integer> stock = new HashMap<>();
         for (String dishName: pantry.getDishNames()) {
@@ -124,6 +123,7 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
         for (String dishName: stock.keySet()) {
             pantry.getRecipe(dishName).setStock(stock.get(dishName));
         }
+        // TODO save
     }
 
     /**
@@ -140,17 +140,19 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
 
     @Override
     public void changePrice(Recipe recipe) {
-
+        pantry.getPantry().put(recipe.getName(), recipe);
+        // TODO save
     }
 
     @Override
     public void savePantry(Pantry newPantry) {
+        this.pantry = pantry;
+        // TODO save
 
     }
 
     /**
      * Downloads a temporary image from the given URL and stores it in a predefined directory.
-     *
      * @param imageUrl The URL of the image to download.
      * @param dishName The name of the dish used to generate the filename for the temporary image.
      * @throws IOException If any error occurs during the download or file creation process.
