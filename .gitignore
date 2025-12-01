@@ -1,3 +1,7 @@
+### App resources ###
+src/main/resources/images/**
+src/main/resources/save_data.json
+
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
