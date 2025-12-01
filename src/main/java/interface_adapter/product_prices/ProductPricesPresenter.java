@@ -7,8 +7,7 @@ import use_case.product_prices.ProductPricesOutputData;
 /**
  * The Presenter for the Product Prices Use Case.
  */
-public class ProductPricesPresenter implements ProductPricesOutputBoundary{
-
+public class ProductPricesPresenter implements ProductPricesOutputBoundary {
     private final ProductPricesViewModel productPricesViewModel;
     private final ViewManagerModel viewManagerModel;
 
@@ -20,7 +19,7 @@ public class ProductPricesPresenter implements ProductPricesOutputBoundary{
 
     @Override
     public void present(ProductPricesOutputData outputData) {
-        ProductPricesState newProductPricesState = productPricesViewModel.getState();
+        final ProductPricesState newProductPricesState = productPricesViewModel.getState();
         newProductPricesState.setSelectedDishName(outputData.getName());
         newProductPricesState.setCurrentPrice(outputData.getNewPrice());
 

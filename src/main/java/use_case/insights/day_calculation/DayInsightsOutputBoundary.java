@@ -1,6 +1,4 @@
-package use_case.insights_day_calculation;
-
-import use_case.insights_day_calculation.DayInsightsOutputData;
+package use_case.insights.day_calculation;
 
 public interface DayInsightsOutputBoundary {
 

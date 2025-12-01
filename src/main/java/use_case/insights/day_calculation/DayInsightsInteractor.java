@@ -1,7 +1,6 @@
-package use_case.insights_day_calculation;
+package use_case.insights.day_calculation;
 
-import use_case.insights_day_calculation.DayInsightsInputBoundary;
-import use_case.insights_performance_calculation.DayRecordsDataAccessInterface;
+import use_case.insights.performance_calculation.DayRecordsDataAccessInterface;
 import entity.PerDayRecord;
 
 
