@@ -1,16 +1,9 @@
 package view;
 
-import entity.Recipe;
-import interface_adapter.ViewManagerModel;
-import interface_adapter.office.OfficeViewModel;
-import interface_adapter.product_prices.ProductPricesController;
-import interface_adapter.product_prices.ProductPricesState;
-import interface_adapter.product_prices.ProductPricesViewModel;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -18,14 +11,30 @@ import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
+import entity.Recipe;
+import interface_adapter.ViewManagerModel;
+import interface_adapter.office.OfficeViewModel;
+import interface_adapter.product_prices.ProductPricesController;
+import interface_adapter.product_prices.ProductPricesState;
+import interface_adapter.product_prices.ProductPricesViewModel;
+
 /**
  * The View for when the user is changing product prices.
  */
 public class ProductPricesView extends JPanel implements ActionListener, PropertyChangeListener {
 
-    private final String viewName = "product prices";
+    public static final int FONT_SIZE = 18;
+    public static final int ROWS = 1;
+    public static final int COLS = 3;
+    public static final int HORIZONTAL_GAP = 10;
+    public static final int VERTICAL_GAP = 10;
+    public static final String VIEW_NAME = "product prices";
     private final ProductPricesViewModel productPricesViewModel;
-    private ProductPricesController productPricesController;
     private final ViewManagerModel viewManagerModel;
 
     // store each DishPanel by its dish name
@@ -35,34 +44,33 @@ public class ProductPricesView extends JPanel implements ActionListener, Propert
                              ProductPricesController productPricesController,
                              ViewManagerModel viewManagerModel) {
         this.productPricesViewModel = productPricesViewModel;
-        this.productPricesController = productPricesController;
         this.productPricesViewModel.addPropertyChangeListener(this);
         this.viewManagerModel = viewManagerModel;
 
         setLayout(new BorderLayout());
 
         // title
-        JLabel titleLabel = new JLabel("Product Prices");
+        final JLabel titleLabel = new JLabel("Product Prices");
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        titleLabel.setFont(new Font("Arial", Font.BOLD, FONT_SIZE));
         add(titleLabel, BorderLayout.NORTH);
 
         // container for all dishes
-        JPanel dishesPanel = new JPanel(new GridLayout(1, 3, 10, 10)); // 3 columns
-        ProductPricesState productPricesState = productPricesViewModel.getState();
+        final JPanel dishesPanel = new JPanel(new GridLayout(ROWS, COLS, HORIZONTAL_GAP, VERTICAL_GAP));
+        final ProductPricesState productPricesState = productPricesViewModel.getState();
 
         // build each DishPanel dynamically
         for (String dishName : productPricesState.getRecipes().keySet()) {
-            Recipe recipe = productPricesState.getRecipes().get(dishName);
-            DishPanel dishPanel = new DishPanel(dishName, recipe, productPricesController);
+            final Recipe recipe = productPricesState.getRecipes().get(dishName);
+            final DishPanel dishPanel = new DishPanel(dishName, recipe, productPricesController);
             dishPanels.put(dishName, dishPanel);
             dishesPanel.add(dishPanel);
         }
 
         add(dishesPanel, BorderLayout.CENTER);
 
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton backButton = new JButton("Back to Office");
+        final JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        final JButton backButton = new JButton("Office");
 
         backButton.addActionListener(evt -> {
             this.viewManagerModel.setState(OfficeViewModel.VIEW_NAME);
@@ -87,19 +95,19 @@ public class ProductPricesView extends JPanel implements ActionListener, Propert
         setFields(state);
     }
 
+    /**
+     * Updates the fields in the current view based on the provided state information.
+     * @param state the ProductPricesState object containing the current selected dish name and its price.
+     */
     public void setFields(ProductPricesState state) {
-        String selected = state.getSelectedDishName();
+        final String selected = state.getSelectedDishName();
         if (selected != null && dishPanels.containsKey(selected)) {
-            double currentPrice = state.getCurrentPrice();
+            final double currentPrice = state.getCurrentPrice();
             dishPanels.get(selected).updatePrices(currentPrice);
         }
     }
 
     public String getViewName() {
-        return viewName;
-    }
-
-    public void setProductPricesController(ProductPricesController productPricesController) {
-        this.productPricesController = productPricesController;
+        return VIEW_NAME;
     }
 }

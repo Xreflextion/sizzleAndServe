@@ -1,12 +1,15 @@
 package use_case.product_prices;
 
-import data_access.PantryDataAccessObject;
-import entity.Pantry;
-import entity.Recipe;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import data_access.PantryDataAccessObject;
+import entity.Pantry;
+import entity.Recipe;
 
 class ProductPricesInteractorTest {
 
@@ -21,18 +24,18 @@ class ProductPricesInteractorTest {
         pizza = new Recipe("Pizza", 10);
         pasta = new Recipe("Pasta", 12);
         salad = new Recipe("Salad", 8);
-        Pantry pantry = new Pantry(pizza, pasta, salad);
+        final Pantry pantry = new Pantry(pizza, pasta, salad);
         productPricesRepository = new PantryDataAccessObject(pantry);
     }
 
     @Test
     void pricesTest() {
-        ProductPricesInputData productPricesInputData = new ProductPricesInputData("Pizza", 15);
+        final ProductPricesInputData productPricesInputData = new ProductPricesInputData("Pizza", 15);
         productPricesRepository.changePrice(pizza);
 
-        ProductPricesOutputBoundary presenter = new ProductPricesOutputBoundary() {
+        final ProductPricesOutputBoundary presenter = new ProductPricesOutputBoundary() {
             @Override
-            public void present(ProductPricesOutputData outputData){
+            public void present(ProductPricesOutputData outputData) {
                 assertEquals("Pizza", pizza.getName());
                 assertEquals("Pizza", productPricesRepository.getPantry().getRecipe(pizza.getName()).getName());
                 assertEquals("Pizza", outputData.getName());
@@ -50,9 +53,9 @@ class ProductPricesInteractorTest {
 
     @Test
     void zeroMarginTest() {
-        ProductPricesInputData inputData = new ProductPricesInputData("Pizza", 0);
+        final ProductPricesInputData inputData = new ProductPricesInputData("Pizza", 0);
 
-        ProductPricesOutputBoundary presenter = new ProductPricesOutputBoundary() {
+        final ProductPricesOutputBoundary presenter = new ProductPricesOutputBoundary() {
             @Override
             public void present(ProductPricesOutputData outputData) {
                 assertEquals("Pizza", pizza.getName());
@@ -72,9 +75,9 @@ class ProductPricesInteractorTest {
 
     @Test
     void negativeMarginTest() {
-        ProductPricesInputData inputData = new ProductPricesInputData("Pizza", -20);
+        final ProductPricesInputData inputData = new ProductPricesInputData("Pizza", -20);
 
-        ProductPricesOutputBoundary presenter = new ProductPricesOutputBoundary() {
+        final ProductPricesOutputBoundary presenter = new ProductPricesOutputBoundary() {
             @Override
             public void present(ProductPricesOutputData outputData) {
                 fail("Should not reach presenter when exception is thrown");
@@ -91,9 +94,9 @@ class ProductPricesInteractorTest {
 
     @Test
     void largeMarginTest() {
-        ProductPricesInputData inputData = new ProductPricesInputData("Pizza", 100);
+        final ProductPricesInputData inputData = new ProductPricesInputData("Pizza", 100);
 
-        ProductPricesOutputBoundary presenter = new ProductPricesOutputBoundary() {
+        final ProductPricesOutputBoundary presenter = new ProductPricesOutputBoundary() {
             @Override
             public void present(ProductPricesOutputData outputData) {
                 assertEquals("Pizza", pizza.getName());
@@ -114,9 +117,9 @@ class ProductPricesInteractorTest {
     @Test
     void multipleMarginChangesTest() {
         // First margin change
-        ProductPricesInputData inputData1 = new ProductPricesInputData("Salad", 50);
+        final ProductPricesInputData inputData1 = new ProductPricesInputData("Salad", 50);
 
-        ProductPricesOutputBoundary presenter1 = new ProductPricesOutputBoundary() {
+        final ProductPricesOutputBoundary presenter1 = new ProductPricesOutputBoundary() {
             @Override
             public void present(ProductPricesOutputData outputData) {
                 assertEquals("Salad", salad.getName());
@@ -134,9 +137,9 @@ class ProductPricesInteractorTest {
         productPricesInteractor.execute(inputData1);
 
         // Second margin change on the same recipe (ensuring calculations are from basePrice and not currentPrice)
-        ProductPricesInputData inputData2 = new ProductPricesInputData("Salad", 100);
+        final ProductPricesInputData inputData2 = new ProductPricesInputData("Salad", 100);
 
-        ProductPricesOutputBoundary presenter2 = new ProductPricesOutputBoundary() {
+        final ProductPricesOutputBoundary presenter2 = new ProductPricesOutputBoundary() {
             @Override
             public void present(ProductPricesOutputData outputData) {
                 assertEquals("Salad", salad.getName());
@@ -156,9 +159,9 @@ class ProductPricesInteractorTest {
 
     @Test
     void fractionalMarginTest() {
-        ProductPricesInputData inputData = new ProductPricesInputData("Pizza", 33);
+        final ProductPricesInputData inputData = new ProductPricesInputData("Pizza", 33);
 
-        ProductPricesOutputBoundary presenter = new ProductPricesOutputBoundary() {
+        final ProductPricesOutputBoundary presenter = new ProductPricesOutputBoundary() {
             @Override
             public void present(ProductPricesOutputData outputData) {
                 assertEquals("Pizza", pizza.getName());
@@ -167,7 +170,7 @@ class ProductPricesInteractorTest {
                 assertEquals(10, pizza.getBasePrice());
                 assertEquals(10, productPricesRepository.getPantry().getRecipe(pizza.getName()).getBasePrice());
                 assertEquals(13.3, pizza.getCurrentPrice(), 0.1);
-                assertEquals(13.3, outputData.getNewPrice(),0.1);
+                assertEquals(13.3, outputData.getNewPrice(), 0.1);
                 assertEquals(13.3, productPricesRepository.getPantry().getRecipe(pizza.getName()).getCurrentPrice(),
                         0.1);
             }
@@ -180,12 +183,12 @@ class ProductPricesInteractorTest {
     @Test
     void allRecipesIndependentTest() {
         // Test that all three recipes can be updated independently without affecting each other
-        ProductPricesInputData pizzaInput = new ProductPricesInputData("Pizza", 20);
-        ProductPricesInputData pastaInput = new ProductPricesInputData("Pasta", 30);
-        ProductPricesInputData saladInput = new ProductPricesInputData("Salad", 40);
+        final ProductPricesInputData pizzaInput = new ProductPricesInputData("Pizza", 20);
+        final ProductPricesInputData pastaInput = new ProductPricesInputData("Pasta", 30);
+        final ProductPricesInputData saladInput = new ProductPricesInputData("Salad", 40);
 
         // Update pizza
-        ProductPricesOutputBoundary pizzaPresenter = new ProductPricesOutputBoundary() {
+        final ProductPricesOutputBoundary pizzaPresenter = new ProductPricesOutputBoundary() {
             @Override
             public void present(ProductPricesOutputData outputData) {
                 assertEquals("Pizza", pizza.getName());
@@ -202,7 +205,7 @@ class ProductPricesInteractorTest {
         productPricesInteractor.execute(pizzaInput);
 
         // Update pasta
-        ProductPricesOutputBoundary pastaPresenter = new ProductPricesOutputBoundary() {
+        final ProductPricesOutputBoundary pastaPresenter = new ProductPricesOutputBoundary() {
             @Override
             public void present(ProductPricesOutputData outputData) {
                 assertEquals("Pasta", pasta.getName());
@@ -219,7 +222,7 @@ class ProductPricesInteractorTest {
         productPricesInteractor.execute(pastaInput);
 
         // Update salad
-        ProductPricesOutputBoundary saladPresenter = new ProductPricesOutputBoundary() {
+        final ProductPricesOutputBoundary saladPresenter = new ProductPricesOutputBoundary() {
             @Override
             public void present(ProductPricesOutputData outputData) {
                 assertEquals("Salad", salad.getName());
@@ -238,9 +241,9 @@ class ProductPricesInteractorTest {
 
     @Test
     void nonExistentRecipeTest() {
-        ProductPricesInputData inputData = new ProductPricesInputData("Burger", 15);
+        final ProductPricesInputData inputData = new ProductPricesInputData("Burger", 15);
 
-        ProductPricesOutputBoundary presenter = new ProductPricesOutputBoundary() {
+        final ProductPricesOutputBoundary presenter = new ProductPricesOutputBoundary() {
             @Override
             public void present(ProductPricesOutputData outputData) {
                 fail("Should not reach presenter when recipe doesn't exist");
