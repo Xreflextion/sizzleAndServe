@@ -129,10 +129,6 @@ public class SimulateInteractorTest {
                 dayRecords.add(dayRecord);
             }
 
-            @Override
-            public PerDayRecord getDayData(int day) {
-                return dayRecords.get(day-1);
-            }
         };
     }
 
