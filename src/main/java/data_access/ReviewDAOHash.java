@@ -22,7 +22,6 @@ public class ReviewDAOHash implements ReviewDAO, SimulateReviewDataAccessInterfa
      * by day, you are able to get the average review for the restaurant coming from the insights class,
      * you are able to get the total number of reviews also coming from the insights class, and
      * you are able to get the total number of reviews per day
-     *
      * An example of what it may look like
      * {
      *     1 : [5.0, 4.1, 3.5, 5.0],
@@ -119,7 +118,7 @@ public class ReviewDAOHash implements ReviewDAO, SimulateReviewDataAccessInterfa
             obj.add("ratings_list", ratingsArray);
             array.add(obj);
         }
-        fileHelperObject.saveArray(Constants.DAY_RECORD_KEY, array);
+        fileHelperObject.saveArray(Constants.REVIEWS_KEY, array);
     }
 
     public void save() {
