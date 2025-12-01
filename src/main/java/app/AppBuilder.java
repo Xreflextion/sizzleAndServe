@@ -17,6 +17,8 @@ import data_access.WageDataAccessObject;
 import entity.Employee;
 import entity.Recipe;
 import interface_adapter.ViewManagerModel;
+import entity.Recipe;
+import interface_adapter.insight.*;
 import interface_adapter.buy_serving.BuyServingController;
 import interface_adapter.buy_serving.BuyServingPresenter;
 import interface_adapter.buy_serving.BuyServingViewModel;
@@ -30,9 +32,19 @@ import interface_adapter.office.SimulatePresenter;
 import interface_adapter.product_prices.ProductPricesController;
 import interface_adapter.product_prices.ProductPricesPresenter;
 import interface_adapter.product_prices.ProductPricesViewModel;
+import interface_adapter.buy_serving.BuyServingController;
+import interface_adapter.buy_serving.BuyServingPresenter;
+import interface_adapter.buy_serving.BuyServingViewModel;
+import use_case.buy_serving.BuyServingInteractor;
 import interface_adapter.review.ReviewController;
 import interface_adapter.review.ReviewPresenter;
 import interface_adapter.review.ReviewViewModel;
+import use_case.insights.day_calculation.DayInsightsInputBoundary;
+import use_case.insights.day_calculation.DayInsightsInteractor;
+import use_case.insights.day_calculation.DayInsightsOutputBoundary;
+import use_case.insights.performance_calculation.PerformanceCalculationInputBoundary;
+import use_case.insights.performance_calculation.PerformanceCalculationInteractor;
+import use_case.insights.performance_calculation.PerformanceCalculationOutputBoundary;
 import use_case.buy_serving.BuyServingInteractor;
 import use_case.manage_wage.WageInteractor;
 import use_case.product_prices.ProductPricesInteractor;
@@ -46,6 +58,8 @@ import view.OfficeView;
 import view.ProductPricesView;
 import view.ReviewView;
 import view.ViewManager;
+import view.InsightsView;
+import view.DrillDownView;
 
 public class AppBuilder {
     public static final int INITIAL_BALANCE = 500;
@@ -75,6 +89,10 @@ public class AppBuilder {
 
     private FileHelperObject fileHelperObject;
     private int customerCount = 0;
+
+    private InsightsViewModel insightsViewModel;
+    private InsightsView insightsView;
+
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -149,10 +167,10 @@ public class AppBuilder {
         ReviewPresenter reviewPresenter = new ReviewPresenter(reviewViewModel);
 
         // Creates a review interactor
-        ReviewInteractor  reviewInteractor = new ReviewInteractor(reviewDAO, reviewPresenter);
+        ReviewInteractor reviewInteractor = new ReviewInteractor(reviewDAO, reviewPresenter);
 
         // Creates a review controller
-        ReviewController  reviewController = new ReviewController(reviewInteractor);
+        ReviewController reviewController = new ReviewController(reviewInteractor);
 
         // Initializes View and add it to card panel
         ReviewView reviewView = new ReviewView(reviewController, reviewViewModel, viewManagerModel);
@@ -220,6 +238,38 @@ public class AppBuilder {
         officeView.setSimulationController(controller);
         return this;
     }
+
+    public AppBuilder addInsightsViewAndUseCase() {
+        insightsViewModel = new InsightsViewModel();
+
+
+        PerformanceCalculationOutputBoundary performancePresenter = new PerformanceCalculationPresenter(
+                insightsViewModel, viewManagerModel);
+        PerformanceCalculationInputBoundary performanceInteractor = new PerformanceCalculationInteractor(
+                dayRecordsDAO, performancePresenter);
+        PerformanceCalculationController performanceController = new PerformanceCalculationController(
+                performanceInteractor);
+
+        if (officeView != null){
+            officeView.setPerformanceController(performanceController);
+        }
+        DayInsightsOutputBoundary dayInsightsPresenter = new DayInsightsPresenter(insightsViewModel, viewManagerModel);
+        DayInsightsInputBoundary dayInsightsInteractor = new DayInsightsInteractor(dayRecordsDAO, dayInsightsPresenter);
+        DayInsightsController dayInsightsController = new DayInsightsController(dayInsightsInteractor);
+
+        insightsView = new InsightsView(
+                insightsViewModel,
+                performanceController,
+                dayInsightsController,
+                viewManagerModel
+        );
+        cardPanel.add(insightsView, insightsViewModel.getViewName());
+        DrillDownView drillDownView = new DrillDownView(insightsViewModel, viewManagerModel);
+        cardPanel.add(drillDownView, DrillDownView.VIEW_NAME);
+        return this;
+
+    }
+
 
     public JFrame build() {
         final JFrame application = new JFrame("Sizzle and Serve");

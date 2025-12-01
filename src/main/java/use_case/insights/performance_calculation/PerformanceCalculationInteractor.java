@@ -15,23 +15,23 @@ public class PerformanceCalculationInteractor implements PerformanceCalculationI
      * @param dataStorage the DAO stores all PerDayRecords
      * @param presenter recieves the calculatedInsights
      */
-    public PerformanceCalculationInteractor(DayRecordsDataAccessInterface dataStorage, PerformanceCalculationOutputBoundary presenter){
+    public PerformanceCalculationInteractor(DayRecordsDataAccessInterface dataStorage,
+                                            PerformanceCalculationOutputBoundary presenter){
         this.dataStorage = dataStorage;
         this.presenter = presenter;
     }
 
-    public PerDayRecord daySummary(double sales, double ingredientCost, double employeeWage, double rating){
-        double totalRevenue = sales;
-        double totalCost = ingredientCost + employeeWage;
-
-        return new PerDayRecord(totalRevenue, totalCost, rating);
-    }
 
     @Override
     public void calculateInsights(){
+        System.out.println("===Insights Calculation DEBUG===");
+        System.out.println("Debug: Insights Interactor is running");
+
         List<PerDayRecord> allRecords = dataStorage.getAllData();
+        System.out.println("Number of days records found: " + allRecords.size());
 
         if(allRecords.isEmpty()){
+            System.out.println("WARNING: No data available yet -- cannot calculate insights");
             presenter.failView("No data available yet");
             return;
         }
@@ -67,68 +67,19 @@ public class PerformanceCalculationInteractor implements PerformanceCalculationI
 
         int numberOfDays = allRecords.size();
 
+        System.out.println("===Insights Calculation Results===");
+        System.out.println("Total Revenue: " + totalRevenue);
+        System.out.println("Total Expenses: " + totalExpenses);
+        System.out.println("Total Profits: " + totalProfits);
+        System.out.println("Average Rating: " + averageRating);
+        System.out.println("Number of Days " + numberOfDays);
+
         PerformanceCalculationOutputData outputData = new PerformanceCalculationOutputData(
-                averageRating,reviewCount, totalRevenue, totalExpenses, totalProfits,revenueTrend,expensesTrend, profitTrend, numberOfDays);
+                averageRating,reviewCount, totalRevenue, totalExpenses, totalProfits,revenueTrend,expensesTrend,
+                profitTrend, numberOfDays);
 
         presenter.successView(outputData);
     }
-
-
-
-//    public double calculateTotalRevenue(){
-//        double totalRevenue = 0;
-//        List <PerDayRecord> allRecords = dataStorage.getAllData();
-//        for (int i = 0; i < allRecords.size(); i++) {
-//            PerDayRecord currRec = allRecords.get(i);
-//            totalRevenue += currRec.getRevenue();
-//        }
-//        return totalRevenue;
-//    }
-//
-//    public double calculateTotalExpense(){
-//        double totalExpenses = 0;
-//        List <PerDayRecord> allRecords = dataStorage.getAllData();
-//        for (int i = 0; i < allRecords.size(); i++) {
-//            PerDayRecord currRec = allRecords.get(i);
-//            totalExpenses += currRec.getExpenses();
-//        }
-//        return totalExpenses;
-//    }
-//
-//    public double calculateProfit(){
-//        double totalProfit = 0;
-//        List <PerDayRecord> allRecords = dataStorage.getAllData();
-//        for (int i = 0; i < allRecords.size(); i++) {
-//            PerDayRecord currRec = allRecords.get(i);
-//            totalProfit += currRec.getProfit();
-//        }
-//        return totalProfit;
-//    }
-//
-//    public List<Double> getProfitTrend() {
-//        List<Double> profitTrend = new ArrayList<>();
-//        for (int i = 0; i < dataStorage.getAllData().size(); i++) {
-//            profitTrend.add(dataStorage.getAllData().get(i).getProfit());
-//        }
-//        return profitTrend;
-//    }
-//
-//    public List<Double> getRevenueTrend() {
-//        List<Double> revenueTrend = new ArrayList<>();
-//        for (int i = 0; i < dataStorage.getAllData().size(); i++) {
-//            revenueTrend.add(dataStorage.getAllData().get(i).getRevenue());
-//        }
-//        return revenueTrend;
-//
-//    }
-//
-//    public List<Double> getExpensesTrend() {
-//        List<Double> expensesTrend = new ArrayList<>();
-//        for (int i = 0; i < dataStorage.getAllData().size(); i++) {
-//            expensesTrend.add(dataStorage.getAllData().get(i).getExpenses());
-//        }
-//        return expensesTrend;
-//    }
 
 
 }
