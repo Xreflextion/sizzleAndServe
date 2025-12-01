@@ -20,7 +20,12 @@ public class PlayerDataAccessObject implements PlayerDataAccessInterface,
         this.fileHelperObject = fileHelperObject;
 
         JsonArray playerObjectArray = fileHelperObject.getArrayFromSaveData(Constants.PLAYER_KEY);
-        JsonObject playerObject = playerObjectArray.get(0).getAsJsonObject();
+
+        JsonObject playerObject = new JsonObject();
+
+        if (playerObjectArray.size() >= 1) {
+            playerObject = playerObjectArray.get(0).getAsJsonObject();
+        }
 
         String name = "Name";
         if (playerObject.keySet().contains("name")) {
