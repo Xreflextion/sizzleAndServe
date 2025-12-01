@@ -146,7 +146,7 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
 
     @Override
     public void savePantry(Pantry newPantry) {
-        this.pantry = pantry;
+        this.pantry = newPantry;
         // TODO save
 
     }
