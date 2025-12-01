@@ -1,8 +1,7 @@
 package interface_adapter.insight;
 
-import use_case.insights_performance_calculation.PerformanceCalculationOutputBoundary;
-import use_case.insights_performance_calculation.PerformanceCalculationOutputData;
-import view.DrillDownView;
+import use_case.insights.performance_calculation.PerformanceCalculationOutputBoundary;
+import use_case.insights.performance_calculation.PerformanceCalculationOutputData;
 import view.InsightsView;
 import interface_adapter.ViewManagerModel;
 

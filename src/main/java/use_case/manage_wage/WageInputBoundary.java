@@ -1,6 +1,5 @@
 package use_case.manage_wage;
 
-
 /**
  * Input Boundary for the Wage Management use case.
  * Allows increasing or decreasing the wage of an employee by position.

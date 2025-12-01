@@ -1,7 +1,7 @@
 package interface_adapter.insight;
 
-import use_case.insights_day_calculation.DayInsightsOutputBoundary;
-import use_case.insights_day_calculation.DayInsightsOutputData;
+import use_case.insights.day_calculation.DayInsightsOutputBoundary;
+import use_case.insights.day_calculation.DayInsightsOutputData;
 import view.DrillDownView;
 import interface_adapter.ViewManagerModel;
 
