@@ -6,6 +6,9 @@ import interface_adapter.manage_wages.WageViewModel;
 import use_case.simulate.SimulateOutputBoundary;
 import use_case.simulate.SimulateOutputData;
 
+/**
+ * Presenter for the Simulate Use Case.
+ */
 public class SimulatePresenter implements SimulateOutputBoundary {
 
     private final OfficeViewModel officeViewModel;
@@ -31,9 +34,9 @@ public class SimulatePresenter implements SimulateOutputBoundary {
         officeState.setCurrentCustomerCount(outputData.getCurrentCustomerCount());
         officeViewModel.firePropertyChange();
 
-        String[] dishNames = buyServingViewModel.getState().dishNames;
-        int[] stocks = new int[dishNames.length];
-        for (int i = 0; i < dishNames.length; i ++) {
+        final String[] dishNames = buyServingViewModel.getState().dishNames;
+        final int[] stocks = new int[dishNames.length];
+        for (int i = 0; i < dishNames.length; i++) {
             stocks[i] = 0;
             if (outputData.getStock().containsKey(dishNames[i])) {
                 stocks[i] = outputData.getStock().get(dishNames[i]);

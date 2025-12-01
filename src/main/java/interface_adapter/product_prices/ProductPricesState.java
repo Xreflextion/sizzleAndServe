@@ -1,15 +1,16 @@
 package interface_adapter.product_prices;
 
-import entity.Recipe;
 import java.util.Map;
+
+import entity.Recipe;
 
 /**
  * The State information representing the Product Prices view.
  */
 public class ProductPricesState {
     private final Map<String, Recipe> recipes;
-    private String selectedDishName;  // Track which dish is being modified
-    private double currentPrice;     // Track the price being edited
+    private String selectedDishName;
+    private double currentPrice;
 
     public ProductPricesState(Map<String, Recipe> recipes) {
         this.recipes = recipes;
@@ -25,6 +26,10 @@ public class ProductPricesState {
         return selectedDishName;
     }
 
+    /**
+     * Updates the selected dish name and adjusts the current price based on the provided dish name.
+     * @param dishName the name of the dish to set as selected
+     */
     public void setSelectedDishName(String dishName) {
         this.selectedDishName = dishName;
         if (dishName != null && recipes.containsKey(dishName)) {
