@@ -1,26 +1,30 @@
 package data_access;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import constants.Constants;
 import java.io.IOException;
-import use_case.review.ReviewDAO;
 import entity.ReviewEntity;
+import use_case.review.ReviewDataAccessInterface;
 import use_case.simulate.SimulateReviewDataAccessInterface;
 
-import java.util.*;
-
-
-
-public class ReviewDAOHash implements ReviewDAO, SimulateReviewDataAccessInterface {
+public class ReviewDataAccessObject implements ReviewDataAccessInterface, SimulateReviewDataAccessInterface {
 
     /**
      * Review manager add reviews by a mapping with the key being the number day (for example
      * 1) and having a list of integers being the ratings you are able to get the average review
      * by day, you are able to get the average review for the restaurant coming from the insights class,
      * you are able to get the total number of reviews also coming from the insights class, and
+     * you are able to get the total number of reviews per day.
      * you are able to get the total number of reviews per day
      * An example of what it may look like
      * {
@@ -31,23 +35,23 @@ public class ReviewDAOHash implements ReviewDAO, SimulateReviewDataAccessInterfa
      *
      */
 
-
     private final Map<Integer, ArrayList<Double>> storage;
     private final FileHelperObject fileHelperObject;
 
     // This implementation of the ReviewDAO is a hashmap
-    public ReviewDAOHash(FileHelperObject fileHelperObject) {
-        Map<Integer, ArrayList<Double>> reviewsByDay = new HashMap<>();
+    public ReviewDataAccessObject(FileHelperObject fileHelperObject) {
+        final Map<Integer, ArrayList<Double>> reviewsByDay = new HashMap<>();
         this.fileHelperObject = fileHelperObject;
 
         if (fileHelperObject != null) {
-            JsonArray daysArray = fileHelperObject.getArrayFromSaveData(Constants.REVIEWS_KEY);
+            final JsonArray daysArray = fileHelperObject.getArrayFromSaveData(Constants.REVIEWS_KEY);
             for (JsonElement element: daysArray) {
-                JsonObject day = element.getAsJsonObject();
-                int dayNumber = day.getAsJsonPrimitive("day_number").getAsInt();
+                final JsonObject day = element.getAsJsonObject();
+                final int dayNumber = day.getAsJsonPrimitive("day_number").getAsInt();
                 if (day.keySet().contains("ratings_list")) {
-                    Double[] ratingsList = new Gson().fromJson(day.getAsJsonArray("ratings_list"), Double[].class);
-                    ArrayList<Double> ratings = new ArrayList<>(Arrays.asList(ratingsList));
+                    final Double[] ratingsList = new Gson().fromJson(
+                            day.getAsJsonArray("ratings_list"), Double[].class);
+                    final ArrayList<Double> ratings = new ArrayList<>(Arrays.asList(ratingsList));
                     reviewsByDay.put(dayNumber, ratings);
                 }
             }
@@ -55,21 +59,20 @@ public class ReviewDAOHash implements ReviewDAO, SimulateReviewDataAccessInterfa
         this.storage = reviewsByDay;
     }
 
-
     @Override
     public void addReview(ReviewEntity reviewEntity) {
         // Checks if the key is in the hashmap if so then it will add the rating to the selected key
-        if(storage.containsKey(reviewEntity.getDayNum())){
+        if (storage.containsKey(reviewEntity.getDayNum())) {
 
             // This will add the value by getting the key with the associated day number then add the rating
             storage.get(reviewEntity.getDayNum()).add(reviewEntity.getRating());
         }
-        else{
+        else {
             // If key doesn't exist in hashmap then a new array list will be made
             // then the new list will become the value for the day number
             // then the rating will be added to the array list for the day
 
-            ArrayList<Double> newList = new ArrayList<>();
+            final ArrayList<Double> newList = new ArrayList<>();
             storage.put(reviewEntity.getDayNum(), newList);
             storage.get(reviewEntity.getDayNum()).add(reviewEntity.getRating());
 
@@ -82,18 +85,17 @@ public class ReviewDAOHash implements ReviewDAO, SimulateReviewDataAccessInterfa
     public ArrayList<Double> getReviewsByDay(int day) {
 
         ArrayList<Double> reviews = storage.get(day);
-        if(reviews == null){
-            return new ArrayList<>();
+        if (reviews == null) {
+            reviews = new ArrayList<>();
         }
         return reviews;
     }
 
-
     // gets all the reviews
     @Override
     public List<Double> getAllReviews() {
-        ArrayList<Double> allReviews = new ArrayList<>();
-        for(ArrayList<Double> reviews : storage.values()){
+        final ArrayList<Double> allReviews = new ArrayList<>();
+        for (ArrayList<Double> reviews : storage.values()) {
             allReviews.addAll(reviews);
         }
         return allReviews;
@@ -132,5 +134,3 @@ public class ReviewDAOHash implements ReviewDAO, SimulateReviewDataAccessInterfa
     }
 
 }
-
-

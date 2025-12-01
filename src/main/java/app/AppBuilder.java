@@ -12,7 +12,7 @@ import data_access.DayRecordsDataAccessObject;
 import data_access.FileHelperObject;
 import data_access.PantryDataAccessObject;
 import data_access.PlayerDataAccessObject;
-import data_access.ReviewDAOHash;
+import data_access.ReviewDataAccessObject;
 import data_access.WageDataAccessObject;
 import entity.Employee;
 import entity.Recipe;
@@ -58,6 +58,11 @@ import view.OfficeView;
 import view.ProductPricesView;
 import view.ReviewView;
 import view.ViewManager;
+import view.*;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.Map;
 import view.InsightsView;
 import view.DrillDownView;
 
@@ -80,7 +85,7 @@ public class AppBuilder {
 
     private PlayerDataAccessObject playerDAO;
     private PantryDataAccessObject pantryDAO;
-    private ReviewDAOHash reviewDAO;
+    private ReviewDataAccessObject reviewDAO;
     private DayRecordsDataAccessObject dayRecordsDAO;
     private WageDataAccessObject wageDataAccessObject;
 
@@ -101,7 +106,7 @@ public class AppBuilder {
 
         playerDAO = new PlayerDataAccessObject(INITIAL_BALANCE, fileHelperObject);
         pantryDAO = new PantryDataAccessObject(fileHelperObject);
-        reviewDAO = new ReviewDAOHash(fileHelperObject);
+        reviewDAO = new ReviewDataAccessObject(fileHelperObject);
         dayRecordsDAO = new DayRecordsDataAccessObject(fileHelperObject);
         wageDataAccessObject = new WageDataAccessObject(fileHelperObject);
         customerCount = reviewDAO.getReviewsByDay(dayRecordsDAO.getNumberOfDays()).size();
