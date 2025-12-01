@@ -1,12 +1,12 @@
 package use_case.product_prices;
 
-import entity.Recipe;
 import entity.Pantry;
+import entity.Recipe;
 
 /**
  * The Product Prices Interactor.
  */
-public class ProductPricesInteractor implements ProductPricesInputBoundary{
+public class ProductPricesInteractor implements ProductPricesInputBoundary {
     private final ProductPricesPantryDataAccessInterface userDataAccessObject;
     private final ProductPricesOutputBoundary userPresenter;
 
@@ -18,7 +18,7 @@ public class ProductPricesInteractor implements ProductPricesInputBoundary{
 
     @Override
     public void execute(ProductPricesInputData productPricesInputData) {
-        Pantry pantry = userDataAccessObject.getPantry();
+        final Pantry pantry = userDataAccessObject.getPantry();
         final Recipe recipe = pantry.getRecipe(productPricesInputData.getName());
         recipe.applyMargin(productPricesInputData.getMarginPercentage());
 
