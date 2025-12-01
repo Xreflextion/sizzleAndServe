@@ -21,13 +21,11 @@ import interface_adapter.office.OfficeViewModel;
 import interface_adapter.office.SimulateController;
 import interface_adapter.product_prices.ProductPricesViewModel;
 import interface_adapter.review.ReviewViewModel;
-import interface_adapter.callback.SaveAllDataListener;
 
 public class OfficeView extends JPanel implements ActionListener, PropertyChangeListener {
     private final OfficeViewModel officeViewModel;
     private SimulateController simulationController;
     private final ViewManagerModel viewManagerModel;
-    private final List<SaveAllDataListener> saveListeners = new ArrayList<>();
 
     private final JLabel curDayLabel;
     private final JLabel curBalanceLabel;

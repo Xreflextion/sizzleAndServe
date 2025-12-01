@@ -53,7 +53,6 @@ public class ReviewDAOHash implements ReviewDAO, SimulateReviewDataAccessInterfa
             }
         }
         this.storage = reviewsByDay;
-        this.fileHelperObject = fileHelperObject;
     }
 
 
