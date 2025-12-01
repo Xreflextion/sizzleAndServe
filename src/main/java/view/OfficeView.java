@@ -266,4 +266,3 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
         this.simulationController = simulationController;
     }
 }
-

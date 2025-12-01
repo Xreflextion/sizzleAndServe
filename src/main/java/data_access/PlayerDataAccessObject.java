@@ -1,11 +1,14 @@
 package data_access;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import constants.Constants;
 import entity.Player;
 import use_case.buy_serving.PlayerDataAccessInterface;
 import use_case.manage_wage.WagePlayerDataAccessInterface;
 import use_case.simulate.SimulatePlayerDataAccessInterface;
+
+import java.io.IOException;
 
 public class PlayerDataAccessObject implements PlayerDataAccessInterface,
         WagePlayerDataAccessInterface, SimulatePlayerDataAccessInterface {
@@ -37,6 +40,23 @@ public class PlayerDataAccessObject implements PlayerDataAccessInterface,
     @Override
     public void savePlayer(Player player) {
         this.player = player;
-        // TODO save
+        save();
+    }
+
+    private void saveToFile() throws IOException {
+        JsonArray playerArray = new JsonArray();
+        JsonObject playerObject = new JsonObject();
+        playerObject.addProperty("name", player.getName());
+        playerObject.addProperty("balance", player.getBalance());
+        playerArray.add(playerObject);
+        fileHelperObject.saveArray(Constants.PLAYER_KEY, playerArray);
+    }
+
+    public void save() {
+        try {
+            saveToFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

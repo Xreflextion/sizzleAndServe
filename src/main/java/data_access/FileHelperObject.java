@@ -20,7 +20,7 @@ public class FileHelperObject {
     public void loadFromFile() {
         try {
             // Reading from json file and saving into our JsonObject
-            FileReader fileReader =  new FileReader(fileName);
+            FileReader fileReader = new FileReader(fileName);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             saveData = gson.fromJson(bufferedReader, JsonObject.class);
             if (saveData == null) {
@@ -36,7 +36,7 @@ public class FileHelperObject {
         try {
             FileWriter writer = new FileWriter(fileName);
 
-            for (String jsonObjectProperty: jsonObjects.keySet()) {
+            for (String jsonObjectProperty : jsonObjects.keySet()) {
                 saveData.add(jsonObjectProperty, jsonObjects.get(jsonObjectProperty));
             }
             // saving to a file
@@ -52,6 +52,17 @@ public class FileHelperObject {
             return saveData.getAsJsonObject(key);
         }
         return new JsonObject();
+    }
+
+    public void saveArray(String key, JsonArray array) throws IOException {
+        // add or replace the array under the given key in the in-memory saveData
+        saveData.add(key, array);
+        // write the updated saveData back to file
+        try (FileWriter writer = new FileWriter(fileName)) {
+            gson.toJson(saveData, writer);
+        } catch (IOException e) {
+            throw new IOException(e);
+        }
     }
 
     public JsonArray getArrayFromSaveData(String key) {
