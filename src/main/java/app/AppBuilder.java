@@ -32,7 +32,6 @@ import view.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
 import java.util.Map;
 
 public class AppBuilder {
@@ -86,14 +85,18 @@ public class AppBuilder {
         return this;
     }
 
+    /**
+     * Adds the Product Prices View to the application.
+     * @return AppBuilder with the Product Prices View added
+     */
     public AppBuilder addProductPricesView() {
-        Map<String, Recipe> recipes = pantryDAO.getPantry().getPantry();
+        final Map<String, Recipe> recipes = pantryDAO.getPantry().getPantry();
         productPricesViewModel = new ProductPricesViewModel(recipes);
-        ProductPricesPresenter productPricesPresenter = new ProductPricesPresenter(productPricesViewModel,
+        final ProductPricesPresenter productPricesPresenter = new ProductPricesPresenter(productPricesViewModel,
                 viewManagerModel);
-        ProductPricesInteractor productPricesInteractor = new ProductPricesInteractor(pantryDAO,
+        final ProductPricesInteractor productPricesInteractor = new ProductPricesInteractor(pantryDAO,
                 productPricesPresenter);
-        ProductPricesController productPricesController = new ProductPricesController(productPricesInteractor);
+        final ProductPricesController productPricesController = new ProductPricesController(productPricesInteractor);
         productPricesView = new ProductPricesView(productPricesViewModel, productPricesController, viewManagerModel);
         cardPanel.add(productPricesView, productPricesView.getViewName());
         return this;
