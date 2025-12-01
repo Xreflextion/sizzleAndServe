@@ -1,4 +1,4 @@
-package use_case.insights_performance_calculation;
+package use_case.insights.performance_calculation;
 
 
 import entity.PerDayRecord;

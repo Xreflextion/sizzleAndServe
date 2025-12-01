@@ -16,7 +16,7 @@ public class ReviewTest {
     // Test Review DAO
     static class TestReviewDAO extends ReviewDAOHash{
         public TestReviewDAO(){
-            super(new HashMap<>());
+            super(null);
             addReview(new ReviewEntity(5.0,1));
             addReview(new ReviewEntity(2.0,1));
             addReview(new ReviewEntity(1.0,2));

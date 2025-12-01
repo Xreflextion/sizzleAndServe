@@ -7,7 +7,7 @@ import com.google.gson.JsonElement;
 import constants.Constants;
 import java.io.IOException;
 import entity.PerDayRecord;
-import use_case.insights_performance_calculation.DayRecordsDataAccessInterface;
+import use_case.insights.performance_calculation.DayRecordsDataAccessInterface;
 import use_case.simulate.SimulateDayRecordsDataAccessInterface;
 
 import java.util.ArrayList;
@@ -19,7 +19,27 @@ public class DayRecordsDataAccessObject implements DayRecordsDataAccessInterface
     private List<PerDayRecord> dayRecords;
     private FileHelperObject fileHelperObject;
 
-    public DayRecordsDataAccessObject() {
+    public DayRecordsDataAccessObject(FileHelperObject fileHelperObject) {
+        this.fileHelperObject = fileHelperObject;
+        ArrayList<PerDayRecord> newDayRecords = new ArrayList<>();
+        JsonArray daysArray = fileHelperObject.getArrayFromSaveData(Constants.DAY_RECORD_KEY);
+        for (JsonElement element: daysArray) {
+            JsonObject day = element.getAsJsonObject();
+            double revenue = 0.0;
+            double expenses = 0.0;
+            double rating = 3.0;
+            if (day.keySet().contains("revenue")) {
+                revenue = day.get("revenue").getAsDouble();
+            }
+            if (day.keySet().contains("expenses")) {
+                expenses = day.get("expenses").getAsDouble();
+            }
+            if (day.keySet().contains("rating")) {
+                rating = day.get("rating").getAsDouble();
+            }
+            newDayRecords.add(new PerDayRecord(revenue, expenses, rating));
+        }
+        this.dayRecords = newDayRecords;
 
     }
 
@@ -30,6 +50,7 @@ public class DayRecordsDataAccessObject implements DayRecordsDataAccessInterface
             throw new NullPointerException("dayRecord is null");
         }
         dayRecords.add(dayRecord);
+        // TODO save
     }
 
     @Override

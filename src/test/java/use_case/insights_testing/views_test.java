@@ -5,7 +5,7 @@ import interface_adapter.insight.PerformanceCalculationController;
 import view.InsightsView;
 import interface_adapter.insight.InsightsState;
 
-import use_case.insights_performance_calculation.PerformanceCalculationInputBoundary;
+import use_case.insights.performance_calculation.PerformanceCalculationInputBoundary;
 
 import javax.swing.*;
 

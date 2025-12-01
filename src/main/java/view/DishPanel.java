@@ -35,7 +35,7 @@ public class DishPanel extends JPanel {
         setBorder(BorderFactory.createTitledBorder(dishName));
 
         basePriceLabel = new JLabel("Base Price: " + (double) recipe.getBasePrice());
-        currentPriceLabel = new JLabel("Current Price: " + (double) recipe.getBasePrice()); // placeholder
+        currentPriceLabel = new JLabel("Current Price: " + recipe.getCurrentPrice()); // placeholder
 
         String imagePath = Constants.DIR_PATH
                 + dishName.replaceAll(Constants.REGEX_CHARACTERS, Constants.REPLACEMENT_CHARACTER)
@@ -44,8 +44,10 @@ public class DishPanel extends JPanel {
         Image scaled = icon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
         imageLabel = new JLabel(new ImageIcon(scaled));
 
-        marginLabel = new JLabel("Profit Margin: " + DEFAULT_MARGIN + "%");
+
         marginSlider = new JSlider(MIN_MARGIN, MAX_MARGIN, DEFAULT_MARGIN);
+        marginSlider.setValue((int) (100 * (recipe.getCurrentPrice() / recipe.getBasePrice() - 1)));
+        marginLabel = new JLabel("Profit Margin: " + marginSlider.getValue() + "%");
         resetButton = new JButton("Reset");
 
         marginSlider.addChangeListener((ChangeEvent e) -> {
