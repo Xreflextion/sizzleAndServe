@@ -70,7 +70,7 @@ public class BuyServingView extends JPanel {
     private void setupBalancePanel() {
         final JPanel balancePanel = new JPanel();
         balancePanel.setLayout(new BoxLayout(balancePanel, BoxLayout.X_AXIS));
-        balanceLabel = new JLabel("Current Balance: " + viewModel.getState().balance);
+        balanceLabel = new JLabel("Current Balance: " + viewModel.getState().getBalance());
         balancePanel.add(balanceLabel);
         this.add(balancePanel);
     }
@@ -93,8 +93,8 @@ public class BuyServingView extends JPanel {
         // first line
         final JPanel line1 = new JPanel();
         line1.setLayout(new BoxLayout(line1, BoxLayout.X_AXIS));
-        dishNameLabels[index] = new JLabel(viewModel.getState().dishNames[index]);
-        stockLabels[index] = new JLabel("Amount in Stock: " + viewModel.getState().dishStocks[index]);
+        dishNameLabels[index] = new JLabel(viewModel.getState().getDishNames()[index]);
+        stockLabels[index] = new JLabel("Amount in Stock: " + viewModel.getState().getDishStocks()[index]);
         stockLabels[index].setHorizontalAlignment(SwingConstants.LEFT);
         line1.add(dishNameLabels[index]);
         line1.add(Box.createRigidArea(new Dimension(BOX_WIDTH, 0)));
@@ -104,7 +104,7 @@ public class BuyServingView extends JPanel {
         // second line
         final JPanel line2 = new JPanel();
         line2.setLayout(new BoxLayout(line2, BoxLayout.X_AXIS));
-        costLabels[index] = new JLabel("Cost: " + viewModel.getState().dishCosts[index]);
+        costLabels[index] = new JLabel("Cost: " + viewModel.getState().getDishCosts()[index]);
         quantityLabels[index] = new JLabel("0");
         final JButton minusButton = new JButton("-");
         final JButton plusButton = new JButton("+");
@@ -151,9 +151,9 @@ public class BuyServingView extends JPanel {
             }
         }
         if (!allZero) {
-            controller.confirmPurchase(viewModel.getState().dishNames, quantities);
+            controller.confirmPurchase(viewModel.getState().getDishNames(), quantities);
             final var state = viewModel.getState();
-            showTransactionResult(state.success);
+            showTransactionResult(state.isSuccess());
             for (int i = 0; i < NUM_DISHES; i++) {
                 quantities[i] = 0;
             }
@@ -181,10 +181,10 @@ public class BuyServingView extends JPanel {
      * the quantity labels to show the currently selected quantities for purchase
      */
     public void updateView() {
-        balanceLabel.setText("Current Balance: " + viewModel.getState().balance);
+        balanceLabel.setText("Current Balance: " + viewModel.getState().getBalance());
 
         for (int i = 0; i < NUM_DISHES; i++) {
-            stockLabels[i].setText("Amount in Stock: " + viewModel.getState().dishStocks[i]);
+            stockLabels[i].setText("Amount in Stock: " + viewModel.getState().getDishStocks()[i]);
             quantityLabels[i].setText(String.valueOf(quantities[i]));
         }
     }
