@@ -1,11 +1,13 @@
 package use_case.simulate;
 
-import entity.Pantry;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
 import entity.PerDayRecord;
 import entity.Player;
 import entity.ReviewEntity;
-
-import java.util.*;
 
 public class SimulateInteractor implements SimulateInputBoundary {
     public static final int CUSTOMER_RANGE = 2;
@@ -17,19 +19,13 @@ public class SimulateInteractor implements SimulateInputBoundary {
     public static final String COOK_POSITION = "Cook";
     public static final String WAITER_POSITION = "Waiter";
 
-
-    private final int NORMAL_RATING_UPPER_BOUND = 5;
-    private final int NO_STOCK_RATING_UPPER_BOUND = 2;
-    private final int RATING_LOWER_BOUND = 1;
-
-
     private final SimulateOutputBoundary simulatePresenter;
 
-    private SimulatePantryDataAccessInterface pantryDataAccessObject;
-    private SimulateReviewDataAccessInterface reviewManagerDataAccessObject;
-    private SimulateWageDataAccessInterface wageDataAccessObject;
-    private SimulatePlayerDataAccessInterface playerDataAccessObject;
-    private SimulateDayRecordsDataAccessInterface dayRecordsDataAccessInterface;
+    private final SimulatePantryDataAccessInterface pantryDataAccessObject;
+    private final SimulateReviewDataAccessInterface reviewManagerDataAccessObject;
+    private final SimulateWageDataAccessInterface wageDataAccessObject;
+    private final SimulatePlayerDataAccessInterface playerDataAccessObject;
+    private final SimulateDayRecordsDataAccessInterface dayRecordsDataAccessInterface;
 
     private final Random randomGenerator;
 
@@ -46,99 +42,125 @@ public class SimulateInteractor implements SimulateInputBoundary {
         this.wageDataAccessObject = wageDataAccessInterface;
         this.playerDataAccessObject = playerDataAccessInterface;
         this.dayRecordsDataAccessInterface = dayRecordsDataAccessInterface;
-        randomGenerator = new Random();
+        this.randomGenerator = new Random();
     }
 
     @Override
     public void execute(SimulateInputData simulateInputData) {
+        // calculate current day
+        final int currentDay = simulateInputData.getPreviousDay() + 1;
 
-        Pantry pantry = pantryDataAccessObject.getPantry();
-        String[] dishes = pantry.getDishNames();
-        Map<String, Integer> stock = pantryDataAccessObject.getStock();
-        Map<String, Double> currentPrices = pantryDataAccessObject.getCurrentPrices();
+        // get today's customer count
+        final int newCustomerCount = getCustomerCount(
+                simulateInputData.getPreviousDay(),
+                simulateInputData.getPreviousCustomerCount()
+        );
 
-        double currentBalance = playerDataAccessObject.getPlayer().getBalance();
-        int curDay = simulateInputData.getCurrentDay();
-        int pastCustomerCount = simulateInputData.getCurrentCustomerCount();
+        final String[] dishNames = pantryDataAccessObject.getPantry().getDishNames();
+        final Map<String, Integer> stock = pantryDataAccessObject.getStock();
 
-        ArrayList<Double> curRatings = reviewManagerDataAccessObject.getReviewsByDay(curDay);
-        double curRating = getAverageRating(curRatings);
-
-        double cookEffect = wageDataAccessObject.getEmployee(COOK_POSITION).getWageEffect();
-        double waiterEffect = wageDataAccessObject.getEmployee(WAITER_POSITION).getWageEffect();
-        System.out.println("cookEffect: " + cookEffect);
-        System.out.println("waiterEffect: " + waiterEffect);
-
-        // get customer count & orders
-        int customerCount = getCustomerCount(curRating, cookEffect, pastCustomerCount);
-        ArrayList<String> orders = getOrders(customerCount, dishes);
-
-        // initialize variables
-        ArrayList<Double> ratings = new ArrayList<>();
-        double ratingsSum = 0;
-        double revenue = 0;
-        double expenses = 0;
-
-        // TODO Remove print statements
-
-        for (String order: orders) {
-            double newRating;
-
-            if (stock.get(order) > 0) {
-                stock.put(order, stock.get(order) - 1);
-                revenue += currentPrices.get(order);
-                newRating = generateRating(NORMAL_RATING_UPPER_BOUND, RATING_LOWER_BOUND, waiterEffect);
-            } else {
-                // No stock: rating cannot be max
-                newRating = generateRating(NO_STOCK_RATING_UPPER_BOUND, RATING_LOWER_BOUND, waiterEffect);
-            }
-            ratings.add(newRating);
-            ratingsSum += newRating;
+        // get orders that can be done and can't be done
+        final Map<String, Integer> orders = getOrders(newCustomerCount, dishNames);
+        final Map<String, Integer> doableOrders = new HashMap<>();
+        final Map<String, Integer> impossibleOrders = new HashMap<>();
+        for (String dishName: dishNames) {
+            doableOrders.put(dishName, Math.min(stock.get(dishName), orders.get(dishName)));
+            impossibleOrders.put(dishName, Math.max(orders.get(dishName) - stock.get(dishName), 0));
         }
 
-
-        int newDay = curDay + 1;
-
-        // Saving reviews
-        for (double rating: ratings ) {
-            ReviewEntity reviewEntity = new ReviewEntity(rating, newDay);
-            reviewManagerDataAccessObject.addReview(reviewEntity);
+        // reduce stock for doable orders
+        for (String dishName: dishNames) {
+            stock.put(dishName, stock.get(dishName) - doableOrders.get(dishName));
         }
-
         // Saving stock
         pantryDataAccessObject.saveStock(stock);
 
-        // Managing expenses
-        expenses += wageDataAccessObject.getTotalWage();
+        // Get revenue for doable orders
+        double revenue = 0;
+        for (String dishName: dishNames) {
+            revenue += pantryDataAccessObject.getCurrentPrices().get(dishName) * doableOrders.get(dishName);
+        }
 
-        // Changing current balance
-        currentBalance += revenue;
-        currentBalance -= expenses;
+        // Get expenses for today
+        final double expenses = wageDataAccessObject.getTotalWage();
 
-        // Saving player balance
-        Player player = playerDataAccessObject.getPlayer();
+        // Get ratings for today
+        final ArrayList<Double> newRatings = getCurrentRatings(dishNames, doableOrders, impossibleOrders);
+        // Saving ratings
+        for (double rating: newRatings) {
+            reviewManagerDataAccessObject.addReview(new ReviewEntity(rating, currentDay));
+        }
+
+        // Current balance management
+        final double currentBalance = playerDataAccessObject.getPlayer().getBalance() + revenue - expenses;
+        final Player player = playerDataAccessObject.getPlayer();
         player.setBalance(currentBalance);
         playerDataAccessObject.savePlayer(player);
 
-        double avgRating = ratingsSum / ratings.size();
+        // Calculate average review for today
+        final double avgRating = getAvgRating(newRatings);
 
         // Saving day record
-        PerDayRecord newDayRecord = new PerDayRecord(revenue, expenses, avgRating);
-        dayRecordsDataAccessInterface.saveNewData(newDayRecord);
+        dayRecordsDataAccessInterface.saveNewData(new PerDayRecord(revenue, expenses, avgRating));
 
         // Generating output data
-        SimulateOutputData outputData = new SimulateOutputData(newDay, currentBalance, customerCount, stock);
+        final SimulateOutputData outputData = new SimulateOutputData(
+                currentDay,
+                currentBalance,
+                newCustomerCount,
+                stock
+        );
         simulatePresenter.prepareSuccessView(outputData);
 
-        System.out.println("Expenses: " + dayRecordsDataAccessInterface.getDayData(newDay).getExpenses());
-        System.out.println("Revenue: " + dayRecordsDataAccessInterface.getDayData(newDay).getRevenue());
-        System.out.println("Profit: " + dayRecordsDataAccessInterface.getDayData(newDay).getProfit());
-        System.out.println("Rating: " + dayRecordsDataAccessInterface.getDayData(newDay).getRating());
-        System.out.println(reviewManagerDataAccessObject.getReviewsByDay(newDay));
-
-        System.out.println("****");
     }
 
+    /**
+     * Generate average rating from list of ratings.
+     * @param ratings list of ratings that is non-empty
+     * @return average rating
+     */
+    private double getAvgRating(ArrayList<Double> ratings) {
+        double ratingsSum = 0;
+        for (double rating: ratings) {
+            ratingsSum += rating;
+        }
+        return ratingsSum / ratings.size();
+    }
+
+    /**
+     * Generate ratings for the given doable and impossible orders.
+     * @param dishNames dish names
+     * @param doableOrders mapping of dish name to number of orders that can be done
+     * @param impossibleOrders mapping of dish name to number of orders that can't be done
+     * @return list of ratings
+     */
+    private ArrayList<Double> getCurrentRatings(
+            String[] dishNames,
+            Map<String, Integer> doableOrders,
+            Map<String, Integer> impossibleOrders
+    ) {
+        final double waiterEffect = wageDataAccessObject.getEmployee(WAITER_POSITION).getWageEffect();
+        final ArrayList<Double> ratings = new ArrayList<>();
+
+        for (String dishName: dishNames) {
+            final int noStockRatingUpperBound = 2;
+            final int normalRatingUpperBound = 5;
+            final int ratingLowerBound = 1;
+
+            for (int i = 0; i < doableOrders.get(dishName); i++) {
+                final double newRating = generateRating(normalRatingUpperBound, ratingLowerBound, waiterEffect);
+                ratings.add(newRating);
+            }
+
+            for (int i = 0; i < impossibleOrders.get(dishName); i++) {
+                final double newRating = generateRating(noStockRatingUpperBound, ratingLowerBound, waiterEffect);
+                ratings.add(newRating);
+            }
+
+        }
+
+        return ratings;
+    }
 
     /**
      * Get the average rating of a list of ratings. Default is 3 if no ratings exist
@@ -146,106 +168,135 @@ public class SimulateInteractor implements SimulateInputBoundary {
      * @return average rating
      */
     private double getAverageRating(ArrayList<Double> ratings) {
-        if (ratings.isEmpty()) {
-            return 3;
-        }
-        double sum = 0;
-        for (double rating: ratings) {
-            sum += rating;
-        }
+        // Start with default rating
+        final double defaultRating = 3.0;
+        double avgRating = defaultRating;
 
-        return roundToOneDecimalPlace(sum/ratings.size());
+        if (!ratings.isEmpty()) {
+            double sum = 0;
+            for (double rating: ratings) {
+                sum += rating;
+            }
+            avgRating = sum / ratings.size();
+        }
+        return roundToOneDecimalPlace(avgRating);
     }
 
-
     /**
-     * Get a multiplier to impact new customer count based on current rating
+     * Get a multiplier to impact new customer count based on current rating.
      * @param rating the rating
      * @return multiplier to use on the randomized customer count
      */
     private double generateRatingMultiplier(double rating) {
-        return 0.25*(rating - 3.0) + 1.0;
+        final double neutralRating = 3.0;
+        final double intercept = 1.0;
+        final double ratingSlope = 0.25;
+        return ratingSlope * (rating - neutralRating) + intercept;
     }
 
-
-    /** Randomize the number of customers for the day depending on the
-     * rating of the restaurant and the cook effect.
-     * Assumes 1 <= rating <= 5
-     * @param rating the rating
-     * @param cookEffect the cook effect, larger than 1.0
+    /**
+     * Randomize the number of customers for the day.
+     * @param pastDay the previous day
      * @param pastCustomerCount the customer count from the previous day
+     * @return customer count
      * */
-    private int getCustomerCount(double rating, double cookEffect, int pastCustomerCount) {
+    private int getCustomerCount(int pastDay, int pastCustomerCount) {
+        final ArrayList<Double> previousRatings = reviewManagerDataAccessObject.getReviewsByDay(pastDay);
+        final double rating = getAverageRating(previousRatings);
+        final double cookEffect = wageDataAccessObject.getEmployee(COOK_POSITION).getWageEffect();
+
         // Step 1: Generate a random customer count that is based on the previous day's count
         // The range is [max(1, pastCustomerCount - CUSTOMER_RANGE), pastCustomerCount + CUSTOMER_RANGE]
-        int lowerBound = Math.max(1, pastCustomerCount - CUSTOMER_RANGE);
-        int upperBound = pastCustomerCount + CUSTOMER_RANGE;
+        final int lowerBound = Math.max(1, pastCustomerCount - CUSTOMER_RANGE);
+        final int upperBound = pastCustomerCount + CUSTOMER_RANGE;
         double customerCount = generateRandomInt(upperBound, lowerBound);
 
-        System.out.println("orig cus count");
-        System.out.println(customerCount);
         // Step 2: Add some customers to the count based on the cook effect
-        // - We divide a COOK_EFFECT_REDUCTION from the cookEffect so cookEffect is less effective under a threshold
-        // - We multiply A by customerCount (B)
-        // - We multiply B by 1/(customerCount - 0.7) so if the customerCount was small, we will increase it more
-        double cookEffectAddition = (cookEffect/COOK_EFFECT_REDUCTION)*customerCount*(1/(customerCount - 0.7));
-        System.out.println("cook effect addition and result " + cookEffectAddition + " " + customerCount);
+        final double cookEffectAddition = getCookEffectAddition(cookEffect, customerCount);
         customerCount += cookEffectAddition;
-        System.out.println("result of rating");
-        System.out.println(generateRatingMultiplier(rating));
+
         // Step 3: Multiply the customerCount by a rating multiplier
-        // Follows the function: f(x) = 0.25*(x - 3.0) + 1.0
+        // Follows the function: f(x) = 0.25 * (x - 3.0) + 1.0
         customerCount *= generateRatingMultiplier(rating);
         return (int) customerCount;
     }
 
-    /** Generate a list of random customer orders
-     *
+    /**
+     * Add some customers to the current customer count based on the cook effect.
+     * @param cookEffect cook effect
+     * @param customerCount customer count
+     * @return number of additional customers to add to customer count (not rounded yet)
+     */
+    private double getCookEffectAddition(double cookEffect, double customerCount) {
+        final double customerCountThreshold = 0.7;
+        // - We divide a COOK_EFFECT_REDUCTION from the cookEffect so cookEffect is less effective under a threshold
+        // - We multiply A by customerCount (B)
+        // - We multiply B by 1/(customerCount - CUSTOMER_COUNT_THRESHOLD)
+        // - CUSTOMER_COUNT_THRESHOLD < 1 so if the customerCount was small, we will increase customer count by more
+        return (cookEffect / COOK_EFFECT_REDUCTION) * customerCount * (1 / (customerCount - customerCountThreshold));
+    }
+
+    /**
+     * Generate random customer orders.
      * @param customerCount number of customers
      * @param dishes dish options
-     * @return a list of dish names where each item represents an order
+     * @return a mapping of dish names to number of orders related to them
      */
-    private ArrayList<String> getOrders(int customerCount, String[] dishes) {
-        int min = 0;
-        int max = dishes.length - 1;
-        ArrayList<String> orders = new ArrayList<>();
-        while (customerCount > 0) {
-            customerCount --;
-            int idx = generateRandomInt(max, min);
-            String dish = dishes[idx];
-            orders.add(dish);
+    private Map<String, Integer> getOrders(int customerCount, String[] dishes) {
+        final int min = 0;
+        final int max = dishes.length - 1;
+
+        final Map<String, Integer> orders = new HashMap<>();
+        for (String dish: dishes) {
+            orders.put(dish, 0);
+        }
+
+        int loopVariable = customerCount;
+        while (loopVariable > 0) {
+            loopVariable--;
+            final int idx = generateRandomInt(max, min);
+            final String dish = dishes[idx];
+            orders.put(dish, orders.get(dish) + 1);
         }
         return orders;
     }
 
     /**
      * Generate a customer rating given a range between 1 and 5.
+     * @param max upper bound for possible value of randomized rating
+     * @param min lower bound for possible value of randomized rating
      * @param waiterEffect the waiter effect that impacts customer rating
      * @return rating the rating
      */
     private double generateRating(int max, int min, double waiterEffect) {
-        // Step 1: Generate a random number between the max and min, both multiplied by 10
-        // They are multiplied by 10 so we can divide by 10 and get a larger variety of ratings
-        int number = generateRandomInt(max*10, min*10);
-        double rating = number / 10.0; // the value will range be in the list [1.0, 1.1, ... 5.0] if range given is 1-5
+        final double maxRating = 5.0;
+        final double minRating = 1.0;
+        final int scaleFactor = 10;
+
+        // Step 1: Generate a random number between the max and min, both multiplied by SCALE_FACTOR
+        // They are multiplied by SCALE_FACTOR so we can divide by SCALE_FACTOR and get a larger variety of ratings
+        final int number = generateRandomInt(max * scaleFactor, min * scaleFactor);
+        double rating = number / (double) scaleFactor;
+        // Ex. the value will range be in the list [1.0, 1.1, ... 5.0] if range given is 1-5 and SCALE_FACTOR = 10
+
         // Step 2: Add the waiterEffect / rating to the rating
         // - This is done so the rating increases by a larger amount if it is smaller at first
         // - Subtract WAITER_EFFECT_REDUCTION from waiterEffect so the waiter wage could negatively impact the rating
-        System.out.println("rating before waiter effect" + rating);
-        rating += ((waiterEffect - WAITER_EFFECT_REDUCTION)/rating);
+        rating += (waiterEffect - WAITER_EFFECT_REDUCTION) / rating;
+
         // Step 3: Make sure rating is within the interval [1.0, 5.0]
-        if (rating > 5.0) {
-            rating = 5.0;
+        if (rating > maxRating) {
+            rating = maxRating;
         }
-        if (rating < 1.0) {
-            rating = 1.0;
+        if (rating < minRating) {
+            rating = minRating;
         }
         // Step 4: round to one decimal place
         return roundToOneDecimalPlace(rating);
     }
 
     /**
-     * Generate a random integer between a range (inclusive)
+     * Generate a random integer between a range (inclusive).
      * @param max max value
      * @param min min value
      * @return random value between max and min
@@ -255,12 +306,13 @@ public class SimulateInteractor implements SimulateInputBoundary {
     }
 
     /**
-     * Round a number to one decimal place
+     * Round a number to one decimal place.
      * @param number to round
      * @return number rounded to one decimal place
      */
     private double roundToOneDecimalPlace(double number) {
-        return (double) Math.round(number * 10.0) / 10.0;
+        final double decimalShift = 10.0;
+        return Math.round(number * decimalShift) / decimalShift;
     }
 
 }
