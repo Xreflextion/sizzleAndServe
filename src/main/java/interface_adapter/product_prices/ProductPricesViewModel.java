@@ -1,11 +1,9 @@
 package interface_adapter.product_prices;
 
-import entity.Pantry;
+import java.util.Map;
+
 import entity.Recipe;
 import interface_adapter.ViewModel;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * The View Model for the Product Prices View.
