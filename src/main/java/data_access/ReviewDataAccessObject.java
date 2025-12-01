@@ -12,6 +12,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import constants.Constants;
+<<<<<<< HEAD:src/main/java/data_access/ReviewDataAccessObject.java
+=======
+import java.io.IOException;
+import use_case.review.ReviewDAO;
+>>>>>>> 550b9bdf3683772144754b39c80e0b97cfdb5bfb:src/main/java/data_access/ReviewDAOHash.java
 import entity.ReviewEntity;
 import use_case.review.ReviewDataAccessInterface;
 import use_case.simulate.SimulateReviewDataAccessInterface;
@@ -23,7 +28,11 @@ public class ReviewDataAccessObject implements ReviewDataAccessInterface, Simula
      * 1) and having a list of integers being the ratings you are able to get the average review
      * by day, you are able to get the average review for the restaurant coming from the insights class,
      * you are able to get the total number of reviews also coming from the insights class, and
+<<<<<<< HEAD:src/main/java/data_access/ReviewDataAccessObject.java
      * you are able to get the total number of reviews per day.
+=======
+     * you are able to get the total number of reviews per day
+>>>>>>> 550b9bdf3683772144754b39c80e0b97cfdb5bfb:src/main/java/data_access/ReviewDAOHash.java
      * An example of what it may look like
      * {
      *     1 : [5.0, 4.1, 3.5, 5.0],
@@ -42,7 +51,11 @@ public class ReviewDataAccessObject implements ReviewDataAccessInterface, Simula
         this.fileHelperObject = fileHelperObject;
 
         if (fileHelperObject != null) {
+<<<<<<< HEAD:src/main/java/data_access/ReviewDataAccessObject.java
             final JsonArray daysArray = fileHelperObject.getArrayFromSaveData(Constants.DAY_RECORD_KEY);
+=======
+            JsonArray daysArray = fileHelperObject.getArrayFromSaveData(Constants.REVIEWS_KEY);
+>>>>>>> 550b9bdf3683772144754b39c80e0b97cfdb5bfb:src/main/java/data_access/ReviewDAOHash.java
             for (JsonElement element: daysArray) {
                 final JsonObject day = element.getAsJsonObject();
                 final int dayNumber = day.getAsJsonPrimitive("day_number").getAsInt();
@@ -54,7 +67,6 @@ public class ReviewDataAccessObject implements ReviewDataAccessInterface, Simula
                 }
             }
         }
-
         this.storage = reviewsByDay;
     }
 
@@ -76,7 +88,7 @@ public class ReviewDataAccessObject implements ReviewDataAccessInterface, Simula
             storage.get(reviewEntity.getDayNum()).add(reviewEntity.getRating());
 
         }
-        // TODO save
+        save();
     }
 
     // gets the reviews by the day
@@ -104,4 +116,32 @@ public class ReviewDataAccessObject implements ReviewDataAccessInterface, Simula
     public Set<Integer> getAllDays() {
         return storage.keySet();
     }
+
+    public void saveToFile() throws IOException {
+        JsonArray array = new JsonArray();
+        Gson gson = new Gson();
+
+        for (Map.Entry<Integer, ArrayList<Double>> entry : storage.entrySet()) {
+            JsonObject obj = new JsonObject();
+            obj.addProperty("day_number", entry.getKey());
+            JsonArray ratingsArray = new JsonArray();
+            for (Double rating : entry.getValue()) {
+                ratingsArray.add(rating);
+            }
+            obj.add("ratings_list", ratingsArray);
+            array.add(obj);
+        }
+        fileHelperObject.saveArray(Constants.REVIEWS_KEY, array);
+    }
+
+    public void save() {
+        if (fileHelperObject != null) {
+            try {
+                saveToFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
