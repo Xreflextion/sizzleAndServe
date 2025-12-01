@@ -164,20 +164,16 @@ public class AppBuilder {
     public AppBuilder addManageWageViewAndUseCase() {
         Map<String, Employee> employees = wageDAO.getEmployees();
 
-        // 1) Initialize the two employees with wage=1, effect=1 on every run
-        employees.put("Cook", new Employee(1, "Cook"));
-        employees.put("Waiter", new Employee(1, "Waiter"));
-
-        // 2) ViewModel + seed initial state so labels are correct immediately
         // 1) ViewModel + seed initial state so labels are correct immediately
         wageViewModel = new WageViewModel();
-        WageState state = wageViewModel.getState();
-        state.setCookWage(employees.get("Cook").getWage());                // 0
-        state.setCookWageEffect(employees.get("Cook").getWageEffect());    // 1.0
-        state.setWaiterWage(employees.get("Waiter").getWage());            // 0
-        state.setWaiterWageEffect(employees.get("Waiter").getWageEffect());// 1.0
+        final WageState state = wageViewModel.getState();
+        state.setCookWage(employees.get("Cook").getWage());
+        state.setCookWageEffect(employees.get("Cook").getWageEffect());
+        state.setWaiterWage(employees.get("Waiter").getWage());
+        state.setWaiterWageEffect(employees.get("Waiter").getWageEffect());
         state.setCurrentBalance(playerDAO.getPlayer().getBalance());
-        wageViewModel.setState(state); // fires property change
+        wageViewModel.setState(state);
+        // fires property change
 
         // 2) Presenter + Controller
         WagePresenter presenter = new WagePresenter(wageViewModel);
@@ -189,11 +185,7 @@ public class AppBuilder {
         wageView.initializePanels();
         wageView.setPanels();
         wageView.setActionListener();
-        // 4) Build the view and inject the controller
-        wageView = new ManageWagesView(wageViewModel, viewManagerModel);
         wageView.setController(controller);
-        // 5) Add view to the cardPanel
-        cardPanel.add(wageView, wageViewModel.getViewName());
         // 4) Add view to the cardPanel
         cardPanel.add(wageView,wageViewModel.getViewName());
         return this;
