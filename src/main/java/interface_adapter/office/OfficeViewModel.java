@@ -23,7 +23,6 @@ public class OfficeViewModel extends ViewModel<OfficeState> {
     public static final String CURRENT_BALANCE_LABEL = "Current Balance: ";
     public static final String CURRENT_CUSTOMER_COUNT_LABEL = "Number of Customers Today: ";
 
-
     public OfficeViewModel() {
         super(VIEW_NAME);
         setState(new OfficeState());

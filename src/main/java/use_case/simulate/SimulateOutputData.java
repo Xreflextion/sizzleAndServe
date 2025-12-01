@@ -2,13 +2,21 @@ package use_case.simulate;
 
 import java.util.Map;
 
+/**
+ * Output Data for Simulate Use Case.
+ */
 public class SimulateOutputData {
     private final int currentDay;
     private final double currentBalance;
     private final int currentCustomerCount;
     private final Map<String, Integer> stock;
 
-    public SimulateOutputData(int currentDay, double currentBalance, int currentCustomerCount, Map<String, Integer>  stock) {
+    public SimulateOutputData(
+            int currentDay,
+            double currentBalance,
+            int currentCustomerCount,
+            Map<String, Integer> stock
+    ) {
         this.currentDay = currentDay;
         this.currentBalance = currentBalance;
         this.currentCustomerCount = currentCustomerCount;
@@ -18,10 +26,14 @@ public class SimulateOutputData {
     public int getCurrentDay() {
         return currentDay;
     }
+
     public double getCurrentBalance() {
         return currentBalance;
     }
-    public int getCurrentCustomerCount() {return currentCustomerCount;}
+
+    public int getCurrentCustomerCount() {
+        return currentCustomerCount;
+    }
 
     public Map<String, Integer> getStock() {
         return stock;

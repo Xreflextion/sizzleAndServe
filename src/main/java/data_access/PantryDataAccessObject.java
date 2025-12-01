@@ -123,7 +123,7 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
         for (String dishName: stock.keySet()) {
             pantry.getRecipe(dishName).setStock(stock.get(dishName));
         }
-        // TODO save
+        save();
     }
 
     /**
@@ -141,14 +141,13 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
     @Override
     public void changePrice(Recipe recipe) {
         pantry.getPantry().put(recipe.getName(), recipe);
-        // TODO save
+        save();
     }
 
     @Override
-    public void savePantry(Pantry newPantry) {
-        this.pantry = newPantry;
-        // TODO save
-
+    public void savePantry(Pantry pantry) {
+        this.pantry = pantry;
+        save();
     }
 
     /**
@@ -170,7 +169,7 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
     }
 
     public void saveToFile() throws IOException {
-        JsonArray array = new JsonArray();
+        JsonArray pantryArray = new JsonArray();
         for (String dishName : pantry.getDishNames()) {
             Recipe recipe = pantry.getRecipe(dishName);
             JsonObject obj = new JsonObject();
@@ -178,8 +177,16 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
             obj.addProperty("stock", recipe.getStock());
             obj.addProperty("base_price", recipe.getBasePrice());
             obj.addProperty("current_price", recipe.getCurrentPrice());
-            array.add(obj);
+            pantryArray.add(obj);
         }
-        fileHelperObject.saveArray(Constants.RECIPE_KEY, array);
+        fileHelperObject.saveArray(Constants.RECIPE_KEY, pantryArray);
+    }
+
+    public void save() {
+        try {
+            saveToFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
