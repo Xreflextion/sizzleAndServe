@@ -17,7 +17,7 @@ public class BuyServingViewModel extends ViewModel<BuyServingViewModel.State> {
      * @param dishNames the names of the dishes available for the user to purchase
      */
     public void setDishNames(String[] dishNames) {
-        getState().dishNames = dishNames;
+        getState().setDishNames(dishNames);
         firePropertyChange();
     }
 
@@ -27,7 +27,7 @@ public class BuyServingViewModel extends ViewModel<BuyServingViewModel.State> {
      * @param costs the cost of each dish corresponding to the stored dish names
      */
     public void setDishCosts(int[] costs) {
-        getState().dishCosts = costs;
+        getState().setDishCosts(costs);
         firePropertyChange();
     }
 
@@ -37,7 +37,7 @@ public class BuyServingViewModel extends ViewModel<BuyServingViewModel.State> {
      * @param stocks the number of servings remaining for each dish
      */
     public void setDishStocks(int[] stocks) {
-        getState().dishStocks = stocks;
+        getState().setDishStocks(stocks);
         firePropertyChange();
     }
 
@@ -47,7 +47,7 @@ public class BuyServingViewModel extends ViewModel<BuyServingViewModel.State> {
      * @param message the message describing the result of the purchase attempt
      */
     public void setMessage(String message) {
-        getState().message = message;
+        getState().setMessage(message);
         firePropertyChange();
     }
 
@@ -57,7 +57,7 @@ public class BuyServingViewModel extends ViewModel<BuyServingViewModel.State> {
      * @param newBalance the updated balance after the purchase
      */
     public void setNewBalance(double newBalance) {
-        getState().balance = newBalance;
+        getState().setBalance(newBalance);
         firePropertyChange();
     }
 
@@ -67,16 +67,64 @@ public class BuyServingViewModel extends ViewModel<BuyServingViewModel.State> {
      * @param success true if the purchase succeeded, false otherwise
      */
     public void setSuccess(boolean success) {
-        getState().success = success;
+        getState().setSuccess(success);
         firePropertyChange();
     }
 
     public static class State {
-        public String message = "";
-        public double balance = 0;
-        public boolean success = false;
-        public String[] dishNames;
-        public int[] dishCosts;
-        public int[] dishStocks;
+        private String message = "";
+        private double balance;
+        private boolean success;
+        private String[] dishNames;
+        private int[] dishCosts;
+        private int[] dishStocks;
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+
+        public double getBalance() {
+            return balance;
+        }
+
+        public void setBalance(double balance) {
+            this.balance = balance;
+        }
+
+        public boolean isSuccess() {
+            return success;
+        }
+
+        public void setSuccess(boolean success) {
+            this.success = success;
+        }
+
+        public String[] getDishNames() {
+            return dishNames;
+        }
+
+        public void setDishNames(String[] dishNames) {
+            this.dishNames = dishNames;
+        }
+
+        public int[] getDishCosts() {
+            return dishCosts;
+        }
+
+        public void setDishCosts(int[] dishCosts) {
+            this.dishCosts = dishCosts;
+        }
+
+        public int[] getDishStocks() {
+            return dishStocks;
+        }
+
+        public void setDishStocks(int[] dishStocks) {
+            this.dishStocks = dishStocks;
+        }
     }
 }

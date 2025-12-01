@@ -30,7 +30,8 @@ public class BuyServingInteractor implements BuyServingInputBoundary {
         return balance + epsilon >= totalCost;
     }
 
-    private void updatePantryAndPlayer(Player player, Pantry pantry, String[] dishNames, int[] servingsToBuy, double newBalance) {
+    private void updatePantryAndPlayer(Player player, Pantry pantry, String[] dishNames,
+                                       int[] servingsToBuy, double newBalance) {
         player.setBalance(newBalance);
         for (int i = 0; i < dishNames.length; i++) {
             pantry.addStock(dishNames[i], servingsToBuy[i]);
@@ -78,8 +79,9 @@ public class BuyServingInteractor implements BuyServingInputBoundary {
 
         if (!hasEnoughBalance(balance, totalCost)) {
             outputBoundary.present(prepareFailureOutput(balance));
-        } else {
-            double newBalance = balance - totalCost;
+        }
+        else {
+            final double newBalance = balance - totalCost;
             updatePantryAndPlayer(player, pantry, dishNames, servingsToBuy, newBalance);
             outputBoundary.present(prepareSuccessOutput(newBalance, pantry, dishNames));
         }
