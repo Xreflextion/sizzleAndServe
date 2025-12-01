@@ -15,7 +15,8 @@ public class PerformanceCalculationInteractor implements PerformanceCalculationI
      * @param dataStorage the DAO stores all PerDayRecords
      * @param presenter recieves the calculatedInsights
      */
-    public PerformanceCalculationInteractor(DayRecordsDataAccessInterface dataStorage, PerformanceCalculationOutputBoundary presenter){
+    public PerformanceCalculationInteractor(DayRecordsDataAccessInterface dataStorage,
+                                            PerformanceCalculationOutputBoundary presenter){
         this.dataStorage = dataStorage;
         this.presenter = presenter;
     }
@@ -74,11 +75,11 @@ public class PerformanceCalculationInteractor implements PerformanceCalculationI
         System.out.println("Number of Days " + numberOfDays);
 
         PerformanceCalculationOutputData outputData = new PerformanceCalculationOutputData(
-                averageRating,reviewCount, totalRevenue, totalExpenses, totalProfits,revenueTrend,expensesTrend, profitTrend, numberOfDays);
+                averageRating,reviewCount, totalRevenue, totalExpenses, totalProfits,revenueTrend,expensesTrend,
+                profitTrend, numberOfDays);
 
         presenter.successView(outputData);
     }
-
 
 
 }
