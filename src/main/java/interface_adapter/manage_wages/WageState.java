@@ -13,7 +13,6 @@ public class WageState {
     private double currentBalance;
     private String warningMessage;
 
-
     public void setWaiterWage(int waiterWage) {
         this.waiterWage = waiterWage;
     }
@@ -50,11 +49,19 @@ public class WageState {
         return cookWageEffect;
     }
 
-    public void setCurrentBalance(double currentBalance) {this.currentBalance = currentBalance;}
+    public void setCurrentBalance(double currentBalance) {
+        this.currentBalance = currentBalance;
+    }
 
-    public void setWarningMessage(String warningMessage) {this.warningMessage = warningMessage;}
+    public void setWarningMessage(String warningMessage) {
+        this.warningMessage = warningMessage;
+    }
 
-    public String getWarningMessage() {return warningMessage;}
+    public String getWarningMessage() {
+        return warningMessage;
+    }
 
-    public double getCurrentBalance() {return  currentBalance;}
+    public double getCurrentBalance() {
+        return currentBalance;
+    }
 }
