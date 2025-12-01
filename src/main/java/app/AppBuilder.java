@@ -77,6 +77,7 @@ public class AppBuilder {
         customerCount = reviewDAO.getReviewsByDay(dayRecordsDAO.getNumberOfDays()).size();
     }
 
+
     public AppBuilder addOfficeView() {
         officeViewModel = new OfficeViewModel();
         officeView = new OfficeView(officeViewModel, viewManagerModel);
@@ -179,10 +180,17 @@ public class AppBuilder {
         return this;
     }
 
-
+    /**
+     * Add Simulate Use Case to the app.
+     * @return AppBuilder with Simulate Use Case added
+     */
     public AppBuilder addSimulateUseCase() {
-        final SimulateOutputBoundary simulateOutputBoundary = new SimulatePresenter(viewManagerModel,
-                officeViewModel, buyServingViewModel, wageViewModel);
+        final SimulateOutputBoundary simulateOutputBoundary = new SimulatePresenter(
+                viewManagerModel,
+                officeViewModel,
+                buyServingViewModel,
+                wageViewModel
+        );
 
         final SimulateInputBoundary simulateInteractor = new SimulateInteractor(
                 simulateOutputBoundary,
@@ -193,7 +201,7 @@ public class AppBuilder {
                 dayRecordsDAO
         );
 
-        SimulateController controller = new SimulateController(simulateInteractor);
+        final SimulateController controller = new SimulateController(simulateInteractor);
         officeView.setSimulationController(controller);
         return this;
     }
