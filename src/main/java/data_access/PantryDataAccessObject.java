@@ -105,9 +105,9 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
     }
 
     /**
-     * Return a mapping of dish name to integer where each integer represents the stock of the corresponding dish name.
-     * @return the stock of all dishes
-     **/
+    * Return a mapping of dish name to integer where each integer represents the stock of the corresponding dish name.
+    * @return the stock of all dishes
+    **/
     public Map<String, Integer> getStock() {
         final Map<String, Integer> stock = new HashMap<>();
         for (String dishName: pantry.getDishNames()) {
@@ -165,6 +165,5 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
         try (InputStream inputStream = url.openStream()) {
             Files.copy(inputStream, tempFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
         }
-
     }
 }
