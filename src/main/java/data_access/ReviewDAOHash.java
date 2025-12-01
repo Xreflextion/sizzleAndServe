@@ -41,7 +41,7 @@ public class ReviewDAOHash implements ReviewDAO, SimulateReviewDataAccessInterfa
         this.fileHelperObject = fileHelperObject;
 
         if (fileHelperObject != null) {
-            JsonArray daysArray = fileHelperObject.getArrayFromSaveData(Constants.DAY_RECORD_KEY);
+            JsonArray daysArray = fileHelperObject.getArrayFromSaveData(Constants.REVIEWS_KEY);
             for (JsonElement element: daysArray) {
                 JsonObject day = element.getAsJsonObject();
                 int dayNumber = day.getAsJsonPrimitive("day_number").getAsInt();
