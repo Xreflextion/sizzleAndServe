@@ -35,6 +35,7 @@ public class PerformanceCalculationPresenter implements PerformanceCalculationOu
 
         viewModel.setState(state);
 
+
         viewManagerModel.setState(InsightsViewModel.VIEW_NAME);
         viewManagerModel.firePropertyChange();
 

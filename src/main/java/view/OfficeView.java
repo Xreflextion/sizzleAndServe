@@ -3,6 +3,7 @@ package view;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.buy_serving.BuyServingViewModel;
 import interface_adapter.insight.InsightsViewModel;
+import interface_adapter.insight.PerformanceCalculationController;
 import interface_adapter.manage_wages.WageViewModel;
 import interface_adapter.office.OfficeState;
 import interface_adapter.office.OfficeViewModel;
@@ -20,6 +21,7 @@ import java.beans.PropertyChangeListener;
 public class OfficeView extends JPanel implements ActionListener, PropertyChangeListener {
     private final OfficeViewModel officeViewModel;
     private SimulateController simulationController;
+    private PerformanceCalculationController performanceController;
     private final ViewManagerModel viewManagerModel;
 
     private final JLabel curDayLabel;
@@ -96,6 +98,12 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
                 evt ->
                 {
                     if (evt.getSource().equals(insightsButton)) {
+                        System.out.println("===Insights Button Clicked===");
+
+                        if(performanceController != null) {
+                            System.out.println("Triggering insights calculation...");
+                            performanceController.displayInsights();
+                        }
                         System.out.println("Go to insights");
                         this.viewManagerModel.setState(InsightsViewModel.VIEW_NAME);
                         this.viewManagerModel.firePropertyChange();
@@ -182,6 +190,10 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
 
     public void setSimulationController(SimulateController simulationController) {
         this.simulationController = simulationController;
+    }
+
+    public void setPerformanceCalculationController(PerformanceCalculationController performanceController) {
+        this.performanceController = performanceController;
     }
 }
 

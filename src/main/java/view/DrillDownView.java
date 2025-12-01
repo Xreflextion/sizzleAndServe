@@ -1,5 +1,6 @@
 package view;
 
+import interface_adapter.ViewManagerModel;
 import interface_adapter.insight.InsightsState;
 import interface_adapter.insight.InsightsViewModel;
 import interface_adapter.insight.PerformanceCalculationController;
@@ -15,6 +16,7 @@ public class DrillDownView extends JPanel implements PropertyChangeListener {
     public static final String VIEW_NAME = "Drill Down Insights";
 
     private final InsightsViewModel viewModel;
+    private final ViewManagerModel viewManagerModel;
 
 
     private JLabel dayNumber;
@@ -23,15 +25,17 @@ public class DrillDownView extends JPanel implements PropertyChangeListener {
     private JLabel profitValue;
     private JLabel ratingValue;
 
-    private final JButton backButton = new JButton("Back to Insights");
+    // private final JButton backButton = new JButton("Back to Insights");
 
-    public DrillDownView(InsightsViewModel viewModel) {
+    public DrillDownView(InsightsViewModel viewModel, ViewManagerModel viewManagerModel) {
         this.viewModel = viewModel;
+        this.viewManagerModel = viewManagerModel;
 
         this.viewModel.addPropertyChangeListener(this);
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         add(buildDrillDownPanel());
+        add(buildBackButtonPanel());
 
 //        backButton.addActionListener(new ActionListener() {
 //            @Override
@@ -78,11 +82,25 @@ public class DrillDownView extends JPanel implements PropertyChangeListener {
         drillDownPanel.add(expensesPanel);
         drillDownPanel.add(profitPanel);
         drillDownPanel.add(ratingPanel);
-        drillDownPanel.add(backButton);
+        // drillDownPanel.add(backButton);
 
         return drillDownPanel;
 
 
+    }
+
+    private JPanel buildBackButtonPanel(){
+        JPanel backPanel = new JPanel();
+        JButton backButton = new JButton("Back to Insights");
+        backPanel.add(backButton);
+
+        backButton.addActionListener(e -> {
+            System.out.println("Back to Insights Button Clicked");
+            viewManagerModel.setState(viewModel.getViewName());
+            viewManagerModel.firePropertyChange();
+
+        });
+        return backPanel;
     }
 
     @Override

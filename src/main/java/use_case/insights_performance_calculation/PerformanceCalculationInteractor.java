@@ -20,18 +20,23 @@ public class PerformanceCalculationInteractor implements PerformanceCalculationI
         this.presenter = presenter;
     }
 
-    public PerDayRecord daySummary(double sales, double ingredientCost, double employeeWage, double rating){
-        double totalRevenue = sales;
-        double totalCost = ingredientCost + employeeWage;
-
-        return new PerDayRecord(totalRevenue, totalCost, rating);
-    }
+//    public PerDayRecord daySummary(double sales, double ingredientCost, double employeeWage, double rating){
+//        double totalRevenue = sales;
+//        double totalCost = ingredientCost + employeeWage;
+//
+//        return new PerDayRecord(totalRevenue, totalCost, rating);
+//    }
 
     @Override
     public void calculateInsights(){
+        System.out.println("===Insights Calculation DEBUG===");
+        System.out.println("Debug: Insights Interactor is running");
+
         List<PerDayRecord> allRecords = dataStorage.getAllData();
+        System.out.println("Number of days records found: " + allRecords.size());
 
         if(allRecords.isEmpty()){
+            System.out.println("WARNING: No data available yet -- cannot calculate insights");
             presenter.failView("No data available yet");
             return;
         }
@@ -66,6 +71,13 @@ public class PerformanceCalculationInteractor implements PerformanceCalculationI
         double averageRating = sumRating/reviewCount;
 
         int numberOfDays = allRecords.size();
+
+        System.out.println("===Insights Calculation Results===");
+        System.out.println("Total Revenue: " + totalRevenue);
+        System.out.println("Total Expenses: " + totalExpenses);
+        System.out.println("Total Profits: " + totalProfits);
+        System.out.println("Average Rating: " + averageRating);
+        System.out.println("Number of Days " + numberOfDays);
 
         PerformanceCalculationOutputData outputData = new PerformanceCalculationOutputData(
                 averageRating,reviewCount, totalRevenue, totalExpenses, totalProfits,revenueTrend,expensesTrend, profitTrend, numberOfDays);

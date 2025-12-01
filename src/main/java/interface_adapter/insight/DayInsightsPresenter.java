@@ -26,6 +26,7 @@ public class DayInsightsPresenter implements DayInsightsOutputBoundary {
 
         viewModel.setState(state);
 
+        System.out.print("Presenter: Switching to Drill Down View");
         viewManagerModel.setState(DrillDownView.VIEW_NAME);
         viewManagerModel.firePropertyChange();
     }

@@ -207,12 +207,17 @@ public class AppBuilder {
     public AppBuilder addInsightsViewAndUseCase() {
         insightsViewModel = new InsightsViewModel();
 
+
         PerformanceCalculationOutputBoundary performancePresenter = new PerformanceCalculationPresenter(
                 insightsViewModel, viewManagerModel);
         PerformanceCalculationInputBoundary performanceInteractor = new PerformanceCalculationInteractor(
                 dayRecordsDataAccessObject, performancePresenter);
         PerformanceCalculationController performanceController = new PerformanceCalculationController(
                 performanceInteractor);
+
+        if (officeView != null){
+            officeView.setPerformanceCalculationController(performanceController);
+        }
         DayInsightsOutputBoundary dayInsightsPresenter = new DayInsightsPresenter(insightsViewModel, viewManagerModel);
         DayInsightsInputBoundary dayInsightsInteractor = new DayInsightsInteractor(dayRecordsDataAccessObject, dayInsightsPresenter);
         DayInsightsController dayInsightsController = new DayInsightsController(dayInsightsInteractor);
@@ -220,9 +225,12 @@ public class AppBuilder {
         insightsView = new InsightsView(
                 insightsViewModel,
                 performanceController,
-                dayInsightsController
+                dayInsightsController,
+                viewManagerModel
         );
         cardPanel.add(insightsView, insightsViewModel.getViewName());
+        DrillDownView drillDownView = new DrillDownView(insightsViewModel, viewManagerModel);
+        cardPanel.add(drillDownView, DrillDownView.VIEW_NAME);
         return this;
 
     }

@@ -1,9 +1,11 @@
 package view;
 
+import interface_adapter.ViewManagerModel;
 import interface_adapter.insight.DayInsightsController;
 import interface_adapter.insight.InsightsState;
 import interface_adapter.insight.InsightsViewModel;
 import interface_adapter.insight.PerformanceCalculationController;
+import interface_adapter.office.OfficeViewModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,6 +24,7 @@ public class InsightsView extends JPanel implements PropertyChangeListener {
     private final InsightsViewModel viewModel;
     private final PerformanceCalculationController controller;
     private final DayInsightsController dayInsightsController;
+    private final ViewManagerModel viewManagerModel;
 
     private JLabel revenueValueLabel;
     private JLabel expensesValueLabel;
@@ -31,10 +34,12 @@ public class InsightsView extends JPanel implements PropertyChangeListener {
     private JPanel drillDownPanel;
     private TrendChartPanel trendChartPanel;
 
-    public InsightsView(InsightsViewModel viewModel, PerformanceCalculationController controller, DayInsightsController dayInsightsController) {
+    public InsightsView(InsightsViewModel viewModel, PerformanceCalculationController controller, DayInsightsController dayInsightsController, ViewManagerModel viewManagerModel) {
         this.viewModel = viewModel;
         this.controller = controller;
         this.dayInsightsController = dayInsightsController;
+        this.viewManagerModel = viewManagerModel;
+
 
         this.viewModel.addPropertyChangeListener(this);
 
@@ -112,7 +117,12 @@ public class InsightsView extends JPanel implements PropertyChangeListener {
     private JPanel buildBackToMainPanel() {
         JPanel panel = new JPanel();
         panel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(new JButton("Back to Main Menu"));
+        JButton backToOffice = new JButton("Back to Office");
+        panel.add(backToOffice);
+        backToOffice.addActionListener(e -> {
+            viewManagerModel.setState(OfficeViewModel.VIEW_NAME);
+            viewManagerModel.firePropertyChange();
+        });
         return panel;
 
     }
@@ -158,7 +168,10 @@ public class InsightsView extends JPanel implements PropertyChangeListener {
             for (int i = 1; i <= numberOfDays; i++) {
                 final int dayNumber = i;
                 JButton drillDownDayButton = new JButton("Day " + i);
-                drillDownDayButton.addActionListener(e -> dayInsightsController.displayDayInsights(dayNumber));
+                drillDownDayButton.addActionListener(e -> {
+                    System.out.println("Drill Down Button Clicked: Day " + dayNumber);
+                        dayInsightsController.displayDayInsights(dayNumber);
+                });
 
                 drillDownPanel.add(drillDownDayButton);
             }
