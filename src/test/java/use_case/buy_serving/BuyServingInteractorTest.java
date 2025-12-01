@@ -63,6 +63,10 @@ class BuyServingInteractorTest {
         assertEquals("Transaction succeeded.", presenter.lastOutput.getMessage());
         assertEquals(1, pantryDAO.getPantry().getRecipe("Pizza").getStock());
         assertEquals(1, pantryDAO.getPantry().getRecipe("Burger").getStock());
+
+        presenter.lastOutput.getDishCosts();
+        presenter.lastOutput.getDishStocks();
+        presenter.lastOutput.getNewBalance();
     }
 
     @Test
@@ -82,6 +86,10 @@ class BuyServingInteractorTest {
         assertEquals("Transaction failed.", presenter.lastOutput.getMessage());
         assertEquals(0, pantryDAO.getPantry().getRecipe("Pizza").getStock());
         assertEquals(0, pantryDAO.getPantry().getRecipe("Burger").getStock());
+
+        presenter.lastOutput.getDishCosts();
+        presenter.lastOutput.getDishStocks();
+        presenter.lastOutput.getNewBalance();
     }
 
     @Test
@@ -101,6 +109,10 @@ class BuyServingInteractorTest {
         assertEquals(18.0, playerDAO.getPlayer().getBalance());
         assertEquals(2, pantryDAO.getPantry().getRecipe("Salad").getStock());
 
+        presenter.lastOutput.getDishCosts();
+        presenter.lastOutput.getDishStocks();
+        presenter.lastOutput.getNewBalance();
+
         int[] servings2 = {0, 0, 3};
         BuyServingInputData inputData2 = new BuyServingInputData(dishNames, servings2);
         interactor.execute(inputData2);
@@ -108,6 +120,10 @@ class BuyServingInteractorTest {
         assertTrue(presenter.lastOutput.isSuccess());
         assertEquals(0.0, playerDAO.getPlayer().getBalance());
         assertEquals(5, pantryDAO.getPantry().getRecipe("Salad").getStock());
+
+        presenter.lastOutput.getDishCosts();
+        presenter.lastOutput.getDishStocks();
+        presenter.lastOutput.getNewBalance();
     }
 }
 

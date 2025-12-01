@@ -2,9 +2,10 @@ package data_access;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
 import constants.Constants;
+import java.io.IOException;
 import entity.PerDayRecord;
 import use_case.insights.performance_calculation.DayRecordsDataAccessInterface;
 import use_case.simulate.SimulateDayRecordsDataAccessInterface;
@@ -49,7 +50,7 @@ public class DayRecordsDataAccessObject implements DayRecordsDataAccessInterface
             throw new NullPointerException("dayRecord is null");
         }
         dayRecords.add(dayRecord);
-        // TODO save
+        save();
     }
 
     @Override
@@ -72,5 +73,22 @@ public class DayRecordsDataAccessObject implements DayRecordsDataAccessInterface
         return dayRecords.size();
     }
 
-}
+    public void saveToFile() throws IOException {
+        JsonArray recordArray = new JsonArray();
+        Gson gson = new Gson();
+        for (PerDayRecord record : dayRecords) {
+            recordArray.add(gson.toJsonTree(record).getAsJsonObject());
+        }
+        fileHelperObject.saveArray(Constants.DAY_RECORD_KEY, recordArray);
+    }
 
+    public void save() {
+        if (fileHelperObject != null) {
+            try {
+                saveToFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}

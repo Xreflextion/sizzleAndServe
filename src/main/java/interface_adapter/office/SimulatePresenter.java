@@ -34,7 +34,7 @@ public class SimulatePresenter implements SimulateOutputBoundary {
         officeState.setCurrentCustomerCount(outputData.getCurrentCustomerCount());
         officeViewModel.firePropertyChange();
 
-        final String[] dishNames = buyServingViewModel.getState().dishNames;
+        final String[] dishNames = buyServingViewModel.getState().getDishNames();
         final int[] stocks = new int[dishNames.length];
         for (int i = 0; i < dishNames.length; i++) {
             stocks[i] = 0;

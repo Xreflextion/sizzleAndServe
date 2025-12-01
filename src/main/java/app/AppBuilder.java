@@ -1,11 +1,27 @@
 package app;
 
+import java.awt.CardLayout;
+import java.util.Map;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+
 import constants.Constants;
-import data_access.*;
+import data_access.DayRecordsDataAccessObject;
+import data_access.FileHelperObject;
+import data_access.PantryDataAccessObject;
+import data_access.PlayerDataAccessObject;
+import data_access.ReviewDAOHash;
+import data_access.WageDataAccessObject;
 import entity.Employee;
+import entity.Recipe;
 import interface_adapter.ViewManagerModel;
 import entity.Recipe;
 import interface_adapter.insight.*;
+import interface_adapter.buy_serving.BuyServingController;
+import interface_adapter.buy_serving.BuyServingPresenter;
+import interface_adapter.buy_serving.BuyServingViewModel;
 import interface_adapter.manage_wages.WageController;
 import interface_adapter.manage_wages.WagePresenter;
 import interface_adapter.manage_wages.WageState;
@@ -29,17 +45,21 @@ import use_case.insights.day_calculation.DayInsightsOutputBoundary;
 import use_case.insights.performance_calculation.PerformanceCalculationInputBoundary;
 import use_case.insights.performance_calculation.PerformanceCalculationInteractor;
 import use_case.insights.performance_calculation.PerformanceCalculationOutputBoundary;
+import use_case.buy_serving.BuyServingInteractor;
 import use_case.manage_wage.WageInteractor;
 import use_case.product_prices.ProductPricesInteractor;
 import use_case.review.ReviewInteractor;
 import use_case.simulate.SimulateInputBoundary;
 import use_case.simulate.SimulateInteractor;
 import use_case.simulate.SimulateOutputBoundary;
-import view.*;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.Map;
+import view.BuyServingView;
+import view.ManageWagesView;
+import view.OfficeView;
+import view.ProductPricesView;
+import view.ReviewView;
+import view.ViewManager;
+import view.InsightsView;
+import view.DrillDownView;
 
 public class AppBuilder {
     public static final int INITIAL_BALANCE = 500;
@@ -62,7 +82,7 @@ public class AppBuilder {
     private PantryDataAccessObject pantryDAO;
     private ReviewDAOHash reviewDAO;
     private DayRecordsDataAccessObject dayRecordsDAO;
-    private WageDataAccessObject wageDAO;
+    private WageDataAccessObject wageDataAccessObject;
 
     private ManageWagesView wageView;
     private WageViewModel wageViewModel;
@@ -83,10 +103,9 @@ public class AppBuilder {
         pantryDAO = new PantryDataAccessObject(fileHelperObject);
         reviewDAO = new ReviewDAOHash(fileHelperObject);
         dayRecordsDAO = new DayRecordsDataAccessObject(fileHelperObject);
-        wageDAO = new WageDataAccessObject(fileHelperObject);
+        wageDataAccessObject = new WageDataAccessObject(fileHelperObject);
         customerCount = reviewDAO.getReviewsByDay(dayRecordsDAO.getNumberOfDays()).size();
     }
-
 
     public AppBuilder addOfficeView() {
         officeViewModel = new OfficeViewModel();
@@ -160,9 +179,12 @@ public class AppBuilder {
         return this;
     }
 
-    // Adds the ManageWageView to the app builder
+    /**
+     * Add the ManageWageView to the app builder.
+     * @return Appbuilder of Wage Manager.
+     */
     public AppBuilder addManageWageViewAndUseCase() {
-        Map<String, Employee> employees = wageDAO.getEmployees();
+        final Map<String, Employee> employees = wageDataAccessObject.getEmployees();
 
         // 1) ViewModel + seed initial state so labels are correct immediately
         wageViewModel = new WageViewModel();
@@ -176,18 +198,18 @@ public class AppBuilder {
         // fires property change
 
         // 2) Presenter + Controller
-        WagePresenter presenter = new WagePresenter(wageViewModel);
-        WageController controller =
-                new WageController(new WageInteractor(wageDAO, playerDAO, presenter, employees));
+        final WagePresenter presenter = new WagePresenter(wageViewModel);
+        final WageController controller =
+                new WageController(new WageInteractor(wageDataAccessObject, playerDAO, presenter, employees));
 
         // 3) Build the view and inject the controller
-        wageView = new ManageWagesView(wageViewModel,viewManagerModel);
+        wageView = new ManageWagesView(wageViewModel, viewManagerModel);
         wageView.initializePanels();
         wageView.setPanels();
         wageView.setActionListener();
         wageView.setController(controller);
         // 4) Add view to the cardPanel
-        cardPanel.add(wageView,wageViewModel.getViewName());
+        cardPanel.add(wageView, wageViewModel.getViewName());
         return this;
     }
 
@@ -207,7 +229,7 @@ public class AppBuilder {
                 simulateOutputBoundary,
                 pantryDAO,
                 reviewDAO,
-                wageDAO,
+                wageDataAccessObject,
                 playerDAO,
                 dayRecordsDAO
         );
@@ -264,4 +286,5 @@ public class AppBuilder {
 
         return application;
     }
+
 }

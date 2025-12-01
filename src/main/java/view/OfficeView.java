@@ -356,4 +356,3 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
         this.performanceController = performanceController;
     }
 }
-

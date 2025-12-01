@@ -62,7 +62,7 @@ public class ProductPricesView extends JPanel implements ActionListener, Propert
         add(dishesPanel, BorderLayout.CENTER);
 
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton backButton = new JButton("Office");
+        JButton backButton = new JButton("Back to Office");
 
         backButton.addActionListener(evt -> {
             this.viewManagerModel.setState(OfficeViewModel.VIEW_NAME);
