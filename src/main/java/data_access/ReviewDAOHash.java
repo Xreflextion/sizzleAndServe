@@ -123,10 +123,12 @@ public class ReviewDAOHash implements ReviewDAO, SimulateReviewDataAccessInterfa
     }
 
     public void save() {
-        try {
-            saveToFile();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (fileHelperObject != null) {
+            try {
+                saveToFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

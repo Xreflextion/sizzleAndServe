@@ -20,7 +20,12 @@ public class PlayerDataAccessObject implements PlayerDataAccessInterface,
         this.fileHelperObject = fileHelperObject;
 
         JsonArray playerObjectArray = fileHelperObject.getArrayFromSaveData(Constants.PLAYER_KEY);
-        JsonObject playerObject = playerObjectArray.get(0).getAsJsonObject();
+
+        JsonObject playerObject = new JsonObject();
+
+        if (!playerObjectArray.isEmpty()) {
+            playerObject = playerObjectArray.get(0).getAsJsonObject();
+        }
 
         String name = "Name";
         if (playerObject.keySet().contains("name")) {
@@ -54,10 +59,12 @@ public class PlayerDataAccessObject implements PlayerDataAccessInterface,
     }
 
     public void save() {
-        try {
-            saveToFile();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (fileHelperObject != null) {
+            try {
+                saveToFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
