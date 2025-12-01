@@ -36,10 +36,6 @@ public class WageOutputData {
         return wageEffectAfter;
     }
 
-    public int getTotalWage() {
-        return totalWage;
-    }
-
     public double getCurrentBalance() {
         return currentBalance;
     }
