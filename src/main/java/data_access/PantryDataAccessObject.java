@@ -70,8 +70,8 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
     public void randomizePantry() {
         // Fetch three random dishes from API
         final OkHttpClient client = new OkHttpClient();
-        final int max = 15;
-        final int min = 1;
+        final int max = 20;
+        final int min = 5;
         for (int i = 0; i < REQUIRED_RECIPE_COUNT; i++) {
             try {
                 final Request request = new Request.Builder()

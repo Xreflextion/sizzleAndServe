@@ -7,7 +7,7 @@ public class Employee {
    every 1 increase in waiter's wage leads to 20 percentage point increase in rating
    every 1 increase in cook's wage leads to -20 percentage point preparation time needed
     */
-    private static final int MIN_WAGE = 50;
+    private static final int MIN_WAGE = 30;
     private static int totalWage = 0;
     /*
     a static variable that is responsible for counting total wages and should be used in daily expense
