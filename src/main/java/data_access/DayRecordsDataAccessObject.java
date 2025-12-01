@@ -7,7 +7,7 @@ import com.google.gson.JsonElement;
 import constants.Constants;
 import java.io.IOException;
 import entity.PerDayRecord;
-import use_case.insights_performance_calculation.DayRecordsDataAccessInterface;
+import use_case.insights.performance_calculation.DayRecordsDataAccessInterface;
 import use_case.simulate.SimulateDayRecordsDataAccessInterface;
 
 import java.util.ArrayList;

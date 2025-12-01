@@ -7,6 +7,10 @@ public interface WageOutputBoundary {
      */
     void prepareSuccessView(WageOutputData wageOutputData);
 
+    /**
+     * Prepares the error view for the wage update use case.
+     * @param message The error message.
+     */
     void prepareErrorView(String message);
 }
 

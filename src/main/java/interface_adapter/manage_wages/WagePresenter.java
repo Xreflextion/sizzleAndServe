@@ -13,17 +13,18 @@ public class WagePresenter implements WageOutputBoundary {
 
     @Override
     public void prepareSuccessView(WageOutputData data) {
-        WageState state = viewModel.getState();
+        final WageState state = viewModel.getState();
 
-        if (data.getPosition()!=null){
+        if (data.getPosition() != null) {
             if ("Cook".equals(data.getPosition())) {
-            state.setCookWage(data.getWageAfter());
-            state.setCookWageEffect(data.getWageEffectAfter());
-        } else if ("Waiter".equals(data.getPosition())) {
-            state.setWaiterWage(data.getWageAfter());
-            state.setWaiterWageEffect(data.getWageEffectAfter());
-        }}
-
+                state.setCookWage(data.getWageAfter());
+                state.setCookWageEffect(data.getWageEffectAfter());
+            }
+            else if ("Waiter".equals(data.getPosition())) {
+                state.setWaiterWage(data.getWageAfter());
+                state.setWaiterWageEffect(data.getWageEffectAfter());
+            }
+        }
         state.setCurrentBalance(data.getCurrentBalance());
         state.setWarningMessage(null);
         viewModel.setState(state);
@@ -31,8 +32,12 @@ public class WagePresenter implements WageOutputBoundary {
 
     }
 
+    /**
+     * Prepare Error View when wage change in unsuccessful.
+     * @param message the message shown when the increase/decrease is unsuccessful.
+     */
     public void prepareErrorView(String message) {
-        WageState state = viewModel.getState();
+        final WageState state = viewModel.getState();
         state.setWarningMessage(message);
         viewModel.setState(state);
         viewModel.firePropertyChange();
