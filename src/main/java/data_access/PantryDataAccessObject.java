@@ -145,8 +145,8 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
     }
 
     @Override
-    public void savePantry(Pantry pantry) {
-        this.pantry = pantry;
+    public void savePantry(Pantry newPantry) {
+        this.pantry = newPantry;
         save();
     }
 
@@ -168,11 +168,15 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
         }
     }
 
+    /**
+     * Serializes the current state of the pantry.
+     * @throws IOException if an IO error occurs during the file saving process
+     */
     public void saveToFile() throws IOException {
-        JsonArray pantryArray = new JsonArray();
+        final JsonArray pantryArray = new JsonArray();
         for (String dishName : pantry.getDishNames()) {
-            Recipe recipe = pantry.getRecipe(dishName);
-            JsonObject obj = new JsonObject();
+            final Recipe recipe = pantry.getRecipe(dishName);
+            final JsonObject obj = new JsonObject();
             obj.addProperty("name", recipe.getName());
             obj.addProperty("stock", recipe.getStock());
             obj.addProperty("base_price", recipe.getBasePrice());
@@ -182,14 +186,17 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
         fileHelperObject.saveArray(Constants.RECIPE_KEY, pantryArray);
     }
 
+    /**
+     * Saves the current state of the pantry or review data to a JSON file.
+     */
     public void save() {
         if (fileHelperObject != null) {
             try {
                 saveToFile();
-            } catch (IOException e) {
-                e.printStackTrace();
+            }
+            catch (IOException exception) {
+                exception.printStackTrace();
             }
         }
-
     }
 }

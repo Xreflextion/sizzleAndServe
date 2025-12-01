@@ -77,7 +77,7 @@ public class DayRecordsDataAccessObject implements DayRecordsDataAccessInterface
     }
 
     /**
-     * Saves the list of daily records to a file in JSON format.
+     * Seralizies the list of daily records.
      * @throws IOException if an I/O error occurs during the file-saving process.
      */
     public void saveToFile() throws IOException {

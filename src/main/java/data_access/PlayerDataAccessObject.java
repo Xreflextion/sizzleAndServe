@@ -52,6 +52,10 @@ public class PlayerDataAccessObject implements PlayerDataAccessInterface,
         save();
     }
 
+    /**
+     * Serializes the current state of the player.
+     * @throws IOException if an IO error occurs during the file saving process
+     */
     private void saveToFile() throws IOException {
         final JsonArray playerArray = new JsonArray();
         final JsonObject playerObject = new JsonObject();
