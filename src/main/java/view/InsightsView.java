@@ -90,7 +90,7 @@ public class InsightsView extends JPanel implements PropertyChangeListener {
 
     private JPanel buildChartPanel() {
         trendChartPanel = new TrendChartPanel();
-        trendChartPanel.setPreferredSize(new Dimension(400, 200));
+        trendChartPanel.setPreferredSize(new Dimension(400, 450));
 
         JPanel chartPanel = new JPanel();
         chartPanel.setLayout(new BoxLayout(chartPanel, BoxLayout.Y_AXIS));
@@ -197,7 +197,7 @@ public class InsightsView extends JPanel implements PropertyChangeListener {
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             if (revenueTrend == null || expensesTrend == null || profitTrend == null) {
-                g.drawString("No data available", 10, 10);
+                g.drawString("No data available", 10, 20);
                 return;
             }
             Graphics2D g2d = (Graphics2D) g;
@@ -206,49 +206,64 @@ public class InsightsView extends JPanel implements PropertyChangeListener {
             int width = getWidth();
             int height = getHeight();
             int padding = 30;
-            int chartWidth = width - padding * 2;
-            int chartHeight = height - padding * 2;
+            int chartWidth = width - 2*padding;
+            int chartHeight = height - 2*padding;
 
             int maxPoints = 0;
-            double maxValue = 0.0;
+            double maxValue = Double.NEGATIVE_INFINITY;
+            double minValue = Double.POSITIVE_INFINITY;
 
             if (revenueTrend != null) {
                 maxPoints = Math.max(maxPoints, revenueTrend.size());
                 for (double currvalue : revenueTrend) {
                     maxValue = Math.max(maxValue, currvalue);
+                    minValue = Math.min(minValue, currvalue);
                 }
             }
             if (expensesTrend != null) {
                 maxPoints = Math.max(maxPoints, expensesTrend.size());
                 for (double currvalue : expensesTrend) {
                     maxValue = Math.max(maxValue, currvalue);
+                    minValue = Math.min(minValue, currvalue);
                 }
             }
             if (profitTrend != null) {
                 maxPoints = Math.max(maxPoints, profitTrend.size());
                 for (double currvalue : profitTrend) {
                     maxValue = Math.max(maxValue, currvalue);
+                    minValue = Math.min(minValue, currvalue);
                 }
             }
 
-            if (maxPoints < 2) {
-                g2d.drawString("There must be at least 2 days of data to draw trendline", 10, 10);
+            if (maxPoints < 2 || minValue == Double.POSITIVE_INFINITY) {
+                g2d.drawString("There must be at least 2 days of data to draw trendline", 10, 20);
                 return;
             }
 
-            if (maxValue <= 0) {
-                maxValue = 1;
+            if (maxValue == minValue) {
+                maxValue = maxValue + 1;
+                minValue = minValue - 1;
             }
 
             int originX = padding;
             int originY = height - padding;
 
+            int zeroY;
+            if ( 0 < minValue ) {
+                zeroY = originY;
+            } else if (0 > maxValue) {
+                zeroY = originY - chartHeight;
+            } else {
+                zeroY = originY - (int)(((0-minValue)/(maxValue-minValue))*chartHeight);
+            }
+
             g2d.setColor(Color.BLACK);
-            g2d.drawLine(originX, originY, originX + chartWidth, originY);
+            g2d.drawLine(originX, zeroY, originX + chartWidth, zeroY);
             g2d.drawLine(originX, originY, originX, originY - chartHeight);
 
             int finalMaxPoints = maxPoints;
-            double finalMaxValue = maxValue;
+            double finalMinValue = minValue;
+            double finalRange = maxValue - minValue;
 
             java.util.function.BiConsumer<List<Double>, Color> drawTrendLine = (list, color) -> {
                 if (list == null || list.size() < 2) {
@@ -265,8 +280,8 @@ public class InsightsView extends JPanel implements PropertyChangeListener {
                     int x1 = originX + (int) (point1 * chartWidth);
                     int x2 = originX + (int) (point2 * chartWidth);
 
-                    int y1 = originY - (int) ((value1 / finalMaxValue) * chartHeight);
-                    int y2 = originY - (int) ((value2 / finalMaxValue) * chartHeight);
+                    int y1 = originY - (int) (((value1 - finalMinValue) / finalRange) * chartHeight);
+                    int y2 = originY - (int) (((value2 - finalMinValue) / finalRange) * chartHeight);
 
                     g2d.drawLine(x1, y1, x2, y2);
                 }
