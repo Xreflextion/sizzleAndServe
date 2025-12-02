@@ -4,16 +4,15 @@ import entity.Pantry;
 import entity.PerDayRecord;
 import entity.Player;
 import entity.Recipe;
-import use_case.insights.performance_calculation.DayRecordsDataAccessInterface;
 
 public class BuyServingInteractor implements BuyServingInputBoundary {
     private final PlayerDataAccessInterface playerDao;
     private final PantryDataAccessInterface pantryDao;
-    private final DayRecordsDataAccessInterface dayRecordsDao;
+    private final BuyServingDayRecordsDataAccessInterface dayRecordsDao;
     private final BuyServingOutputBoundary outputBoundary;
 
     public BuyServingInteractor(PlayerDataAccessInterface playerDao, PantryDataAccessInterface pantryDao,
-                                DayRecordsDataAccessInterface dayRecordsDao,
+                                BuyServingDayRecordsDataAccessInterface dayRecordsDao,
                                 BuyServingOutputBoundary outputBoundary) {
         this.playerDao = playerDao;
         this.pantryDao = pantryDao;
@@ -35,7 +34,8 @@ public class BuyServingInteractor implements BuyServingInputBoundary {
         return balance + epsilon >= totalCost;
     }
 
-    private void updateData(Player player, Pantry pantry, int today, PerDayRecord perDayRecord, String[] dishNames,
+    private void updateData(Player player, Pantry pantry, int today,
+                            PerDayRecord perDayRecord, String[] dishNames,
                             int[] servingsToBuy, double newBalance) {
         player.setBalance(newBalance);
         for (int i = 0; i < dishNames.length; i++) {

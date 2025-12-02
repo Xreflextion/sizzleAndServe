@@ -5,7 +5,7 @@ import entity.Recipe;
 import entity.Player;
 import entity.PerDayRecord;
 import org.junit.jupiter.api.Test;
-import use_case.insights.performance_calculation.DayRecordsDataAccessInterface;
+import use_case.buy_serving.BuyServingDayRecordsDataAccessInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +41,7 @@ class BuyServingInteractorTest {
         public void savePantry(Pantry pantry) {}
     }
 
-    static class TestDayRecordsDAO implements DayRecordsDataAccessInterface {
+    static class TestDayRecordsDAO implements BuyServingDayRecordsDataAccessInterface {
         List<PerDayRecord> records = new ArrayList<>();
 
         @Override
@@ -63,10 +63,6 @@ class BuyServingInteractorTest {
             records.set(day - 1, updatedRecord);
         }
 
-        @Override
-        public List<PerDayRecord> getAllData() {
-            return records;
-        }
     }
 
     // Test Presenter
