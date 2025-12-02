@@ -153,7 +153,7 @@ public class AppBuilder {
         buyServingViewModel.setDishStocks(dishStocks);
 
         BuyServingPresenter presenter = new BuyServingPresenter(buyServingViewModel, officeViewModel, wageViewModel);
-        BuyServingInteractor interactor = new BuyServingInteractor(playerDAO, pantryDAO, presenter);
+        BuyServingInteractor interactor = new BuyServingInteractor(playerDAO, pantryDAO, dayRecordsDAO, presenter);
         BuyServingController controller = new BuyServingController(interactor);
 
         buyServingView = new BuyServingView(controller, buyServingViewModel, viewManagerModel);

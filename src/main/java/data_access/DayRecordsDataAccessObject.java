@@ -7,14 +7,16 @@ import com.google.gson.JsonElement;
 import constants.Constants;
 import java.io.IOException;
 import entity.PerDayRecord;
+import use_case.buy_serving.BuyServingDayRecordsDataAccessInterface;
 import use_case.insights.performance_calculation.DayRecordsDataAccessInterface;
 import use_case.simulate.SimulateDayRecordsDataAccessInterface;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class DayRecordsDataAccessObject implements DayRecordsDataAccessInterface, SimulateDayRecordsDataAccessInterface {
+public class DayRecordsDataAccessObject implements BuyServingDayRecordsDataAccessInterface,
+                                                   DayRecordsDataAccessInterface,
+                                                   SimulateDayRecordsDataAccessInterface {
 
     private List<PerDayRecord> dayRecords;
     private FileHelperObject fileHelperObject;
@@ -71,6 +73,18 @@ public class DayRecordsDataAccessObject implements DayRecordsDataAccessInterface
     @Override
     public int getNumberOfDays(){
         return dayRecords.size();
+    }
+
+    @Override
+    public void updateDayData(int day, PerDayRecord updatedRecord){
+        if (updatedRecord == null){
+            throw new NullPointerException("updatedRecord is null");
+        }
+        if (day < 1 || day > dayRecords.size()){
+            throw new IllegalArgumentException("Invalid day number");
+        }
+        dayRecords.set(day - 1, updatedRecord);
+        save();
     }
 
     public void saveToFile() throws IOException {
