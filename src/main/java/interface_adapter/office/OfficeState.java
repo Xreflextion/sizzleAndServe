@@ -10,6 +10,8 @@ public class OfficeState {
     // The number of customers that occurred for this day
     private int pastCustomerCount;
 
+    private String errorMessage;
+
     public int getCurrentDay() {
         return currentDay;
     }
@@ -32,6 +34,14 @@ public class OfficeState {
 
     public void setPastCustomerCount(int newCustomerCount) {
         pastCustomerCount = newCustomerCount;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String newErrorMessage) {
+        errorMessage = newErrorMessage;
     }
 
 }

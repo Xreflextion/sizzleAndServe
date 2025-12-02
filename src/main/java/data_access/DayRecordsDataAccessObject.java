@@ -1,35 +1,36 @@
 package data_access;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import constants.Constants;
-import java.io.IOException;
 import entity.PerDayRecord;
 import use_case.buy_serving.BuyServingDayRecordsDataAccessInterface;
 import use_case.insights.performance_calculation.DayRecordsDataAccessInterface;
 import use_case.simulate.SimulateDayRecordsDataAccessInterface;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class DayRecordsDataAccessObject implements BuyServingDayRecordsDataAccessInterface,
                                                    DayRecordsDataAccessInterface,
                                                    SimulateDayRecordsDataAccessInterface {
 
+    public static final double RATING = 3.0;
     private List<PerDayRecord> dayRecords;
     private FileHelperObject fileHelperObject;
 
     public DayRecordsDataAccessObject(FileHelperObject fileHelperObject) {
         this.fileHelperObject = fileHelperObject;
-        ArrayList<PerDayRecord> newDayRecords = new ArrayList<>();
-        JsonArray daysArray = fileHelperObject.getArrayFromSaveData(Constants.DAY_RECORD_KEY);
+        final ArrayList<PerDayRecord> newDayRecords = new ArrayList<>();
+        final JsonArray daysArray = fileHelperObject.getArrayFromSaveData(Constants.DAY_RECORD_KEY);
         for (JsonElement element: daysArray) {
-            JsonObject day = element.getAsJsonObject();
+            final JsonObject day = element.getAsJsonObject();
             double revenue = 0.0;
             double expenses = 0.0;
-            double rating = 3.0;
+            double rating = RATING;
             if (day.keySet().contains("revenue")) {
                 revenue = day.get("revenue").getAsDouble();
             }
@@ -49,9 +50,8 @@ public class DayRecordsDataAccessObject implements BuyServingDayRecordsDataAcces
     }
 
     @Override
-    public void saveNewData(PerDayRecord dayRecord){
-
-        if (dayRecord == null){
+    public void saveNewData(PerDayRecord dayRecord) {
+        if (dayRecord == null) {
             throw new NullPointerException("dayRecord is null");
         }
         dayRecords.add(dayRecord);
@@ -59,22 +59,25 @@ public class DayRecordsDataAccessObject implements BuyServingDayRecordsDataAcces
     }
 
     @Override
-    public PerDayRecord getDayData(int day){
-        if (day < 1 || day > dayRecords.size()){
-            return null;
-        } else{
-            return dayRecords.get(day - 1);
+    public PerDayRecord getDayData(int day) {
+        final PerDayRecord result;
+        if (day < 1 || day > dayRecords.size()) {
+            result = null;
+        }
+        else {
+            result = dayRecords.get(day - 1);
         }
 
+        return result;
     }
 
     @Override
-    public List<PerDayRecord> getAllData(){
+    public List<PerDayRecord> getAllData() {
         return new ArrayList<>(dayRecords);
     }
 
     @Override
-    public int getNumberOfDays(){
+    public int getNumberOfDays() {
         return dayRecords.size();
     }
 
@@ -90,21 +93,29 @@ public class DayRecordsDataAccessObject implements BuyServingDayRecordsDataAcces
         save();
     }
 
+    /**
+     * Seralizies the list of daily records.
+     * @throws IOException if an I/O error occurs during the file-saving process.
+     */                                                 
     public void saveToFile() throws IOException {
-        JsonArray recordArray = new JsonArray();
-        Gson gson = new Gson();
+        final JsonArray recordArray = new JsonArray();
+        final Gson gson = new Gson();
         for (PerDayRecord record : dayRecords) {
             recordArray.add(gson.toJsonTree(record).getAsJsonObject());
         }
         fileHelperObject.saveArray(Constants.DAY_RECORD_KEY, recordArray);
     }
 
+    /**
+     * Saves the current state of data to a file through the provided file helper object.
+     */
     public void save() {
         if (fileHelperObject != null) {
             try {
                 saveToFile();
-            } catch (IOException e) {
-                e.printStackTrace();
+            }
+            catch (IOException exception) {
+                exception.printStackTrace();
             }
         }
     }

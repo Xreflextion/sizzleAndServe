@@ -32,6 +32,7 @@ public class SimulatePresenter implements SimulateOutputBoundary {
         officeState.setCurrentBalance(outputData.getCurrentBalance());
         officeState.setCurrentDay(outputData.getCurrentDay());
         officeState.setPastCustomerCount(outputData.getCurrentCustomerCount());
+        officeState.setErrorMessage(null);
         officeViewModel.firePropertyChange();
 
         final String[] dishNames = buyServingViewModel.getState().getDishNames();
@@ -54,6 +55,11 @@ public class SimulatePresenter implements SimulateOutputBoundary {
 
     @Override
     public void prepareFailView(String errorMessage) {
+        final OfficeState officeState = officeViewModel.getState();
+        officeState.setErrorMessage(errorMessage);
+        officeViewModel.firePropertyChange();
 
+        viewManagerModel.setState(officeViewModel.getViewName());
+        viewManagerModel.firePropertyChange();
     }
 }

@@ -1,5 +1,7 @@
 package data_access;
 
+import java.io.IOException;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import constants.Constants;
@@ -8,10 +10,10 @@ import use_case.buy_serving.PlayerDataAccessInterface;
 import use_case.manage_wage.WagePlayerDataAccessInterface;
 import use_case.simulate.SimulatePlayerDataAccessInterface;
 
-import java.io.IOException;
-
 public class PlayerDataAccessObject implements PlayerDataAccessInterface,
         WagePlayerDataAccessInterface, SimulatePlayerDataAccessInterface {
+    public static final String NAME = "name";
+    public static final String BALANCE = "balance";
     private Player player;
     private FileHelperObject fileHelperObject;
 
@@ -19,7 +21,7 @@ public class PlayerDataAccessObject implements PlayerDataAccessInterface,
 
         this.fileHelperObject = fileHelperObject;
 
-        JsonArray playerObjectArray = fileHelperObject.getArrayFromSaveData(Constants.PLAYER_KEY);
+        final JsonArray playerObjectArray = fileHelperObject.getArrayFromSaveData(Constants.PLAYER_KEY);
 
         JsonObject playerObject = new JsonObject();
 
@@ -28,13 +30,14 @@ public class PlayerDataAccessObject implements PlayerDataAccessInterface,
         }
 
         String name = "Name";
-        if (playerObject.keySet().contains("name")) {
-            name = playerObject.get("name").getAsString();
+        if (playerObject.keySet().contains(NAME)) {
+            name = playerObject.get(NAME).getAsString();
         }
-        if (playerObject.keySet().contains("balance")) {
-            balance = playerObject.get("balance").getAsDouble();
+        double loadedBalance = balance;
+        if (playerObject.keySet().contains(BALANCE)) {
+            loadedBalance = playerObject.get(BALANCE).getAsDouble();
         }
-        this.player = new Player(name, balance);
+        this.player = new Player(name, loadedBalance);
 
     }
 
@@ -44,26 +47,34 @@ public class PlayerDataAccessObject implements PlayerDataAccessInterface,
     }
 
     @Override
-    public void savePlayer(Player player) {
-        this.player = player;
+    public void savePlayer(Player newPlayer) {
+        this.player = newPlayer;
         save();
     }
 
+    /**
+     * Serializes the current state of the player.
+     * @throws IOException if an IO error occurs during the file saving process
+     */
     private void saveToFile() throws IOException {
-        JsonArray playerArray = new JsonArray();
-        JsonObject playerObject = new JsonObject();
+        final JsonArray playerArray = new JsonArray();
+        final JsonObject playerObject = new JsonObject();
         playerObject.addProperty("name", player.getName());
         playerObject.addProperty("balance", player.getBalance());
         playerArray.add(playerObject);
         fileHelperObject.saveArray(Constants.PLAYER_KEY, playerArray);
     }
 
+    /**
+     * Saves the current state of the player data to a JSON file.
+     */
     public void save() {
         if (fileHelperObject != null) {
             try {
                 saveToFile();
-            } catch (IOException e) {
-                e.printStackTrace();
+            }
+            catch (IOException exception) {
+                exception.printStackTrace();
             }
         }
     }

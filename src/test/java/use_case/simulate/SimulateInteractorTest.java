@@ -19,7 +19,8 @@ import entity.Recipe;
 import entity.ReviewEntity;
 
 public class SimulateInteractorTest {
-    private static final String UNEXPECTED_FAILURE_MESSAGE = "Use case failure is unexpected: ";
+    private final String UNEXPECTED_SUCCESS_MESSAGE = "Use case success is unexpected: ";
+    private final String UNEXPECTED_FAILURE_MESSAGE = "Use case failure is unexpected: ";
 
     private final int TEST_PLAYER_BALANCE = 100;
     private final int TEST_CUSTOMER_COUNT = 5;
@@ -428,4 +429,43 @@ public class SimulateInteractorTest {
         );
         interactor.execute(inputData);
     }
+
+    /**
+     * Test if simulation fails when balance is negative
+     */
+    @Test
+    void negativeBalanceTest() {
+        int currentBalance = -50;
+        String expectedErrorMessage = "You are bankrupt and can no longer simulate more days";
+        SimulateInputData inputData = new SimulateInputData(TEST_CURRENT_DAY,  TEST_CUSTOMER_COUNT);
+        SimulatePantryDataAccessInterface pantryDataAccessObject = generatePantryDataAccessObject();
+        SimulatePlayerDataAccessInterface playerDataAccessObject = generatePlayerDataAccessObject(currentBalance);
+        SimulateReviewDataAccessInterface reviewManagerDataAccessObject = generateReviewDataAccessObject();
+        SimulateDayRecordsDataAccessInterface dayRecordsDataAccessObject = generateDayRecordsDataAccessObject();
+        SimulateWageDataAccessInterface wageDataAccessObject = generateWageDataAccessObject(0, 0);
+
+
+        SimulateOutputBoundary successPresenter = new SimulateOutputBoundary() {
+            @Override
+            public void prepareSuccessView(SimulateOutputData outputData) {
+                fail(UNEXPECTED_SUCCESS_MESSAGE + outputData.getCurrentDay());
+            }
+
+            @Override
+            public void prepareFailView(String errorMessage) {
+                assertEquals(expectedErrorMessage, errorMessage);
+            }
+        };
+
+        SimulateInputBoundary interactor = new SimulateInteractor(
+                successPresenter,
+                pantryDataAccessObject,
+                reviewManagerDataAccessObject,
+                wageDataAccessObject,
+                playerDataAccessObject,
+                dayRecordsDataAccessObject
+        );
+        interactor.execute(inputData);
+    }
+
 }
