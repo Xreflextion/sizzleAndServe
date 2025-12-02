@@ -4,9 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 import entity.Pantry;
+import entity.PerDayRecord;
 import entity.Player;
 import entity.Recipe;
 
@@ -16,9 +20,11 @@ class BuyServingInteractorTest {
     void successTest() {
         final TestPlayerDataAccessObject playerDataAccessObject = new TestPlayerDataAccessObject();
         final TestPantryDataAccessObject pantryDataAccessObject = new TestPantryDataAccessObject();
+        final TestDayRecordsDataAccessObject dayRecordsDataAccessObject = new TestDayRecordsDataAccessObject();
+        dayRecordsDataAccessObject.saveNewData(new PerDayRecord(0, 0, 0));
         final TestPresenter presenter = new TestPresenter();
-        final BuyServingInteractor interactor = new BuyServingInteractor(playerDataAccessObject,
-                pantryDataAccessObject, presenter);
+        final BuyServingInteractor interactor = new BuyServingInteractor(playerDataAccessObject, pantryDataAccessObject,
+                dayRecordsDataAccessObject, presenter);
 
         final String[] dishNames = pantryDataAccessObject.getPantry().getDishNames();
         final int[] servingsToBuy = {1, 1, 0};
@@ -41,8 +47,10 @@ class BuyServingInteractorTest {
         final TestPlayerDataAccessObject playerDataAccessObject = new TestPlayerDataAccessObject();
         final TestPantryDataAccessObject pantryDataAccessObject = new TestPantryDataAccessObject();
         final TestPresenter presenter = new TestPresenter();
+        final TestDayRecordsDataAccessObject dayRecordsDataAccessObject = new TestDayRecordsDataAccessObject();
+        dayRecordsDataAccessObject.saveNewData(new PerDayRecord(0, 0, 0));
         final BuyServingInteractor interactor = new BuyServingInteractor(playerDataAccessObject, pantryDataAccessObject,
-                presenter);
+                dayRecordsDataAccessObject, presenter);
 
         final String[] dishNames = pantryDataAccessObject.getPantry().getDishNames();
         final int[] servingsToBuy = {2, 2, 0};
@@ -64,9 +72,11 @@ class BuyServingInteractorTest {
     void cumulativeStockTest() {
         final TestPlayerDataAccessObject playerDataAccessObject = new TestPlayerDataAccessObject();
         final TestPantryDataAccessObject pantryDataAccessObject = new TestPantryDataAccessObject();
+        final TestDayRecordsDataAccessObject dayRecordsDataAccessObject = new TestDayRecordsDataAccessObject();
+        dayRecordsDataAccessObject.saveNewData(new PerDayRecord(0, 0, 0));
         final TestPresenter presenter = new TestPresenter();
         final BuyServingInteractor interactor = new BuyServingInteractor(playerDataAccessObject, pantryDataAccessObject,
-                presenter);
+                dayRecordsDataAccessObject, presenter);
 
         final String[] dishNames = pantryDataAccessObject.getPantry().getDishNames();
 
@@ -129,6 +139,35 @@ class BuyServingInteractorTest {
         public void savePantry(Pantry newPantry) {
 
         }
+    }
+
+    static class TestDayRecordsDataAccessObject implements BuyServingDayRecordsDataAccessInterface {
+        private List<PerDayRecord> records = new ArrayList<>();
+
+        @Override
+        public int getNumberOfDays() {
+            return records.size();
+        }
+
+        @Override
+        public PerDayRecord getDayData(int day) {
+            PerDayRecord result = null;
+            if (day >= 1 && day <= records.size()) {
+                result = records.get(day - 1);
+            }
+            return result;
+        }
+
+        @Override
+        public void saveNewData(PerDayRecord record) {
+            records.add(record);
+        }
+
+        @Override
+        public void updateDayData(int day, PerDayRecord updatedRecord) {
+            records.set(day - 1, updatedRecord);
+        }
+
     }
 
     // Test Presenter
