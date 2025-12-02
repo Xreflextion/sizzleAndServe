@@ -298,12 +298,9 @@ public class SimulateInteractor implements SimulateInputBoundary {
         rating += (waiterEffect - WAITER_EFFECT_REDUCTION) / rating;
 
         // Step 3: Make sure rating is within the interval [1.0, 5.0]
-        if (rating > maxRating) {
-            rating = maxRating;
-        }
-        if (rating < minRating) {
-            rating = minRating;
-        }
+        rating = Math.min(maxRating, rating);
+        rating = Math.max(minRating, rating);
+
         // Step 4: round to one decimal place
         return roundToOneDecimalPlace(rating);
     }
