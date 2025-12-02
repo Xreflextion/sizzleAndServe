@@ -102,7 +102,7 @@ public class AppBuilder {
         reviewDataAccessObjectHash = new ReviewDataAccessObject(fileHelperObject);
         dayRecordsDataAccessObject = new DayRecordsDataAccessObject(fileHelperObject);
         wageDataAccessObject = new WageDataAccessObject(fileHelperObject);
-        customerCount = reviewDataAccessObjectHash.getReviewsByDay(dayRecordsDataAccessObject.getNumberOfDays()).size();
+        customerCount = reviewDataAccessObjectHash.getReviewsByDay(dayRecordsDataAccessObject.getNumberOfDays() - 1).size();
     }
 
     /**
@@ -300,7 +300,7 @@ public class AppBuilder {
         viewManagerModel.setState(officeView.getViewName());
         officeViewModel.getState().setCurrentBalance(playerDataAccessObject.getPlayer().getBalance());
         officeViewModel.getState().setCurrentDay(dayRecordsDataAccessObject.getNumberOfDays());
-        officeViewModel.getState().setCurrentCustomerCount(customerCount);
+        officeViewModel.getState().setPastCustomerCount(customerCount);
         officeViewModel.firePropertyChange();
         viewManagerModel.firePropertyChange();
 
