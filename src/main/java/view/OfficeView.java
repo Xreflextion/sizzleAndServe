@@ -32,7 +32,7 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
 
     private final JLabel curDayLabel;
     private final JLabel curBalanceLabel;
-    private final JLabel curCustomerCountLabel;
+    private final JLabel pastCustomerCountLabel;
 
     private final JButton inventoryButton;
     private final JButton reviewButton;
@@ -50,7 +50,7 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
 
         curDayLabel = new JLabel();
         curBalanceLabel = new JLabel();
-        curCustomerCountLabel = new JLabel();
+        pastCustomerCountLabel = new JLabel();
 
         inventoryButton = createButton(OfficeViewModel.INVENTORY_BUTTON_LABEL);
         addViewMovementActionListener(inventoryButton, BuyServingViewModel.VIEW_NAME);
@@ -89,7 +89,7 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
 
                         simulationController.execute(
                                 currentState.getCurrentDay(),
-                                currentState.getCurrentCustomerCount()
+                                currentState.getPastCustomerCount()
                         );
                     }
                 }
@@ -164,7 +164,7 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
 
         curDetailsPanel.add(curDayLabel);
         curDetailsPanel.add(curBalanceLabel);
-        curDetailsPanel.add(curCustomerCountLabel);
+        curDetailsPanel.add(pastCustomerCountLabel);
         curDetailsPanel.setLayout(new BoxLayout(curDetailsPanel, BoxLayout.Y_AXIS));
         return curDetailsPanel;
     }
@@ -342,8 +342,8 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
             final OfficeState state = (OfficeState) evt.getNewValue();
             curDayLabel.setText(OfficeViewModel.CURRENT_DAY_LABEL + state.getCurrentDay());
             curBalanceLabel.setText(OfficeViewModel.CURRENT_BALANCE_LABEL + state.getCurrentBalance());
-            curCustomerCountLabel.setText(
-                    OfficeViewModel.CURRENT_CUSTOMER_COUNT_LABEL + state.getCurrentCustomerCount()
+            pastCustomerCountLabel.setText(
+                    OfficeViewModel.PAST_CUSTOMER_COUNT_LABEL + state.getPastCustomerCount()
             );
         }
     }

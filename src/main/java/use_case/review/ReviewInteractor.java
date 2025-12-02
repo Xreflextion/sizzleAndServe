@@ -1,4 +1,3 @@
-
 package use_case.review;
 
 import java.util.ArrayList;
@@ -53,9 +52,8 @@ public class ReviewInteractor implements ReviewInputBoundary {
     @Override
     public void fetchDays() {
         final List<Integer> availableDays = new ArrayList<>(reviewDataAccessObjectHash.getAllDays());
-        availableDays.remove(Integer.valueOf(0));
         Collections.sort(availableDays);
-        availableDays.add(0, 0);
+        availableDays.add(reviewDataAccessObjectHash.getAllDays().size() + 1);
 
         // Pass only the updated list to the presenter
         presenter.presentAvailableDays(availableDays);

@@ -11,7 +11,7 @@ public class SimulateInteractorTest {
 
     private final int TEST_PLAYER_BALANCE = 100;
     private final int TEST_CUSTOMER_COUNT = 5;
-    private final int TEST_CURRENT_DAY = 0;
+    private final int TEST_CURRENT_DAY = 1;
 
     private final int TEST_BASE_PRICE = 5;
     private final String TEST_RECIPE_ONE_NAME = "One";
@@ -123,10 +123,21 @@ public class SimulateInteractorTest {
 
     private SimulateDayRecordsDataAccessInterface generateDayRecordsDataAccessObject() {
         List<PerDayRecord> dayRecords = new ArrayList<PerDayRecord>();
+        dayRecords.add(new PerDayRecord(0, 0, 0));
         return new SimulateDayRecordsDataAccessInterface() {
             @Override
             public void saveNewData(PerDayRecord dayRecord) {
                 dayRecords.add(dayRecord);
+            }
+
+            @Override
+            public PerDayRecord getDayData(int day) {
+                return dayRecords.get(day - 1);
+            }
+
+            @Override
+            public void updateDayData(int day, PerDayRecord updatedRecord) {
+                dayRecords.set(day - 1, updatedRecord);
             }
 
         };

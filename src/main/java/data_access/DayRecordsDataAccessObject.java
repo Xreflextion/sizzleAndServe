@@ -39,6 +39,9 @@ public class DayRecordsDataAccessObject implements DayRecordsDataAccessInterface
             }
             newDayRecords.add(new PerDayRecord(revenue, expenses, rating));
         }
+        if (newDayRecords.size() == 0) {
+            newDayRecords.add(new PerDayRecord(0,0,0));
+        }
         this.dayRecords = newDayRecords;
 
     }
@@ -71,6 +74,18 @@ public class DayRecordsDataAccessObject implements DayRecordsDataAccessInterface
     @Override
     public int getNumberOfDays(){
         return dayRecords.size();
+    }
+
+    @Override
+    public void updateDayData(int day, PerDayRecord updatedRecord){
+        if (updatedRecord == null){
+            throw new NullPointerException("updatedRecord is null");
+        }
+        if (day < 1 || day > dayRecords.size()){
+            throw new IllegalArgumentException("Invalid day number");
+        }
+        dayRecords.set(day - 1, updatedRecord);
+        save();
     }
 
     public void saveToFile() throws IOException {
