@@ -1,6 +1,6 @@
 package entity;
 
-public class ReviewEntity{
+public class Review {
 
     // Following things come from entity
     // The rating for the restaurant
@@ -14,7 +14,7 @@ public class ReviewEntity{
      Where the simulation will randomly do the rating and the day number
      will already be tracked
      */
-    public ReviewEntity(double rating, int dayNum) {
+    public Review(double rating, int dayNum) {
         this.rating = rating;
         this.dayNum = dayNum;
     }
@@ -29,10 +29,5 @@ public class ReviewEntity{
         return this.rating;
     }
 
-    // If you just wanted to return a daily review for the day use this function
-    // This will probably get removed
-    public String displayRating(){
-        return "Day " + this.dayNum + ":\n" + this.rating + " stars out of 5";
-    }
 }
 

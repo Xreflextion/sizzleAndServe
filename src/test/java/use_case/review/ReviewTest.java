@@ -8,7 +8,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import data_access.ReviewDataAccessObject;
-import entity.ReviewEntity;
+import entity.Review;
 
 public class ReviewTest {
 
@@ -106,11 +106,11 @@ public class ReviewTest {
     static class TestReviewDataAccessInterface extends ReviewDataAccessObject {
         TestReviewDataAccessInterface() {
             super(null);
-            addReview(new ReviewEntity(5.0, 1));
-            addReview(new ReviewEntity(2.0, 1));
-            addReview(new ReviewEntity(1.0, 2));
-            addReview(new ReviewEntity(1.0, 2));
-            addReview(new ReviewEntity(4.0, 3));
+            addReview(new Review(5.0, 1));
+            addReview(new Review(2.0, 1));
+            addReview(new Review(1.0, 2));
+            addReview(new Review(1.0, 2));
+            addReview(new Review(4.0, 3));
         }
     }
 

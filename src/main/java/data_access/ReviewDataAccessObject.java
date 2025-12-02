@@ -13,7 +13,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import constants.Constants;
 import java.io.IOException;
-import entity.ReviewEntity;
+import entity.Review;
 import use_case.review.ReviewDataAccessInterface;
 import use_case.simulate.SimulateReviewDataAccessInterface;
 
@@ -60,12 +60,12 @@ public class ReviewDataAccessObject implements ReviewDataAccessInterface, Simula
     }
 
     @Override
-    public void addReview(ReviewEntity reviewEntity) {
+    public void addReview(Review review) {
         // Checks if the key is in the hashmap if so then it will add the rating to the selected key
-        if (storage.containsKey(reviewEntity.getDayNum())) {
+        if (storage.containsKey(review.getDayNum())) {
 
             // This will add the value by getting the key with the associated day number then add the rating
-            storage.get(reviewEntity.getDayNum()).add(reviewEntity.getRating());
+            storage.get(review.getDayNum()).add(review.getRating());
         }
         else {
             // If key doesn't exist in hashmap then a new array list will be made
@@ -73,8 +73,8 @@ public class ReviewDataAccessObject implements ReviewDataAccessInterface, Simula
             // then the rating will be added to the array list for the day
 
             final ArrayList<Double> newList = new ArrayList<>();
-            storage.put(reviewEntity.getDayNum(), newList);
-            storage.get(reviewEntity.getDayNum()).add(reviewEntity.getRating());
+            storage.put(review.getDayNum(), newList);
+            storage.get(review.getDayNum()).add(review.getRating());
 
         }
         save();
