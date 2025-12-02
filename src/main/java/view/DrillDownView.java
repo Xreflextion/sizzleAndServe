@@ -1,23 +1,23 @@
 package view;
 
-import interface_adapter.ViewManagerModel;
-import interface_adapter.insight.InsightsState;
-import interface_adapter.insight.InsightsViewModel;
-import interface_adapter.insight.PerformanceCalculationController;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class DrillDownView extends JPanel implements PropertyChangeListener {
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
+import interface_adapter.ViewManagerModel;
+import interface_adapter.insight.InsightsState;
+import interface_adapter.insight.InsightsViewModel;
+
+public class DrillDownView extends JPanel implements PropertyChangeListener {
+    public static final String DASH = " - ";
     public static final String VIEW_NAME = "Drill Down Insights";
 
     private final InsightsViewModel viewModel;
     private final ViewManagerModel viewManagerModel;
-
 
     private JLabel dayNumber;
     private JLabel revenueValue;
@@ -37,45 +37,44 @@ public class DrillDownView extends JPanel implements PropertyChangeListener {
         add(buildDrillDownPanel());
         add(buildBackButtonPanel());
 
-//        backButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(DrillDownView.this);
-//                frame.setContentPane(new InsightsView());
-//                frame.revalidate();
-//                frame.repaint();
-//            }
-//        });
+//      backButton.addActionListener(new ActionListener() {
+//          @Override
+//          public void actionPerformed(ActionEvent e) {
+//              JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(DrillDownView.this);
+//              frame.setContentPane(new InsightsView());
+//              frame.revalidate();
+//              frame.repaint();
+//          }
+//      });
     }
 
-
-    private JPanel buildDrillDownPanel(){
-        JPanel titlePanel = new JPanel();
+    private JPanel buildDrillDownPanel() {
+        final JPanel titlePanel = new JPanel();
         titlePanel.add(new JLabel("Day "));
-        dayNumber = new JLabel(" - ");
+        dayNumber = new JLabel(DASH);
         titlePanel.add(dayNumber);
 
-        JPanel revenuePanel = new JPanel();
+        final JPanel revenuePanel = new JPanel();
         revenuePanel.add(new JLabel("Revenue of the Day: $"));
-        revenueValue = new JLabel(" - ");
+        revenueValue = new JLabel(DASH);
         revenuePanel.add(revenueValue);
 
-        JPanel expensesPanel = new JPanel();
+        final JPanel expensesPanel = new JPanel();
         expensesPanel.add(new JLabel("Expenses of the Day: $"));
-        expensesValue = new JLabel(" - ");
+        expensesValue = new JLabel(DASH);
         expensesPanel.add(expensesValue);
 
-        JPanel profitPanel = new JPanel();
+        final JPanel profitPanel = new JPanel();
         profitPanel.add(new JLabel("Profit of the Day: $"));
-        profitValue = new JLabel(" - ");
+        profitValue = new JLabel(DASH);
         profitPanel.add(profitValue);
 
-        JPanel ratingPanel = new JPanel();
+        final JPanel ratingPanel = new JPanel();
         ratingPanel.add(new JLabel("Rating of the Day: "));
-        ratingValue = new JLabel(" - ");
+        ratingValue = new JLabel(DASH);
         ratingPanel.add(ratingValue);
 
-        JPanel drillDownPanel = new JPanel();
+        final JPanel drillDownPanel = new JPanel();
         drillDownPanel.setLayout(new BoxLayout(drillDownPanel, BoxLayout.Y_AXIS));
         drillDownPanel.add(titlePanel);
         drillDownPanel.add(revenuePanel);
@@ -85,16 +84,14 @@ public class DrillDownView extends JPanel implements PropertyChangeListener {
         // drillDownPanel.add(backButton);
 
         return drillDownPanel;
-
-
     }
 
-    private JPanel buildBackButtonPanel(){
-        JPanel backPanel = new JPanel();
-        JButton backButton = new JButton("Back to Insights");
+    private JPanel buildBackButtonPanel() {
+        final JPanel backPanel = new JPanel();
+        final JButton backButton = new JButton("Back to Insights");
         backPanel.add(backButton);
 
-        backButton.addActionListener(e -> {
+        backButton.addActionListener(event -> {
             System.out.println("Back to Insights Button Clicked");
             viewManagerModel.setState(viewModel.getViewName());
             viewManagerModel.firePropertyChange();
@@ -104,21 +101,17 @@ public class DrillDownView extends JPanel implements PropertyChangeListener {
     }
 
     @Override
-    public void propertyChange (PropertyChangeEvent evt){
-        InsightsState state = viewModel.getState();
+    public void propertyChange(PropertyChangeEvent evt) {
+        final InsightsState state = viewModel.getState();
 
-        if (state == null){
-            return;
+        if (state != null) {
+            dayNumber.setText(String.valueOf(state.getDayNumber()));
+            revenueValue.setText(String.valueOf(state.getDayRevenue()));
+            expensesValue.setText(String.valueOf(state.getDayExpenses()));
+            profitValue.setText(String.valueOf(state.getDayProfits()));
+            ratingValue.setText(String.valueOf(state.getDayRating()));
         }
-        dayNumber.setText(String.valueOf(state.getDayNumber()));
-        revenueValue.setText(String.valueOf(state.getDayRevenue()));
-        expensesValue.setText(String.valueOf(state.getDayExpenses()));
-        profitValue.setText(String.valueOf(state.getDayProfits()));
-        ratingValue.setText(String.valueOf(state.getDayRating()));
-
     }
-
-
 
 //    public static void main(String[] args) {
 //        SwingUtilities.invokeLater(() -> {
@@ -131,5 +124,4 @@ public class DrillDownView extends JPanel implements PropertyChangeListener {
 //            frame.setVisible(true);
 //        });
 //    }
-
 }
