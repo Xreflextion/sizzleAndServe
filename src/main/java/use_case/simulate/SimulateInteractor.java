@@ -106,8 +106,8 @@ public class SimulateInteractor implements SimulateInputBoundary {
 
         final PerDayRecord previousDay = dayRecordsDataAccessInterface.getDayData(simulateInputData.getPreviousDay());
         final PerDayRecord previousDayEdited = new PerDayRecord(
-                revenue,
-                expenses + previousDay.getExpenses(),
+                roundToTwoDecimalPlace(revenue),
+                roundToTwoDecimalPlace(expenses + previousDay.getExpenses()),
                 avgRating
         );
         dayRecordsDataAccessInterface.updateDayData(simulateInputData.getPreviousDay(), previousDayEdited);
@@ -133,7 +133,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
         for (double rating: ratings) {
             ratingsSum += rating;
         }
-        return ratingsSum / ratings.size();
+        return roundToOneDecimalPlace(ratingsSum / ratings.size());
     }
 
     /**

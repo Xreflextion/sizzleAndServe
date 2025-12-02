@@ -104,7 +104,7 @@ public class AppBuilder {
         reviewDAO = new ReviewDataAccessObject(fileHelperObject);
         dayRecordsDAO = new DayRecordsDataAccessObject(fileHelperObject);
         wageDataAccessObject = new WageDataAccessObject(fileHelperObject);
-        customerCount = reviewDAO.getReviewsByDay(dayRecordsDAO.getNumberOfDays()).size();
+        customerCount = reviewDAO.getReviewsByDay(dayRecordsDAO.getNumberOfDays() - 1).size();
     }
 
     public AppBuilder addOfficeView() {
