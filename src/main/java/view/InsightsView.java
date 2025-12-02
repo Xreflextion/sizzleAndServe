@@ -81,7 +81,10 @@ public class InsightsView extends JPanel implements PropertyChangeListener {
         profitPanel.add(profitValueLabel);
 
         final JPanel averageRatingPanel = new JPanel();
-        averageRatingPanel.add(new JLabel("Average Rating: "));
+        averageRatingPanel.add(new JLabel("Average Daily Rating: "));
+        // Note: the rating here may be slightly different from Reviews use case rating.
+        // The Insights use case Average Daily rating calculates the average of daily averages
+        // While Review calculates the overall average of all individual reviews
         averageRatingValueLabel = new JLabel(DASH);
         averageRatingPanel.add(averageRatingValueLabel);
 
