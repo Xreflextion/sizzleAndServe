@@ -1,33 +1,47 @@
 package use_case.simulate;
-import entity.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.*;
+import entity.Employee;
+import entity.Pantry;
+import entity.PerDayRecord;
+import entity.Player;
+import entity.Recipe;
+import entity.ReviewEntity;
 
 public class SimulateInteractorTest {
-    private final String UNEXPECTED_FAILURE_MESSAGE = "Use case failure is unexpected: ";
+    private static final String UNEXPECTED_FAILURE_MESSAGE = "Use case failure is unexpected: ";
 
-    private final int TEST_PLAYER_BALANCE = 100;
-    private final int TEST_CUSTOMER_COUNT = 5;
-    private final int TEST_CURRENT_DAY = 0;
+    private static final int TEST_PLAYER_BALANCE = 100;
+    private static final int TEST_CUSTOMER_COUNT = 5;
+    private static final int TEST_CURRENT_DAY = 0;
 
-    private final int TEST_BASE_PRICE = 5;
-    private final String TEST_RECIPE_ONE_NAME = "One";
-    private final String TEST_RECIPE_TWO_NAME = "Two";
-    private final String TEST_RECIPE_THREE_NAME = "Three";
+    private static final int TEST_BASE_PRICE = 5;
+    private static final String TEST_RECIPE_ONE_NAME = "One";
+    private static final String TEST_RECIPE_TWO_NAME = "Two";
+    private static final String TEST_RECIPE_THREE_NAME = "Three";
 
-    private final int BASE_COOK_WAGE = 50;
-    private final int BASE_WAITER_WAGE = 50;
-    private final int COOK_WAGE_NO_REDUCTION = (int)(50 + 10*(SimulateInteractor.COOK_EFFECT_REDUCTION - 1.0)/0.2);
-    private final int WAITER_WAGE_NO_REDUCTION = (int)(50 + 10*(SimulateInteractor.WAITER_EFFECT_REDUCTION - 1.0)/0.2);
+    private static final int BASE_COOK_WAGE = 50;
+    private static final int BASE_WAITER_WAGE = 50;
+    private static final int COOK_WAGE_NO_REDUCTION = (int) (50 + 10
+            * (SimulateInteractor.COOK_EFFECT_REDUCTION - 1.0) / 0.2);
+    private static final int WAITER_WAGE_NO_REDUCTION = (int) (50 + 10
+            * (SimulateInteractor.WAITER_EFFECT_REDUCTION - 1.0) / 0.2);
 
     private SimulatePantryDataAccessInterface generatePantryDataAccessObject() {
-        Recipe recipe1 = new Recipe(TEST_RECIPE_ONE_NAME, TEST_BASE_PRICE);
-        Recipe recipe2 = new Recipe(TEST_RECIPE_TWO_NAME, TEST_BASE_PRICE);
-        Recipe recipe3 = new Recipe(TEST_RECIPE_THREE_NAME, TEST_BASE_PRICE);
-        Pantry pantry = new Pantry(recipe1, recipe2, recipe3);
+        final Recipe recipe1 = new Recipe(TEST_RECIPE_ONE_NAME, TEST_BASE_PRICE);
+        final Recipe recipe2 = new Recipe(TEST_RECIPE_TWO_NAME, TEST_BASE_PRICE);
+        final Recipe recipe3 = new Recipe(TEST_RECIPE_THREE_NAME, TEST_BASE_PRICE);
+        final Pantry pantry = new Pantry(recipe1, recipe2, recipe3);
 
         return new SimulatePantryDataAccessInterface() {
             @Override
@@ -37,7 +51,7 @@ public class SimulateInteractorTest {
 
             @Override
             public Map<String, Integer> getStock() {
-                Map<String, Integer> stock = new HashMap<>();
+                final Map<String, Integer> stock = new HashMap<>();
                 for (String dishName: pantry.getDishNames()) {
                     stock.put(dishName, pantry.getRecipe(dishName).getStock());
                 }
@@ -53,7 +67,7 @@ public class SimulateInteractorTest {
 
             @Override
             public Map<String, Double> getCurrentPrices() {
-                Map<String, Double> prices = new HashMap<>();
+                final Map<String, Double> prices = new HashMap<>();
                 for (String dishName: pantry.getDishNames()) {
                     prices.put(dishName, pantry.getRecipe(dishName).getCurrentPrice());
                 }
@@ -77,9 +91,8 @@ public class SimulateInteractorTest {
         };
     }
 
-
     private SimulateReviewDataAccessInterface generateReviewDataAccessObject() {
-        Map<Integer, ArrayList<Double>> reviewManager = new HashMap<>();
+        final Map<Integer, ArrayList<Double>> reviewManager = new HashMap<>();
         return new SimulateReviewDataAccessInterface() {
             @Override
             public void addReview(ReviewEntity reviewEntity) {
@@ -91,11 +104,15 @@ public class SimulateInteractorTest {
 
             @Override
             public ArrayList<Double> getReviewsByDay(int day) {
-                ArrayList<Double> reviews = reviewManager.get(day);
+                final ArrayList<Double> result;
+                final ArrayList<Double> reviews = reviewManager.get(day);
                 if (reviews == null) {
-                    return new ArrayList<>();
+                    result = new ArrayList<>();
                 }
-                return reviews;
+                else {
+                    result = reviews;
+                }
+                return result;
             }
         };
     }
@@ -104,13 +121,14 @@ public class SimulateInteractorTest {
         return new SimulateWageDataAccessInterface() {
             @Override
             public Employee getEmployee(String position) {
+                Employee result = null;
                 if (position.equals(SimulateInteractor.COOK_POSITION)) {
-                    return new Employee(cookWage, SimulateInteractor.COOK_POSITION);
+                    result = new Employee(cookWage, SimulateInteractor.COOK_POSITION);
                 }
-                if (position.equals(SimulateInteractor.WAITER_POSITION)) {
-                    return new Employee(waiterWage, SimulateInteractor.WAITER_POSITION);
+                else if (position.equals(SimulateInteractor.WAITER_POSITION)) {
+                    result = new Employee(waiterWage, SimulateInteractor.WAITER_POSITION);
                 }
-                return null;
+                return result;
             }
 
             @Override
@@ -120,9 +138,8 @@ public class SimulateInteractorTest {
         };
     }
 
-
     private SimulateDayRecordsDataAccessInterface generateDayRecordsDataAccessObject() {
-        List<PerDayRecord> dayRecords = new ArrayList<PerDayRecord>();
+        final List<PerDayRecord> dayRecords = new ArrayList<PerDayRecord>();
         return new SimulateDayRecordsDataAccessInterface() {
             @Override
             public void saveNewData(PerDayRecord dayRecord) {
@@ -132,21 +149,22 @@ public class SimulateInteractorTest {
         };
     }
 
-
     /**
-     * Test if simulation succeeds to return the next day
+     * Test if simulation succeeds to return the next day.
      */
     @Test
     void nextDaySuccessTest() {
-        int expectedNextDay = TEST_CURRENT_DAY + 1;
-        SimulateInputData inputData = new SimulateInputData(TEST_CURRENT_DAY, TEST_CUSTOMER_COUNT);
-        SimulatePantryDataAccessInterface pantryDataAccessObject = generatePantryDataAccessObject();
-        SimulatePlayerDataAccessInterface playerDataAccessObject = generatePlayerDataAccessObject(TEST_PLAYER_BALANCE);
-        SimulateReviewDataAccessInterface reviewManagerDataAccessObject = generateReviewDataAccessObject();
-        SimulateDayRecordsDataAccessInterface dayRecordsDataAccessObject = generateDayRecordsDataAccessObject();
-        SimulateWageDataAccessInterface wageDataAccessObject = generateWageDataAccessObject(BASE_COOK_WAGE, BASE_WAITER_WAGE);
+        final int expectedNextDay = TEST_CURRENT_DAY + 1;
+        final SimulateInputData inputData = new SimulateInputData(TEST_CURRENT_DAY, TEST_CUSTOMER_COUNT);
+        final SimulatePantryDataAccessInterface pantryDataAccessObject = generatePantryDataAccessObject();
+        final SimulatePlayerDataAccessInterface playerDataAccessObject = generatePlayerDataAccessObject(
+                TEST_PLAYER_BALANCE);
+        final SimulateReviewDataAccessInterface reviewManagerDataAccessObject = generateReviewDataAccessObject();
+        final SimulateDayRecordsDataAccessInterface dayRecordsDataAccessObject = generateDayRecordsDataAccessObject();
+        final SimulateWageDataAccessInterface wageDataAccessObject = generateWageDataAccessObject(BASE_COOK_WAGE,
+                BASE_WAITER_WAGE);
 
-        SimulateOutputBoundary successPresenter = new SimulateOutputBoundary() {
+        final SimulateOutputBoundary successPresenter = new SimulateOutputBoundary() {
             @Override
             public void prepareSuccessView(SimulateOutputData outputData) {
                 assertEquals(expectedNextDay, outputData.getCurrentDay());
@@ -158,8 +176,7 @@ public class SimulateInteractorTest {
             }
         };
 
-
-        SimulateInputBoundary interactor = new SimulateInteractor(
+        final SimulateInputBoundary interactor = new SimulateInteractor(
                 successPresenter,
                 pantryDataAccessObject,
                 reviewManagerDataAccessObject,
@@ -171,20 +188,20 @@ public class SimulateInteractorTest {
     }
 
     /**
-     * Test if simulation succeeds with no stock
+     * Test if simulation succeeds with no stock.
      */
     @Test
     void noStockSuccessTest() {
-        int expectedCurrentBalance = TEST_PLAYER_BALANCE;
-        SimulateInputData inputData = new SimulateInputData(TEST_CURRENT_DAY,  TEST_CUSTOMER_COUNT);
-        SimulatePantryDataAccessInterface pantryDataAccessObject = generatePantryDataAccessObject();
-        SimulatePlayerDataAccessInterface playerDataAccessObject = generatePlayerDataAccessObject(TEST_PLAYER_BALANCE);
-        SimulateReviewDataAccessInterface reviewManagerDataAccessObject = generateReviewDataAccessObject();
-        SimulateDayRecordsDataAccessInterface dayRecordsDataAccessObject = generateDayRecordsDataAccessObject();
-        SimulateWageDataAccessInterface wageDataAccessObject = generateWageDataAccessObject(0, 0);
+        final int expectedCurrentBalance = TEST_PLAYER_BALANCE;
+        final SimulateInputData inputData = new SimulateInputData(TEST_CURRENT_DAY, TEST_CUSTOMER_COUNT);
+        final SimulatePantryDataAccessInterface pantryDataAccessObject = generatePantryDataAccessObject();
+        final SimulatePlayerDataAccessInterface playerDataAccessObject = generatePlayerDataAccessObject(
+                TEST_PLAYER_BALANCE);
+        final SimulateReviewDataAccessInterface reviewManagerDataAccessObject = generateReviewDataAccessObject();
+        final SimulateDayRecordsDataAccessInterface dayRecordsDataAccessObject = generateDayRecordsDataAccessObject();
+        final SimulateWageDataAccessInterface wageDataAccessObject = generateWageDataAccessObject(0, 0);
 
-
-        SimulateOutputBoundary successPresenter = new SimulateOutputBoundary() {
+        final SimulateOutputBoundary successPresenter = new SimulateOutputBoundary() {
             @Override
             public void prepareSuccessView(SimulateOutputData outputData) {
                 assertEquals(expectedCurrentBalance, outputData.getCurrentBalance());
@@ -196,7 +213,7 @@ public class SimulateInteractorTest {
             }
         };
 
-        SimulateInputBoundary interactor = new SimulateInteractor(
+        final SimulateInputBoundary interactor = new SimulateInteractor(
                 successPresenter,
                 pantryDataAccessObject,
                 reviewManagerDataAccessObject,
@@ -208,22 +225,22 @@ public class SimulateInteractorTest {
     }
 
     /**
-     * Test if simulation succeeds with current balance reduced due to employee expenses
+     * Test if simulation succeeds with current balance reduced due to employee expenses.
      */
     @Test
     void employeeExpensesApplied() {
-        int waiterWage = BASE_WAITER_WAGE*35;
-        int currentBalance = 100 + BASE_COOK_WAGE + waiterWage;
-        int expectedCurrentBalance = currentBalance - BASE_COOK_WAGE - waiterWage;
-        SimulateInputData inputData = new SimulateInputData(TEST_CURRENT_DAY,  TEST_CUSTOMER_COUNT);
-        SimulatePantryDataAccessInterface pantryDataAccessObject = generatePantryDataAccessObject();
-        SimulatePlayerDataAccessInterface playerDataAccessObject = generatePlayerDataAccessObject(currentBalance);
-        SimulateReviewDataAccessInterface reviewManagerDataAccessObject = generateReviewDataAccessObject();
-        SimulateDayRecordsDataAccessInterface dayRecordsDataAccessObject = generateDayRecordsDataAccessObject();
-        SimulateWageDataAccessInterface wageDataAccessObject = generateWageDataAccessObject(BASE_COOK_WAGE, waiterWage);
+        final int waiterWage = BASE_WAITER_WAGE * 35;
+        final int currentBalance = 100 + BASE_COOK_WAGE + waiterWage;
+        final int expectedCurrentBalance = currentBalance - BASE_COOK_WAGE - waiterWage;
+        final SimulateInputData inputData = new SimulateInputData(TEST_CURRENT_DAY, TEST_CUSTOMER_COUNT);
+        final SimulatePantryDataAccessInterface pantryDataAccessObject = generatePantryDataAccessObject();
+        final SimulatePlayerDataAccessInterface playerDataAccessObject = generatePlayerDataAccessObject(currentBalance);
+        final SimulateReviewDataAccessInterface reviewManagerDataAccessObject = generateReviewDataAccessObject();
+        final SimulateDayRecordsDataAccessInterface dayRecordsDataAccessObject = generateDayRecordsDataAccessObject();
+        final SimulateWageDataAccessInterface wageDataAccessObject = generateWageDataAccessObject(BASE_COOK_WAGE,
+                waiterWage);
 
-
-        SimulateOutputBoundary successPresenter = new SimulateOutputBoundary() {
+        final SimulateOutputBoundary successPresenter = new SimulateOutputBoundary() {
             @Override
             public void prepareSuccessView(SimulateOutputData outputData) {
                 assertEquals(expectedCurrentBalance, outputData.getCurrentBalance());
@@ -235,7 +252,7 @@ public class SimulateInteractorTest {
             }
         };
 
-        SimulateInputBoundary interactor = new SimulateInteractor(
+        final SimulateInputBoundary interactor = new SimulateInteractor(
                 successPresenter,
                 pantryDataAccessObject,
                 reviewManagerDataAccessObject,
@@ -246,28 +263,28 @@ public class SimulateInteractorTest {
         interactor.execute(inputData);
     }
 
-
     /**
-     * Test if customer count is within range
+     * Test if customer count is within range.
      */
     @Test
     void customerCountWithinRange() {
-        int customerCount = 50;
-        int minBoundCustomerCount = customerCount - SimulateInteractor.CUSTOMER_RANGE;
-        int maxBoundCustomerCount = customerCount + SimulateInteractor.CUSTOMER_RANGE + 1;
+        final int customerCount = 50;
+        final int minBoundCustomerCount = customerCount - SimulateInteractor.CUSTOMER_RANGE;
+        final int maxBoundCustomerCount = customerCount + SimulateInteractor.CUSTOMER_RANGE + 1;
         // cook effect adds by at least 1
 
-        SimulateInputData inputData = new SimulateInputData(TEST_CURRENT_DAY,  customerCount);
-        SimulatePantryDataAccessInterface pantryDataAccessObject = generatePantryDataAccessObject();
-        SimulatePlayerDataAccessInterface playerDataAccessObject = generatePlayerDataAccessObject(TEST_PLAYER_BALANCE);
-        SimulateReviewDataAccessInterface reviewManagerDataAccessObject = generateReviewDataAccessObject();
-        SimulateDayRecordsDataAccessInterface dayRecordsDataAccessObject = generateDayRecordsDataAccessObject();
-        SimulateWageDataAccessInterface wageDataAccessObject = generateWageDataAccessObject(
+        final SimulateInputData inputData = new SimulateInputData(TEST_CURRENT_DAY, customerCount);
+        final SimulatePantryDataAccessInterface pantryDataAccessObject = generatePantryDataAccessObject();
+        final SimulatePlayerDataAccessInterface playerDataAccessObject = generatePlayerDataAccessObject(
+                TEST_PLAYER_BALANCE);
+        final SimulateReviewDataAccessInterface reviewManagerDataAccessObject = generateReviewDataAccessObject();
+        final SimulateDayRecordsDataAccessInterface dayRecordsDataAccessObject = generateDayRecordsDataAccessObject();
+        final SimulateWageDataAccessInterface wageDataAccessObject = generateWageDataAccessObject(
                 COOK_WAGE_NO_REDUCTION,
                 WAITER_WAGE_NO_REDUCTION
         );
 
-        SimulateOutputBoundary successPresenter = new SimulateOutputBoundary() {
+        final SimulateOutputBoundary successPresenter = new SimulateOutputBoundary() {
             @Override
             public void prepareSuccessView(SimulateOutputData outputData) {
                 assertTrue(minBoundCustomerCount <= outputData.getCurrentCustomerCount()
@@ -281,7 +298,7 @@ public class SimulateInteractorTest {
             }
         };
 
-        SimulateInputBoundary interactor = new SimulateInteractor(
+        final SimulateInputBoundary interactor = new SimulateInteractor(
                 successPresenter,
                 pantryDataAccessObject,
                 reviewManagerDataAccessObject,
@@ -292,35 +309,35 @@ public class SimulateInteractorTest {
         interactor.execute(inputData);
     }
 
-
     /**
-     * Test if revenue generated from orders is within a range
+     * Test if revenue generated from orders is within a range.
      */
     @Test
     void revenueMadeWithinRange() {
 
-        int customerCount = 50;
-        int minBoundCustomerCount = customerCount - SimulateInteractor.CUSTOMER_RANGE;
-        int maxBoundCustomerCount = customerCount + SimulateInteractor.CUSTOMER_RANGE + 1;
+        final int customerCount = 50;
+        final int minBoundCustomerCount = customerCount - SimulateInteractor.CUSTOMER_RANGE;
+        final int maxBoundCustomerCount = customerCount + SimulateInteractor.CUSTOMER_RANGE + 1;
         // cook effect adds by at least 1
 
-        int minBoundExpectedBalance = TEST_PLAYER_BALANCE + TEST_BASE_PRICE*minBoundCustomerCount;
-        int maxBoundExpectedBalance = TEST_PLAYER_BALANCE + TEST_BASE_PRICE*maxBoundCustomerCount;
+        final int minBoundExpectedBalance = TEST_PLAYER_BALANCE + TEST_BASE_PRICE * minBoundCustomerCount;
+        final int maxBoundExpectedBalance = TEST_PLAYER_BALANCE + TEST_BASE_PRICE * maxBoundCustomerCount;
 
-        SimulateInputData inputData = new SimulateInputData(TEST_CURRENT_DAY,  customerCount);
-        SimulatePantryDataAccessInterface pantryDataAccessObject = generatePantryDataAccessObject();
-        Map<String, Integer> stock = new HashMap<>();
+        final SimulateInputData inputData = new SimulateInputData(TEST_CURRENT_DAY, customerCount);
+        final SimulatePantryDataAccessInterface pantryDataAccessObject = generatePantryDataAccessObject();
+        final Map<String, Integer> stock = new HashMap<>();
         stock.put(TEST_RECIPE_ONE_NAME, maxBoundCustomerCount);
         stock.put(TEST_RECIPE_TWO_NAME, maxBoundCustomerCount);
         stock.put(TEST_RECIPE_THREE_NAME, maxBoundCustomerCount);
         pantryDataAccessObject.saveStock(stock);
-        int totalStockCount = maxBoundCustomerCount*3;
-        SimulatePlayerDataAccessInterface playerDataAccessObject = generatePlayerDataAccessObject(TEST_PLAYER_BALANCE);
-        SimulateReviewDataAccessInterface reviewManagerDataAccessObject = generateReviewDataAccessObject();
-        SimulateDayRecordsDataAccessInterface dayRecordsDataAccessObject = generateDayRecordsDataAccessObject();
-        SimulateWageDataAccessInterface wageDataAccessObject = generateWageDataAccessObject(0, 0);
+        final int totalStockCount = maxBoundCustomerCount * 3;
+        final SimulatePlayerDataAccessInterface playerDataAccessObject = generatePlayerDataAccessObject(
+                TEST_PLAYER_BALANCE);
+        final SimulateReviewDataAccessInterface reviewManagerDataAccessObject = generateReviewDataAccessObject();
+        final SimulateDayRecordsDataAccessInterface dayRecordsDataAccessObject = generateDayRecordsDataAccessObject();
+        final SimulateWageDataAccessInterface wageDataAccessObject = generateWageDataAccessObject(0, 0);
 
-        SimulateOutputBoundary successPresenter = new SimulateOutputBoundary() {
+        final SimulateOutputBoundary successPresenter = new SimulateOutputBoundary() {
             @Override
             public void prepareSuccessView(SimulateOutputData outputData) {
                 assertTrue(minBoundExpectedBalance <= outputData.getCurrentBalance()
@@ -339,7 +356,7 @@ public class SimulateInteractorTest {
             }
         };
 
-        SimulateInputBoundary interactor = new SimulateInteractor(
+        final SimulateInputBoundary interactor = new SimulateInteractor(
                 successPresenter,
                 pantryDataAccessObject,
                 reviewManagerDataAccessObject,
@@ -351,29 +368,32 @@ public class SimulateInteractorTest {
     }
 
     /**
-     * Test if customer count is within range when considering reviews
+     * Test if customer count is within range when considering reviews.
      */
     @Test
     void customerCountWithinRangeWithReviews() {
-        double ratingMultiplier = 1.5;
-        int customerCount = 50;
-        int minBoundCustomerCount = (int) ((customerCount - SimulateInteractor.CUSTOMER_RANGE) * ratingMultiplier);
-        int maxBoundCustomerCount = (int) ((customerCount + SimulateInteractor.CUSTOMER_RANGE + 1) * ratingMultiplier);
+        final double ratingMultiplier = 1.5;
+        final int customerCount = 50;
+        final int minBoundCustomerCount = (int) ((customerCount - SimulateInteractor.CUSTOMER_RANGE)
+                * ratingMultiplier);
+        final int maxBoundCustomerCount = (int) ((customerCount + SimulateInteractor.CUSTOMER_RANGE + 1)
+                * ratingMultiplier);
         // cook effect adds by at least 1
 
-        SimulateInputData inputData = new SimulateInputData(TEST_CURRENT_DAY,  customerCount);
-        SimulatePantryDataAccessInterface pantryDataAccessObject = generatePantryDataAccessObject();
-        SimulatePlayerDataAccessInterface playerDataAccessObject = generatePlayerDataAccessObject(TEST_PLAYER_BALANCE);
-        SimulateReviewDataAccessInterface reviewManagerDataAccessObject = generateReviewDataAccessObject();
-        ReviewEntity review = new ReviewEntity(5.0, TEST_CURRENT_DAY);
+        final SimulateInputData inputData = new SimulateInputData(TEST_CURRENT_DAY, customerCount);
+        final SimulatePantryDataAccessInterface pantryDataAccessObject = generatePantryDataAccessObject();
+        final SimulatePlayerDataAccessInterface playerDataAccessObject = generatePlayerDataAccessObject(
+                TEST_PLAYER_BALANCE);
+        final SimulateReviewDataAccessInterface reviewManagerDataAccessObject = generateReviewDataAccessObject();
+        final ReviewEntity review = new ReviewEntity(5.0, TEST_CURRENT_DAY);
         reviewManagerDataAccessObject.addReview(review);
-        SimulateDayRecordsDataAccessInterface dayRecordsDataAccessObject = generateDayRecordsDataAccessObject();
-        SimulateWageDataAccessInterface wageDataAccessObject = generateWageDataAccessObject(
+        final SimulateDayRecordsDataAccessInterface dayRecordsDataAccessObject = generateDayRecordsDataAccessObject();
+        final SimulateWageDataAccessInterface wageDataAccessObject = generateWageDataAccessObject(
                 COOK_WAGE_NO_REDUCTION,
                 WAITER_WAGE_NO_REDUCTION
         );
 
-        SimulateOutputBoundary successPresenter = new SimulateOutputBoundary() {
+        final SimulateOutputBoundary successPresenter = new SimulateOutputBoundary() {
             @Override
             public void prepareSuccessView(SimulateOutputData outputData) {
                 assertTrue(minBoundCustomerCount <= outputData.getCurrentCustomerCount()
@@ -387,7 +407,7 @@ public class SimulateInteractorTest {
             }
         };
 
-        SimulateInputBoundary interactor = new SimulateInteractor(
+        final SimulateInputBoundary interactor = new SimulateInteractor(
                 successPresenter,
                 pantryDataAccessObject,
                 reviewManagerDataAccessObject,
@@ -397,5 +417,4 @@ public class SimulateInteractorTest {
         );
         interactor.execute(inputData);
     }
-
 }
