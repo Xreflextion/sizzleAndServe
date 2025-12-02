@@ -40,7 +40,7 @@ public class PerformanceCalculationInteractor implements PerformanceCalculationI
         double totalExpenses = 0;
         double totalProfits = 0;
         double sumRating = 0;
-        int reviewCount = 0;
+        int reviewCount = -1;
 
         List<Double> revenueTrend = new ArrayList<>();
         List<Double> expensesTrend = new ArrayList<>();
@@ -63,7 +63,7 @@ public class PerformanceCalculationInteractor implements PerformanceCalculationI
             profitTrend.add(dayProfit);
         }
 
-        double averageRating = sumRating/reviewCount;
+        double averageRating = Math.round((sumRating/reviewCount)*10.0)/10.0;
 
         int numberOfDays = allRecords.size();
 
