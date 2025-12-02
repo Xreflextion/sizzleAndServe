@@ -17,7 +17,9 @@ public class OfficeViewModel extends ViewModel<OfficeState> {
     public static final String PRICE_MANAGER_BUTTON_LABEL = "Price Manager";
     public static final String INSIGHTS_BUTTON_LABEL = "Insights";
     public static final String REVIEW_MANAGER_BUTTON_LABEL = "Rating Manager";
-    public static final String SIMULATE_BUTTON_LABEL = "Simulate Next Day";
+    public static final String SIMULATE_BUTTON_LABEL = "Simulate Today";
+
+    public static final String BANKRUPT_ERROR_TITLE = "Unable to Simulate";
 
     public static final String CURRENT_DAY_LABEL = "Current Day: ";
     public static final String CURRENT_BALANCE_LABEL = "Current Balance: ";

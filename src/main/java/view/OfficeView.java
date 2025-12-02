@@ -272,7 +272,7 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
             if (state.getErrorMessage() != null) {
                 JOptionPane.showMessageDialog(this,
                         state.getErrorMessage(),
-                        "Warning", JOptionPane.WARNING_MESSAGE
+                        OfficeViewModel.BANKRUPT_ERROR_TITLE, JOptionPane.ERROR_MESSAGE
                 );
             }
             else {
