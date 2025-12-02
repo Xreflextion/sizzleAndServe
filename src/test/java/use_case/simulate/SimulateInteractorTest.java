@@ -19,12 +19,12 @@ import entity.Recipe;
 import entity.ReviewEntity;
 
 public class SimulateInteractorTest {
-    private final String UNEXPECTED_SUCCESS_MESSAGE = "Use case success is unexpected: ";
-    private final String UNEXPECTED_FAILURE_MESSAGE = "Use case failure is unexpected: ";
+    private static final String UNEXPECTED_SUCCESS_MESSAGE = "Use case success is unexpected: ";
+    private static final String UNEXPECTED_FAILURE_MESSAGE = "Use case failure is unexpected: ";
 
-    private final int TEST_PLAYER_BALANCE = 100;
-    private final int TEST_CUSTOMER_COUNT = 5;
-    private final int TEST_CURRENT_DAY = 1;
+    private static final int TEST_PLAYER_BALANCE = 100;
+    private static final int TEST_CUSTOMER_COUNT = 5;
+    private static final int TEST_CURRENT_DAY = 1;
 
     private static final int TEST_BASE_PRICE = 5;
     private static final String TEST_RECIPE_ONE_NAME = "One";
@@ -140,7 +140,7 @@ public class SimulateInteractorTest {
     }
 
     private SimulateDayRecordsDataAccessInterface generateDayRecordsDataAccessObject() {
-        List<PerDayRecord> dayRecords = new ArrayList<PerDayRecord>();
+        final List<PerDayRecord> dayRecords = new ArrayList<PerDayRecord>();
         dayRecords.add(new PerDayRecord(0, 0, 0));
         return new SimulateDayRecordsDataAccessInterface() {
             @Override
@@ -431,21 +431,20 @@ public class SimulateInteractorTest {
     }
 
     /**
-     * Test if simulation fails when balance is negative
+     * Test if simulation fails when balance is negative.
      */
     @Test
     void negativeBalanceTest() {
-        int currentBalance = -50;
-        String expectedErrorMessage = "You are bankrupt and can no longer simulate more days";
-        SimulateInputData inputData = new SimulateInputData(TEST_CURRENT_DAY,  TEST_CUSTOMER_COUNT);
-        SimulatePantryDataAccessInterface pantryDataAccessObject = generatePantryDataAccessObject();
-        SimulatePlayerDataAccessInterface playerDataAccessObject = generatePlayerDataAccessObject(currentBalance);
-        SimulateReviewDataAccessInterface reviewManagerDataAccessObject = generateReviewDataAccessObject();
-        SimulateDayRecordsDataAccessInterface dayRecordsDataAccessObject = generateDayRecordsDataAccessObject();
-        SimulateWageDataAccessInterface wageDataAccessObject = generateWageDataAccessObject(0, 0);
+        final int currentBalance = -50;
+        final String expectedErrorMessage = "You are bankrupt and can no longer simulate more days";
+        final SimulateInputData inputData = new SimulateInputData(TEST_CURRENT_DAY, TEST_CUSTOMER_COUNT);
+        final SimulatePantryDataAccessInterface pantryDataAccessObject = generatePantryDataAccessObject();
+        final SimulatePlayerDataAccessInterface playerDataAccessObject = generatePlayerDataAccessObject(currentBalance);
+        final SimulateReviewDataAccessInterface reviewManagerDataAccessObject = generateReviewDataAccessObject();
+        final SimulateDayRecordsDataAccessInterface dayRecordsDataAccessObject = generateDayRecordsDataAccessObject();
+        final SimulateWageDataAccessInterface wageDataAccessObject = generateWageDataAccessObject(0, 0);
 
-
-        SimulateOutputBoundary successPresenter = new SimulateOutputBoundary() {
+        final SimulateOutputBoundary successPresenter = new SimulateOutputBoundary() {
             @Override
             public void prepareSuccessView(SimulateOutputData outputData) {
                 fail(UNEXPECTED_SUCCESS_MESSAGE + outputData.getCurrentDay());
@@ -457,7 +456,7 @@ public class SimulateInteractorTest {
             }
         };
 
-        SimulateInputBoundary interactor = new SimulateInteractor(
+        final SimulateInputBoundary interactor = new SimulateInteractor(
                 successPresenter,
                 pantryDataAccessObject,
                 reviewManagerDataAccessObject,
