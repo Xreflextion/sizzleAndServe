@@ -1,10 +1,9 @@
 package use_case.review;
 
-import data_access.ReviewDAOHash;
+import data_access.ReviewDataAccessObject;
 import entity.ReviewEntity;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,8 +13,8 @@ public class ReviewTest {
 
 
     // Test Review DAO
-    static class TestReviewDAO extends ReviewDAOHash{
-        public TestReviewDAO(){
+    static class TestReviewDataAccessInterface extends ReviewDataAccessObject {
+        public TestReviewDataAccessInterface(){
             super(null);
             addReview(new ReviewEntity(5.0,1));
             addReview(new ReviewEntity(2.0,1));
@@ -43,7 +42,7 @@ public class ReviewTest {
 
     @Test
     void testExecuteDayReview(){
-        TestReviewDAO dao = new TestReviewDAO();
+        TestReviewDataAccessInterface dao = new TestReviewDataAccessInterface();
         TestPresenter presenter = new TestPresenter ();
         ReviewInteractor reviewInteractor = new ReviewInteractor(dao, presenter);
 
@@ -57,7 +56,7 @@ public class ReviewTest {
 
     @Test
     void testExecuteOverallReview(){
-        TestReviewDAO dao = new TestReviewDAO();
+        TestReviewDataAccessInterface dao = new TestReviewDataAccessInterface();
         TestPresenter outputBoundary = new TestPresenter();
         ReviewInteractor reviewInteractor = new ReviewInteractor(dao, outputBoundary);
 
@@ -68,7 +67,7 @@ public class ReviewTest {
 
     @Test
     void testExecuteDayNull(){
-        TestReviewDAO dao = new TestReviewDAO();
+        TestReviewDataAccessInterface dao = new TestReviewDataAccessInterface();
         TestPresenter presenter = new TestPresenter();
         ReviewInteractor reviewInteractor = new ReviewInteractor(dao, presenter);
 
@@ -79,7 +78,7 @@ public class ReviewTest {
 
     @Test
     void testFetchAvailableDays(){
-        TestReviewDAO dao = new TestReviewDAO();
+        TestReviewDataAccessInterface dao = new TestReviewDataAccessInterface();
         TestPresenter presenter = new TestPresenter ();
         ReviewInteractor reviewInteractor = new ReviewInteractor(dao, presenter);
 
@@ -93,7 +92,7 @@ public class ReviewTest {
 
     @Test
     void testGetAverageOverallAndEmoji(){
-        TestReviewDAO dao = new TestReviewDAO();
+        TestReviewDataAccessInterface dao = new TestReviewDataAccessInterface();
         TestPresenter presenter = new TestPresenter ();
         ReviewInteractor reviewInteractor = new ReviewInteractor(dao, presenter);
 
@@ -107,7 +106,7 @@ public class ReviewTest {
 
     @Test
     void testGetAverageReviewDay(){
-        TestReviewDAO dao = new TestReviewDAO();
+        TestReviewDataAccessInterface dao = new TestReviewDataAccessInterface();
         TestPresenter  outputBoundary = new TestPresenter();
         ReviewInteractor reviewInteractor = new ReviewInteractor(dao, outputBoundary);
 
@@ -123,7 +122,7 @@ public class ReviewTest {
 
     @Test
     void testGetAvailableDaysDirect(){
-        TestReviewDAO dao = new TestReviewDAO();
+        TestReviewDataAccessInterface dao = new TestReviewDataAccessInterface();
         TestPresenter outputBoundary = new TestPresenter();
         ReviewInteractor reviewInteractor = new ReviewInteractor(dao, outputBoundary);
 

@@ -12,7 +12,7 @@ import data_access.DayRecordsDataAccessObject;
 import data_access.FileHelperObject;
 import data_access.PantryDataAccessObject;
 import data_access.PlayerDataAccessObject;
-import data_access.ReviewDAOHash;
+import data_access.ReviewDataAccessObject;
 import data_access.WageDataAccessObject;
 import entity.Employee;
 import entity.Recipe;
