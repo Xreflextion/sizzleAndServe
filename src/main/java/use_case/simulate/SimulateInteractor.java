@@ -18,6 +18,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
     // Amount to subtract from waiter effect to allow waiter effect to impact reviews negatively
     public static final String COOK_POSITION = "Cook";
     public static final String WAITER_POSITION = "Waiter";
+    public static final String BANKRUPT_ERROR_MESSAGE = "You are bankrupt and can no longer simulate more days";
 
     private final SimulateOutputBoundary simulatePresenter;
 
@@ -47,79 +48,82 @@ public class SimulateInteractor implements SimulateInputBoundary {
 
     @Override
     public void execute(SimulateInputData simulateInputData) {
-        // calculate current day
-        final int currentDay = simulateInputData.getPreviousDay() + 1;
-
-        // get today's customer count
-        final int newCustomerCount = getCustomerCount(
-                simulateInputData.getPreviousDay(),
-                simulateInputData.getPreviousCustomerCount()
-        );
-
-        final String[] dishNames = pantryDataAccessObject.getPantry().getDishNames();
-        final Map<String, Integer> stock = pantryDataAccessObject.getStock();
-
-        // get orders that can be done and can't be done
-        final Map<String, Integer> orders = getOrders(newCustomerCount, dishNames);
-        final Map<String, Integer> doableOrders = new HashMap<>();
-        final Map<String, Integer> impossibleOrders = new HashMap<>();
-        for (String dishName: dishNames) {
-            doableOrders.put(dishName, Math.min(stock.get(dishName), orders.get(dishName)));
-            impossibleOrders.put(dishName, Math.max(orders.get(dishName) - stock.get(dishName), 0));
+        if (playerDataAccessObject.getPlayer().getBalance() < 0.0) {
+            simulatePresenter.prepareFailView(BANKRUPT_ERROR_MESSAGE);
         }
+        else {
+            // calculate current day
+            final int currentDay = simulateInputData.getPreviousDay() + 1;
 
-        // reduce stock for doable orders
-        for (String dishName: dishNames) {
-            stock.put(dishName, stock.get(dishName) - doableOrders.get(dishName));
+            // get today's customer count
+            final int newCustomerCount = getCustomerCount(
+                    simulateInputData.getPreviousDay(),
+                    simulateInputData.getPreviousCustomerCount()
+            );
+
+            final String[] dishNames = pantryDataAccessObject.getPantry().getDishNames();
+            final Map<String, Integer> stock = pantryDataAccessObject.getStock();
+
+            // get orders that can be done and can't be done
+            final Map<String, Integer> orders = getOrders(newCustomerCount, dishNames);
+            final Map<String, Integer> doableOrders = new HashMap<>();
+            final Map<String, Integer> impossibleOrders = new HashMap<>();
+            for (String dishName: dishNames) {
+                doableOrders.put(dishName, Math.min(stock.get(dishName), orders.get(dishName)));
+                impossibleOrders.put(dishName, Math.max(orders.get(dishName) - stock.get(dishName), 0));
+            }
+
+            // reduce stock for doable orders
+            for (String dishName: dishNames) {
+                stock.put(dishName, stock.get(dishName) - doableOrders.get(dishName));
+            }
+            // Saving stock
+            pantryDataAccessObject.saveStock(stock);
+
+            // Get revenue for doable orders
+            double revenue = 0;
+            for (String dishName: dishNames) {
+                revenue += pantryDataAccessObject.getCurrentPrices().get(dishName) * doableOrders.get(dishName);
+            }
+
+            // Get expenses for today
+            final double expenses = wageDataAccessObject.getTotalWage();
+
+            // Get ratings for today
+            final ArrayList<Double> newRatings = getCurrentRatings(dishNames, doableOrders, impossibleOrders);
+            // Saving ratings
+            for (double rating: newRatings) {
+                reviewManagerDataAccessObject.addReview(new ReviewEntity(rating, simulateInputData.getPreviousDay()));
+            }
+
+            // Current balance management
+            final double currentBalance = roundToTwoDecimalPlace(
+                    playerDataAccessObject.getPlayer().getBalance() + revenue - expenses
+            );
+            final Player player = playerDataAccessObject.getPlayer();
+            player.setBalance(currentBalance);
+            playerDataAccessObject.savePlayer(player);
+
+            // Saving day record
+            final PerDayRecord previousDay = dayRecordsDataAccessInterface.getDayData(
+                    simulateInputData.getPreviousDay()
+            );
+            final PerDayRecord previousDayEdited = new PerDayRecord(
+                    roundToTwoDecimalPlace(revenue),
+                    roundToTwoDecimalPlace(expenses + previousDay.getExpenses()),
+                    getAvgRating(newRatings)
+            );
+            dayRecordsDataAccessInterface.updateDayData(simulateInputData.getPreviousDay(), previousDayEdited);
+            dayRecordsDataAccessInterface.saveNewData(new PerDayRecord(0, 0, 0));
+            // Generating output data
+            final SimulateOutputData outputData = new SimulateOutputData(
+                    currentDay,
+                    currentBalance,
+                    newCustomerCount,
+                    stock
+            );
+            simulatePresenter.prepareSuccessView(outputData);
         }
-        // Saving stock
-        pantryDataAccessObject.saveStock(stock);
-
-        // Get revenue for doable orders
-        double revenue = 0;
-        for (String dishName: dishNames) {
-            revenue += pantryDataAccessObject.getCurrentPrices().get(dishName) * doableOrders.get(dishName);
-        }
-
-        // Get expenses for today
-        final double expenses = wageDataAccessObject.getTotalWage();
-
-        // Get ratings for today
-        final ArrayList<Double> newRatings = getCurrentRatings(dishNames, doableOrders, impossibleOrders);
-        // Saving ratings
-        for (double rating: newRatings) {
-            reviewManagerDataAccessObject.addReview(new ReviewEntity(rating, simulateInputData.getPreviousDay()));
-        }
-
-        // Current balance management
-        final double currentBalance = roundToTwoDecimalPlace(
-                playerDataAccessObject.getPlayer().getBalance() + revenue - expenses
-        );
-        final Player player = playerDataAccessObject.getPlayer();
-        player.setBalance(currentBalance);
-        playerDataAccessObject.savePlayer(player);
-
-        // Calculate average review for today
-        final double avgRating = getAvgRating(newRatings);
-
-        // Saving day record
-
-        final PerDayRecord previousDay = dayRecordsDataAccessInterface.getDayData(simulateInputData.getPreviousDay());
-        final PerDayRecord previousDayEdited = new PerDayRecord(
-                roundToTwoDecimalPlace(revenue),
-                roundToTwoDecimalPlace(expenses + previousDay.getExpenses()),
-                avgRating
-        );
-        dayRecordsDataAccessInterface.updateDayData(simulateInputData.getPreviousDay(), previousDayEdited);
-        dayRecordsDataAccessInterface.saveNewData(new PerDayRecord(0, 0, 0));
-        // Generating output data
-        final SimulateOutputData outputData = new SimulateOutputData(
-                currentDay,
-                currentBalance,
-                newCustomerCount,
-                stock
-        );
-        simulatePresenter.prepareSuccessView(outputData);
 
     }
 
@@ -294,12 +298,9 @@ public class SimulateInteractor implements SimulateInputBoundary {
         rating += (waiterEffect - WAITER_EFFECT_REDUCTION) / rating;
 
         // Step 3: Make sure rating is within the interval [1.0, 5.0]
-        if (rating > maxRating) {
-            rating = maxRating;
-        }
-        if (rating < minRating) {
-            rating = minRating;
-        }
+        rating = Math.min(maxRating, rating);
+        rating = Math.max(minRating, rating);
+
         // Step 4: round to one decimal place
         return roundToOneDecimalPlace(rating);
     }
