@@ -102,7 +102,9 @@ public class AppBuilder {
         reviewDataAccessObjectHash = new ReviewDataAccessObject(fileHelperObject);
         dayRecordsDataAccessObject = new DayRecordsDataAccessObject(fileHelperObject);
         wageDataAccessObject = new WageDataAccessObject(fileHelperObject);
-        customerCount = reviewDataAccessObjectHash.getReviewsByDay(dayRecordsDataAccessObject.getNumberOfDays() - 1).size();
+        customerCount = reviewDataAccessObjectHash.getReviewsByDay(
+                dayRecordsDataAccessObject.getNumberOfDays() - 1
+        ).size();
     }
 
     /**
