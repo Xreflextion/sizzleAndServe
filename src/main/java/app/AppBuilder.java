@@ -79,7 +79,7 @@ public class AppBuilder {
 
     private PlayerDataAccessObject playerDataAccessObject;
     private PantryDataAccessObject pantryDataAccessObject;
-    private ReviewDAOHash reviewDataAccessObjectHash;
+    private ReviewDataAccessObject reviewDataAccessObjectHash;
     private DayRecordsDataAccessObject dayRecordsDataAccessObject;
     private WageDataAccessObject wageDataAccessObject;
 
@@ -99,7 +99,7 @@ public class AppBuilder {
 
         playerDataAccessObject = new PlayerDataAccessObject(INITIAL_BALANCE, fileHelperObject);
         pantryDataAccessObject = new PantryDataAccessObject(fileHelperObject);
-        reviewDataAccessObjectHash = new ReviewDAOHash(fileHelperObject);
+        reviewDataAccessObjectHash = new ReviewDataAccessObject(fileHelperObject);
         dayRecordsDataAccessObject = new DayRecordsDataAccessObject(fileHelperObject);
         wageDataAccessObject = new WageDataAccessObject(fileHelperObject);
         customerCount = reviewDataAccessObjectHash.getReviewsByDay(dayRecordsDataAccessObject.getNumberOfDays()).size();
@@ -155,8 +155,8 @@ public class AppBuilder {
 
         final BuyServingPresenter presenter = new BuyServingPresenter(buyServingViewModel,
                 officeViewModel, wageViewModel);
-        final BuyServingInteractor interactor = new BuyServingInteractor(playerDataAccessObject,
-                pantryDataAccessObject, presenter);
+        final BuyServingInteractor interactor = new BuyServingInteractor(playerDataAccessObject, pantryDataAccessObject,
+                dayRecordsDataAccessObject, presenter);
         final BuyServingController controller = new BuyServingController(interactor);
 
         buyServingView = new BuyServingView(controller, buyServingViewModel, viewManagerModel);
