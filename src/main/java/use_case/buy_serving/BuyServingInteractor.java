@@ -1,18 +1,22 @@
 package use_case.buy_serving;
 
 import entity.Pantry;
+import entity.PerDayRecord;
 import entity.Player;
 import entity.Recipe;
 
 public class BuyServingInteractor implements BuyServingInputBoundary {
     private final PlayerDataAccessInterface playerDao;
     private final PantryDataAccessInterface pantryDao;
+    private final BuyServingDayRecordsDataAccessInterface dayRecordsDao;
     private final BuyServingOutputBoundary outputBoundary;
 
     public BuyServingInteractor(PlayerDataAccessInterface playerDao, PantryDataAccessInterface pantryDao,
+                                BuyServingDayRecordsDataAccessInterface dayRecordsDao,
                                 BuyServingOutputBoundary outputBoundary) {
         this.playerDao = playerDao;
         this.pantryDao = pantryDao;
+        this.dayRecordsDao = dayRecordsDao;
         this.outputBoundary = outputBoundary;
     }
 
@@ -30,14 +34,16 @@ public class BuyServingInteractor implements BuyServingInputBoundary {
         return balance + epsilon >= totalCost;
     }
 
-    private void updatePantryAndPlayer(Player player, Pantry pantry, String[] dishNames,
-                                       int[] servingsToBuy, double newBalance) {
+    private void updateData(Player player, Pantry pantry, int today,
+                            PerDayRecord perDayRecord, String[] dishNames,
+                            int[] servingsToBuy, double newBalance) {
         player.setBalance(newBalance);
         for (int i = 0; i < dishNames.length; i++) {
             pantry.addStock(dishNames[i], servingsToBuy[i]);
         }
         playerDao.savePlayer(player);
         pantryDao.savePantry(pantry);
+        dayRecordsDao.updateDayData(today, perDayRecord);
     }
 
     private BuyServingOutputData prepareFailureOutput(double balance) {
@@ -71,18 +77,29 @@ public class BuyServingInteractor implements BuyServingInputBoundary {
     public void execute(BuyServingInputData inputData) {
         final Player player = playerDao.getPlayer();
         final Pantry pantry = pantryDao.getPantry();
+        final int today = dayRecordsDao.getNumberOfDays();
+        final PerDayRecord perDayRecord = dayRecordsDao.getDayData(today);
         final String[] dishNames = inputData.getDishNames();
         final int[] servingsToBuy = inputData.getServingsToBuy();
 
         final double totalCost = computeTotalCost(pantry, dishNames, servingsToBuy);
         final double balance = player.getBalance();
 
+        final double updatedExpense = perDayRecord.getExpenses() + totalCost;
+
+        final PerDayRecord updatedDayRecord = new PerDayRecord(
+                perDayRecord.getRevenue(),
+                updatedExpense,
+                perDayRecord.getRating()
+        );
+
         if (!hasEnoughBalance(balance, totalCost)) {
             outputBoundary.present(prepareFailureOutput(balance));
         }
         else {
-            final double newBalance = balance - totalCost;
-            updatePantryAndPlayer(player, pantry, dishNames, servingsToBuy, newBalance);
+            final double decimalShift = 10.00;
+            final double newBalance = Math.round((balance - totalCost) * decimalShift) / decimalShift;
+            updateData(player, pantry, today, updatedDayRecord, dishNames, servingsToBuy, newBalance);
             outputBoundary.present(prepareSuccessOutput(newBalance, pantry, dishNames));
         }
     }

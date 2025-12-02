@@ -1,10 +1,10 @@
+
 package interface_adapter.review;
 
+import java.util.List;
 
 import use_case.review.ReviewOutputBoundary;
 import use_case.review.ReviewOutputData;
-
-import java.util.List;
 
 public class ReviewPresenter implements ReviewOutputBoundary {
 
@@ -15,10 +15,9 @@ public class ReviewPresenter implements ReviewOutputBoundary {
         this.reviewViewModel = reviewViewModel;
     }
 
-
     @Override
     public void present(ReviewOutputData reviewOutputData) {
-        ReviewState state = reviewViewModel.getState();
+        final ReviewState state = reviewViewModel.getState();
         state.setRating(reviewOutputData.getRating());
         state.setEmoji(reviewOutputData.getEmoji());
 
@@ -28,7 +27,7 @@ public class ReviewPresenter implements ReviewOutputBoundary {
 
     @Override
     public void presentAvailableDays(List<Integer> availableDays) {
-        ReviewState reviewState = reviewViewModel.getState();
+        final ReviewState reviewState = reviewViewModel.getState();
         reviewState.setAvailableDays(availableDays);
         reviewViewModel.setState(reviewState);
         reviewViewModel.firePropertyChange();

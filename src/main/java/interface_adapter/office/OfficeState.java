@@ -8,7 +8,7 @@ public class OfficeState {
     private double currentBalance;
 
     // The number of customers that occurred for this day
-    private int currentCustomerCount;
+    private int pastCustomerCount;
 
     public int getCurrentDay() {
         return currentDay;
@@ -26,12 +26,12 @@ public class OfficeState {
         currentBalance = newBalance;
     }
 
-    public int getCurrentCustomerCount() {
-        return currentCustomerCount;
+    public int getPastCustomerCount() {
+        return pastCustomerCount;
     }
 
-    public void setCurrentCustomerCount(int newCustomerCount) {
-        currentCustomerCount = newCustomerCount;
+    public void setPastCustomerCount(int newCustomerCount) {
+        pastCustomerCount = newCustomerCount;
     }
 
 }

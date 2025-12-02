@@ -1,9 +1,9 @@
+
 package interface_adapter.review;
 
 import interface_adapter.ViewModel;
-import use_case.review.ReviewOutputData;
 
-public class ReviewViewModel extends ViewModel<ReviewState>{
+public class ReviewViewModel extends ViewModel<ReviewState> {
 
     public static final String VIEW_NAME = "review view";
 
