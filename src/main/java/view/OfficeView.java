@@ -8,7 +8,11 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.*;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import interface_adapter.ViewManagerModel;
 import interface_adapter.buy_serving.BuyServingViewModel;
@@ -60,12 +64,9 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
 
         insightsButton = createButton(OfficeViewModel.INSIGHTS_BUTTON_LABEL);
         insightsButton.addActionListener(
-                evt ->
-                {
+                evt -> {
                     if (evt.getSource().equals(insightsButton)) {
-                        System.out.println("===Insights button Clicked===");
                         if (performanceController != null) {
-                            System.out.println("Triggering insights calculation...");
                             performanceController.displayInsights();
                         }
                         this.viewManagerModel.setState(InsightsViewModel.VIEW_NAME);
@@ -73,7 +74,6 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
                     }
                 }
         );
-        //addViewMovementActionListener(insightsButton, InsightsViewModel.VIEW_NAME);
 
         employeeButton = createButton(OfficeViewModel.EMPLOYEE_BUTTON_LABEL);
         addViewMovementActionListener(employeeButton, WageViewModel.VIEW_NAME);
@@ -173,75 +173,6 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
     public JPanel createMidLeftPanel() {
         final JPanel midLeftPanel = new JPanel();
         midLeftPanel.setLayout(new BoxLayout(midLeftPanel, BoxLayout.Y_AXIS));
-        final JPanel centerPanel = new JPanel();
-        final JPanel midRightPanel = new JPanel();
-        midRightPanel.setLayout(new BoxLayout(midRightPanel, BoxLayout.Y_AXIS));
-
-        final JButton inventoryButton = new JButton(OfficeViewModel.INVENTORY_BUTTON_LABEL);
-        editButtonSize(inventoryButton);
-        inventoryButton.addActionListener(
-                evt ->
-                {
-                    if (evt.getSource().equals(inventoryButton)) {
-                        System.out.println("Go to inventory");
-                        this.viewManagerModel.setState(BuyServingViewModel.VIEW_NAME);
-                        this.viewManagerModel.firePropertyChange();
-                    }
-                }
-        );
-        final JButton priceButton = new JButton(OfficeViewModel.PRICE_MANAGER_BUTTON_LABEL);
-        editButtonSize(priceButton);
-        priceButton.addActionListener(
-                evt ->
-                {
-                    if (evt.getSource().equals(priceButton)) {
-                        this.viewManagerModel.setState(ProductPricesViewModel.VIEW_NAME);
-                        this.viewManagerModel.firePropertyChange();
-                    }
-                }
-        );
-        final JButton reviewButton = new JButton(OfficeViewModel.REVIEW_MANAGER_BUTTON_LABEL);
-        editButtonSize(reviewButton);
-        reviewButton.addActionListener(
-                evt ->
-                {
-                    if (evt.getSource().equals(reviewButton)) {
-                        System.out.println("Go to reviews");
-                        this.viewManagerModel.setState(ReviewViewModel.VIEW_NAME);
-                        this.viewManagerModel.firePropertyChange();
-                    }
-                }
-        );
-        final JButton insightsButton = new JButton(OfficeViewModel.INSIGHTS_BUTTON_LABEL);
-        editButtonSize(insightsButton);
-        insightsButton.addActionListener(
-                evt ->
-                {
-                    if (evt.getSource().equals(insightsButton)) {
-                        System.out.println("===Insights Button Clicked===");
-
-                        if(performanceController != null) {
-                            System.out.println("Triggering insights calculation...");
-                            performanceController.displayInsights();
-                        }
-                        System.out.println("Go to insights");
-                        this.viewManagerModel.setState(InsightsViewModel.VIEW_NAME);
-                        this.viewManagerModel.firePropertyChange();
-                    }
-                }
-        );
-        final JButton employeeButton = new JButton(OfficeViewModel.EMPLOYEE_BUTTON_LABEL);
-        editButtonSize(employeeButton);
-        employeeButton.addActionListener(
-                evt ->
-                {
-                    if (evt.getSource().equals(employeeButton)) {
-                        System.out.println("Go to wages");
-                        this.viewManagerModel.setState(WageViewModel.VIEW_NAME);
-                        this.viewManagerModel.firePropertyChange();
-                    }
-                }
-        );
 
         midLeftPanel.add(inventoryButton);
         midLeftPanel.add(reviewButton);
@@ -343,7 +274,8 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
                         state.getErrorMessage(),
                         "Warning", JOptionPane.WARNING_MESSAGE
                 );
-            } else {
+            }
+            else {
                 curDayLabel.setText(OfficeViewModel.CURRENT_DAY_LABEL + state.getCurrentDay());
                 curBalanceLabel.setText(OfficeViewModel.CURRENT_BALANCE_LABEL + state.getCurrentBalance());
                 pastCustomerCountLabel.setText(
