@@ -37,7 +37,7 @@ public class ReviewState {
 
     /**
      * Sets the list of available review days. Always ensures that
-     * the placeholder day `0` is included.
+     * the placeholder day `1` is included.
      *
      * @param days - The list of review days to set
      */
