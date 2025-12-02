@@ -16,7 +16,7 @@ import entity.Pantry;
 import entity.PerDayRecord;
 import entity.Player;
 import entity.Recipe;
-import entity.ReviewEntity;
+import entity.Review;
 
 public class SimulateInteractorTest {
     private static final String UNEXPECTED_SUCCESS_MESSAGE = "Use case success is unexpected: ";
@@ -97,11 +97,11 @@ public class SimulateInteractorTest {
         final Map<Integer, ArrayList<Double>> reviewManager = new HashMap<>();
         return new SimulateReviewDataAccessInterface() {
             @Override
-            public void addReview(ReviewEntity reviewEntity) {
-                if (!reviewManager.containsKey(reviewEntity.getDayNum())) {
-                    reviewManager.put(reviewEntity.getDayNum(), new ArrayList<>());
+            public void addReview(Review review) {
+                if (!reviewManager.containsKey(review.getDayNum())) {
+                    reviewManager.put(review.getDayNum(), new ArrayList<>());
                 }
-                reviewManager.get(reviewEntity.getDayNum()).add(reviewEntity.getRating());
+                reviewManager.get(review.getDayNum()).add(review.getRating());
             }
 
             @Override
@@ -398,7 +398,7 @@ public class SimulateInteractorTest {
         final SimulatePlayerDataAccessInterface playerDataAccessObject = generatePlayerDataAccessObject(
                 TEST_PLAYER_BALANCE);
         final SimulateReviewDataAccessInterface reviewManagerDataAccessObject = generateReviewDataAccessObject();
-        final ReviewEntity review = new ReviewEntity(5.0, TEST_CURRENT_DAY);
+        final Review review = new Review(5.0, TEST_CURRENT_DAY);
         reviewManagerDataAccessObject.addReview(review);
         final SimulateDayRecordsDataAccessInterface dayRecordsDataAccessObject = generateDayRecordsDataAccessObject();
         final SimulateWageDataAccessInterface wageDataAccessObject = generateWageDataAccessObject(

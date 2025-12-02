@@ -7,7 +7,7 @@ import java.util.Random;
 
 import entity.PerDayRecord;
 import entity.Player;
-import entity.ReviewEntity;
+import entity.Review;
 
 public class SimulateInteractor implements SimulateInputBoundary {
     public static final int CUSTOMER_RANGE = 2;
@@ -93,7 +93,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
             final ArrayList<Double> newRatings = getCurrentRatings(dishNames, doableOrders, impossibleOrders);
             // Saving ratings
             for (double rating: newRatings) {
-                reviewManagerDataAccessObject.addReview(new ReviewEntity(rating, simulateInputData.getPreviousDay()));
+                reviewManagerDataAccessObject.addReview(new Review(rating, simulateInputData.getPreviousDay()));
             }
 
             // Current balance management

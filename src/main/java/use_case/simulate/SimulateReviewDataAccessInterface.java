@@ -2,7 +2,7 @@ package use_case.simulate;
 
 import java.util.ArrayList;
 
-import entity.ReviewEntity;
+import entity.Review;
 
 /**
  * Review DAO interface for the Simulate Use Case.
@@ -11,9 +11,9 @@ public interface SimulateReviewDataAccessInterface {
 
     /**
      * Add a review.
-     * @param reviewEntity new review to add
+     * @param review new review to add
      */
-    void addReview(ReviewEntity reviewEntity);
+    void addReview(Review review);
 
     /**
      * Return the reviews of the given day.
