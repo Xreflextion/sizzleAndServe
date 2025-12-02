@@ -131,7 +131,6 @@ public class SimulateInteractor implements SimulateInputBoundary {
     private double getAvgRating(ArrayList<Double> ratings) {
         double ratingsSum = 0;
         for (double rating: ratings) {
-            System.out.println("Rating: " + rating);
             ratingsSum += rating;
         }
         return roundToOneDecimalPlace(ratingsSum / ratings.size());
@@ -220,18 +219,14 @@ public class SimulateInteractor implements SimulateInputBoundary {
         final int lowerBound = Math.max(1, pastCustomerCount - CUSTOMER_RANGE);
         final int upperBound = pastCustomerCount + CUSTOMER_RANGE;
         double customerCount = generateRandomInt(upperBound, lowerBound);
-        System.out.println("customer count: " + customerCount);
 
         // Step 2: Add some customers to the count based on the cook effect
         final double cookEffectAddition = getCookEffectAddition(cookEffect, customerCount);
         customerCount += cookEffectAddition;
-        System.out.println("cook effect: " + cookEffectAddition);
-
 
         // Step 3: Multiply the customerCount by a rating multiplier
         // Follows the function: f(x) = 0.25 * (x - 3.0) + 1.0
         customerCount *= generateRatingMultiplier(rating);
-        System.out.println("after multiplier: " + customerCount);
         return (int) customerCount;
     }
 
@@ -292,12 +287,11 @@ public class SimulateInteractor implements SimulateInputBoundary {
         final int number = generateRandomInt(max * scaleFactor, min * scaleFactor);
         double rating = number / (double) scaleFactor;
         // Ex. the value will range be in the list [1.0, 1.1, ... 5.0] if range given is 1-5 and SCALE_FACTOR = 10
-        System.out.println("Before waiter effect: " + rating);
+
         // Step 2: Add the waiterEffect / rating to the rating
         // - This is done so the rating increases by a larger amount if it is smaller at first
         // - Subtract WAITER_EFFECT_REDUCTION from waiterEffect so the waiter wage could negatively impact the rating
         rating += (waiterEffect - WAITER_EFFECT_REDUCTION) / rating;
-        System.out.println("After waiter effect: " + rating);
 
         // Step 3: Make sure rating is within the interval [1.0, 5.0]
         if (rating > maxRating) {
