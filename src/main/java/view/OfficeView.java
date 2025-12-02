@@ -8,10 +8,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import interface_adapter.ViewManagerModel;
 import interface_adapter.buy_serving.BuyServingViewModel;
@@ -340,11 +337,19 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("state")) {
             final OfficeState state = (OfficeState) evt.getNewValue();
-            curDayLabel.setText(OfficeViewModel.CURRENT_DAY_LABEL + state.getCurrentDay());
-            curBalanceLabel.setText(OfficeViewModel.CURRENT_BALANCE_LABEL + state.getCurrentBalance());
-            pastCustomerCountLabel.setText(
-                    OfficeViewModel.PAST_CUSTOMER_COUNT_LABEL + state.getPastCustomerCount()
-            );
+
+            if (state.getErrorMessage() != null) {
+                JOptionPane.showMessageDialog(this,
+                        state.getErrorMessage(),
+                        "Warning", JOptionPane.WARNING_MESSAGE
+                );
+            } else {
+                curDayLabel.setText(OfficeViewModel.CURRENT_DAY_LABEL + state.getCurrentDay());
+                curBalanceLabel.setText(OfficeViewModel.CURRENT_BALANCE_LABEL + state.getCurrentBalance());
+                pastCustomerCountLabel.setText(
+                        OfficeViewModel.PAST_CUSTOMER_COUNT_LABEL + state.getPastCustomerCount()
+                );
+            }
         }
     }
 
