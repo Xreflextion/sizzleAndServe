@@ -33,9 +33,10 @@ public class SimulateInteractorTest {
 
     private static final int BASE_COOK_WAGE = 50;
     private static final int BASE_WAITER_WAGE = 50;
-    private static final int COOK_WAGE_NO_REDUCTION = (int) (50 + 10
+    private static final int MIN_WAGE = 30;
+    private static final int COOK_WAGE_NO_REDUCTION = (int) (MIN_WAGE + 10
             * (SimulateInteractor.COOK_EFFECT_REDUCTION - 1.0) / 0.2);
-    private static final int WAITER_WAGE_NO_REDUCTION = (int) (50 + 10
+    private static final int WAITER_WAGE_NO_REDUCTION = (int) (MIN_WAGE + 10
             * (SimulateInteractor.WAITER_EFFECT_REDUCTION - 1.0) / 0.2);
 
     private SimulatePantryDataAccessInterface generatePantryDataAccessObject() {
