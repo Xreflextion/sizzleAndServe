@@ -14,7 +14,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
     // value to add to yesterday's customer count to determine today's possible range of customers
     public static final double COOK_EFFECT_REDUCTION = 1.2;
     // Amount to subtract from cook effect to allow cook effect to impact customer count negatively
-    public static final double WAITER_EFFECT_REDUCTION = 1.6;
+    public static final double WAITER_EFFECT_REDUCTION = 0.8;
     // Amount to subtract from waiter effect to allow waiter effect to impact reviews negatively
     public static final String COOK_POSITION = "Cook";
     public static final String WAITER_POSITION = "Waiter";
