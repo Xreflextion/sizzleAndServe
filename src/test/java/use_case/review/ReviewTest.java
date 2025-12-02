@@ -59,7 +59,7 @@ public class ReviewTest {
         assertNotNull(presenter.availableDaysList);
 
         // Placeholder 0 should be first
-        assertEquals(List.of(0, 1, 2, 3), presenter.availableDaysList);
+        assertEquals(List.of(1,2,3,4), presenter.availableDaysList);
     }
 
     @Test

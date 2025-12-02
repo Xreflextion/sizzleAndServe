@@ -79,7 +79,7 @@ public class AppBuilder {
 
     private PlayerDataAccessObject playerDataAccessObject;
     private PantryDataAccessObject pantryDataAccessObject;
-    private ReviewDAOHash reviewDataAccessObjectHash;
+    private ReviewDataAccessObject reviewDataAccessObjectHash;
     private DayRecordsDataAccessObject dayRecordsDataAccessObject;
     private WageDataAccessObject wageDataAccessObject;
 
@@ -99,10 +99,10 @@ public class AppBuilder {
 
         playerDataAccessObject = new PlayerDataAccessObject(INITIAL_BALANCE, fileHelperObject);
         pantryDataAccessObject = new PantryDataAccessObject(fileHelperObject);
-        reviewDataAccessObjectHash = new ReviewDAOHash(fileHelperObject);
+        reviewDataAccessObjectHash = new ReviewDataAccessObject(fileHelperObject);
         dayRecordsDataAccessObject = new DayRecordsDataAccessObject(fileHelperObject);
         wageDataAccessObject = new WageDataAccessObject(fileHelperObject);
-        customerCount = reviewDataAccessObjectHash.getReviewsByDay(dayRecordsDataAccessObject.getNumberOfDays()).size();
+        customerCount = reviewDataAccessObjectHash.getReviewsByDay(dayRecordsDataAccessObject.getNumberOfDays() - 1).size();
     }
 
     /**
@@ -156,7 +156,7 @@ public class AppBuilder {
         final BuyServingPresenter presenter = new BuyServingPresenter(buyServingViewModel,
                 officeViewModel, wageViewModel);
         final BuyServingInteractor interactor = new BuyServingInteractor(playerDataAccessObject,
-                pantryDataAccessObject, presenter);
+                pantryDataAccessObject, dayRecordsDataAccessObject, presenter);
         final BuyServingController controller = new BuyServingController(interactor);
 
         buyServingView = new BuyServingView(controller, buyServingViewModel, viewManagerModel);
@@ -300,7 +300,7 @@ public class AppBuilder {
         viewManagerModel.setState(officeView.getViewName());
         officeViewModel.getState().setCurrentBalance(playerDataAccessObject.getPlayer().getBalance());
         officeViewModel.getState().setCurrentDay(dayRecordsDataAccessObject.getNumberOfDays());
-        officeViewModel.getState().setCurrentCustomerCount(customerCount);
+        officeViewModel.getState().setPastCustomerCount(customerCount);
         officeViewModel.firePropertyChange();
         viewManagerModel.firePropertyChange();
 

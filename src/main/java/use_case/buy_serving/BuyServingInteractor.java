@@ -97,7 +97,8 @@ public class BuyServingInteractor implements BuyServingInputBoundary {
             outputBoundary.present(prepareFailureOutput(balance));
         }
         else {
-            final double newBalance = balance - totalCost;
+            final double decimalShift = 10.00;
+            final double newBalance = Math.round((balance - totalCost) * decimalShift) / decimalShift;
             updateData(player, pantry, today, updatedDayRecord, dishNames, servingsToBuy, newBalance);
             outputBoundary.present(prepareSuccessOutput(newBalance, pantry, dishNames));
         }

@@ -41,6 +41,9 @@ public class DayRecordsDataAccessObject implements BuyServingDayRecordsDataAcces
             }
             newDayRecords.add(new PerDayRecord(revenue, expenses, rating));
         }
+        if (newDayRecords.size() == 0) {
+            newDayRecords.add(new PerDayRecord(0,0,0));
+        }
         this.dayRecords = newDayRecords;
 
     }
