@@ -23,6 +23,90 @@ class BuyServingInteractorTest {
         final String[] dishNames = pantryDataAccessObject.getPantry().getDishNames();
         final int[] servingsToBuy = {1, 1, 0};
         final BuyServingInputData inputData = new BuyServingInputData(dishNames, servingsToBuy);
+import entity.PerDayRecord;
+import org.junit.jupiter.api.Test;
+import use_case.buy_serving.BuyServingDayRecordsDataAccessInterface;
+
+import java.util.ArrayList;
+import java.util.List;
+import static org.junit.jupiter.api.Assertions.*;
+
+class BuyServingInteractorTest {
+
+    // Test Player DAO
+    static class TestPlayerDAO implements PlayerDataAccessInterface {
+        Player player = new Player("TestUser", 30.0);
+
+        @Override
+        public Player getPlayer() { return player; }
+
+        @Override
+        public void savePlayer(Player player) {}
+    }
+
+    // Test Pantry DAO
+    static class TestPantryDAO implements PantryDataAccessInterface {
+        Pantry pantry = new Pantry();
+
+        public TestPantryDAO() {
+            pantry.getPantry().put("Pizza", new Recipe("Pizza", 10));
+            pantry.getPantry().put("Burger", new Recipe("Burger", 8));
+            pantry.getPantry().put("Salad", new Recipe("Salad", 6));
+        }
+
+        @Override
+        public Pantry getPantry() { return pantry; }
+
+        @Override
+        public void savePantry(Pantry pantry) {}
+    }
+
+    static class TestDayRecordsDAO implements BuyServingDayRecordsDataAccessInterface {
+        List<PerDayRecord> records = new ArrayList<>();
+
+        @Override
+        public int getNumberOfDays() { return records.size(); }
+
+        @Override
+        public PerDayRecord getDayData(int day) {
+            if (day < 1 || day > records.size()) return null;
+            return records.get(day - 1);
+        }
+
+        @Override
+        public void saveNewData(PerDayRecord record) {
+            records.add(record);
+        }
+
+        @Override
+        public void updateDayData(int day, PerDayRecord updatedRecord) {
+            records.set(day - 1, updatedRecord);
+        }
+
+    }
+
+    // Test Presenter
+    static class TestPresenter implements BuyServingOutputBoundary {
+        BuyServingOutputData lastOutput;
+
+        @Override
+        public void present(BuyServingOutputData outputData) {
+            lastOutput = outputData;
+        }
+    }
+
+    @Test
+    void successTest() {
+        TestPlayerDAO playerDAO = new TestPlayerDAO();
+        TestPantryDAO pantryDAO = new TestPantryDAO();
+        TestDayRecordsDAO dayDAO = new TestDayRecordsDAO();
+        dayDAO.saveNewData(new PerDayRecord(0, 0, 0));
+        TestPresenter presenter = new TestPresenter();
+        BuyServingInteractor interactor = new BuyServingInteractor(playerDAO, pantryDAO, dayDAO, presenter);
+
+        String[] dishNames = pantryDAO.getPantry().getDishNames();
+        int[] servingsToBuy = {1, 1, 0};
+        BuyServingInputData inputData = new BuyServingInputData(dishNames, servingsToBuy);
         interactor.execute(inputData);
 
         assertTrue(presenter.lastOutput.isSuccess());
@@ -47,6 +131,16 @@ class BuyServingInteractorTest {
         final String[] dishNames = pantryDataAccessObject.getPantry().getDishNames();
         final int[] servingsToBuy = {2, 2, 0};
         final BuyServingInputData inputData = new BuyServingInputData(dishNames, servingsToBuy);
+        TestPlayerDAO playerDAO = new TestPlayerDAO();
+        TestPantryDAO pantryDAO = new TestPantryDAO();
+        TestDayRecordsDAO dayDAO = new TestDayRecordsDAO();
+        dayDAO.saveNewData(new PerDayRecord(0, 0, 0));
+        TestPresenter presenter = new TestPresenter();
+        BuyServingInteractor interactor = new BuyServingInteractor(playerDAO, pantryDAO, dayDAO, presenter);
+
+        String[] dishNames = pantryDAO.getPantry().getDishNames();
+        int[] servingsToBuy = {2, 2, 0};
+        BuyServingInputData inputData = new BuyServingInputData(dishNames, servingsToBuy);
         interactor.execute(inputData);
 
         assertFalse(presenter.lastOutput.isSuccess());
@@ -67,6 +161,12 @@ class BuyServingInteractorTest {
         final TestPresenter presenter = new TestPresenter();
         final BuyServingInteractor interactor = new BuyServingInteractor(playerDataAccessObject,
                 pantryDataAccessObject, presenter);
+        TestPlayerDAO playerDAO = new TestPlayerDAO();
+        TestPantryDAO pantryDAO = new TestPantryDAO();
+        TestDayRecordsDAO dayDAO = new TestDayRecordsDAO();
+        dayDAO.saveNewData(new PerDayRecord(0, 0, 0));
+        TestPresenter presenter = new TestPresenter();
+        BuyServingInteractor interactor = new BuyServingInteractor(playerDAO, pantryDAO, dayDAO, presenter);
 
         final String[] dishNames = pantryDataAccessObject.getPantry().getDishNames();
 
@@ -141,4 +241,3 @@ class BuyServingInteractorTest {
         }
     }
 }
-
