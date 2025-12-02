@@ -14,7 +14,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
     // value to add to yesterday's customer count to determine today's possible range of customers
     public static final double COOK_EFFECT_REDUCTION = 1.2;
     // Amount to subtract from cook effect to allow cook effect to impact customer count negatively
-    public static final double WAITER_EFFECT_REDUCTION = 1.6;
+    public static final double WAITER_EFFECT_REDUCTION = 0.8;
     // Amount to subtract from waiter effect to allow waiter effect to impact reviews negatively
     public static final String COOK_POSITION = "Cook";
     public static final String WAITER_POSITION = "Waiter";
@@ -88,11 +88,13 @@ public class SimulateInteractor implements SimulateInputBoundary {
         final ArrayList<Double> newRatings = getCurrentRatings(dishNames, doableOrders, impossibleOrders);
         // Saving ratings
         for (double rating: newRatings) {
-            reviewManagerDataAccessObject.addReview(new ReviewEntity(rating, currentDay));
+            reviewManagerDataAccessObject.addReview(new ReviewEntity(rating, simulateInputData.getPreviousDay()));
         }
 
         // Current balance management
-        final double currentBalance = playerDataAccessObject.getPlayer().getBalance() + revenue - expenses;
+        final double currentBalance = roundToTwoDecimalPlace(
+                playerDataAccessObject.getPlayer().getBalance() + revenue - expenses
+        );
         final Player player = playerDataAccessObject.getPlayer();
         player.setBalance(currentBalance);
         playerDataAccessObject.savePlayer(player);
@@ -101,8 +103,15 @@ public class SimulateInteractor implements SimulateInputBoundary {
         final double avgRating = getAvgRating(newRatings);
 
         // Saving day record
-        dayRecordsDataAccessInterface.saveNewData(new PerDayRecord(revenue, expenses, avgRating));
 
+        final PerDayRecord previousDay = dayRecordsDataAccessInterface.getDayData(simulateInputData.getPreviousDay());
+        final PerDayRecord previousDayEdited = new PerDayRecord(
+                roundToTwoDecimalPlace(revenue),
+                roundToTwoDecimalPlace(expenses + previousDay.getExpenses()),
+                avgRating
+        );
+        dayRecordsDataAccessInterface.updateDayData(simulateInputData.getPreviousDay(), previousDayEdited);
+        dayRecordsDataAccessInterface.saveNewData(new PerDayRecord(0, 0, 0));
         // Generating output data
         final SimulateOutputData outputData = new SimulateOutputData(
                 currentDay,
@@ -124,7 +133,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
         for (double rating: ratings) {
             ratingsSum += rating;
         }
-        return ratingsSum / ratings.size();
+        return roundToOneDecimalPlace(ratingsSum / ratings.size());
     }
 
     /**
@@ -312,6 +321,16 @@ public class SimulateInteractor implements SimulateInputBoundary {
      */
     private double roundToOneDecimalPlace(double number) {
         final double decimalShift = 10.0;
+        return Math.round(number * decimalShift) / decimalShift;
+    }
+
+    /**
+     * Round a number to two decimal place.
+     * @param number to round
+     * @return number rounded to two decimal place
+     */
+    private double roundToTwoDecimalPlace(double number) {
+        final double decimalShift = 10.00;
         return Math.round(number * decimalShift) / decimalShift;
     }
 

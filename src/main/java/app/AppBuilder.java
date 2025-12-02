@@ -17,11 +17,14 @@ import data_access.WageDataAccessObject;
 import entity.Employee;
 import entity.Recipe;
 import interface_adapter.ViewManagerModel;
-import entity.Recipe;
-import interface_adapter.insight.*;
 import interface_adapter.buy_serving.BuyServingController;
 import interface_adapter.buy_serving.BuyServingPresenter;
 import interface_adapter.buy_serving.BuyServingViewModel;
+import interface_adapter.insight.DayInsightsController;
+import interface_adapter.insight.DayInsightsPresenter;
+import interface_adapter.insight.InsightsViewModel;
+import interface_adapter.insight.PerformanceCalculationController;
+import interface_adapter.insight.PerformanceCalculationPresenter;
 import interface_adapter.manage_wages.WageController;
 import interface_adapter.manage_wages.WagePresenter;
 import interface_adapter.manage_wages.WageState;
@@ -32,20 +35,16 @@ import interface_adapter.office.SimulatePresenter;
 import interface_adapter.product_prices.ProductPricesController;
 import interface_adapter.product_prices.ProductPricesPresenter;
 import interface_adapter.product_prices.ProductPricesViewModel;
-import interface_adapter.buy_serving.BuyServingController;
-import interface_adapter.buy_serving.BuyServingPresenter;
-import interface_adapter.buy_serving.BuyServingViewModel;
-import use_case.buy_serving.BuyServingInteractor;
 import interface_adapter.review.ReviewController;
 import interface_adapter.review.ReviewPresenter;
 import interface_adapter.review.ReviewViewModel;
+import use_case.buy_serving.BuyServingInteractor;
 import use_case.insights.day_calculation.DayInsightsInputBoundary;
 import use_case.insights.day_calculation.DayInsightsInteractor;
 import use_case.insights.day_calculation.DayInsightsOutputBoundary;
 import use_case.insights.performance_calculation.PerformanceCalculationInputBoundary;
 import use_case.insights.performance_calculation.PerformanceCalculationInteractor;
 import use_case.insights.performance_calculation.PerformanceCalculationOutputBoundary;
-import use_case.buy_serving.BuyServingInteractor;
 import use_case.manage_wage.WageInteractor;
 import use_case.product_prices.ProductPricesInteractor;
 import use_case.review.ReviewInteractor;
@@ -53,18 +52,13 @@ import use_case.simulate.SimulateInputBoundary;
 import use_case.simulate.SimulateInteractor;
 import use_case.simulate.SimulateOutputBoundary;
 import view.BuyServingView;
+import view.DrillDownView;
+import view.InsightsView;
 import view.ManageWagesView;
 import view.OfficeView;
 import view.ProductPricesView;
 import view.ReviewView;
 import view.ViewManager;
-import view.*;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.Map;
-import view.InsightsView;
-import view.DrillDownView;
 
 public class AppBuilder {
     public static final int INITIAL_BALANCE = 500;
@@ -83,35 +77,40 @@ public class AppBuilder {
     private BuyServingViewModel buyServingViewModel;
     private BuyServingView buyServingView;
 
-    private PlayerDataAccessObject playerDAO;
-    private PantryDataAccessObject pantryDAO;
-    private ReviewDataAccessObject reviewDAO;
-    private DayRecordsDataAccessObject dayRecordsDAO;
+    private PlayerDataAccessObject playerDataAccessObject;
+    private PantryDataAccessObject pantryDataAccessObject;
+    private ReviewDataAccessObject reviewDataAccessObjectHash;
+    private DayRecordsDataAccessObject dayRecordsDataAccessObject;
     private WageDataAccessObject wageDataAccessObject;
 
     private ManageWagesView wageView;
     private WageViewModel wageViewModel;
 
     private FileHelperObject fileHelperObject;
-    private int customerCount = 0;
+    private int customerCount;
 
     private InsightsViewModel insightsViewModel;
     private InsightsView insightsView;
-
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
         fileHelperObject = new FileHelperObject(Constants.FILE_NAME);
         fileHelperObject.loadFromFile();
 
-        playerDAO = new PlayerDataAccessObject(INITIAL_BALANCE, fileHelperObject);
-        pantryDAO = new PantryDataAccessObject(fileHelperObject);
-        reviewDAO = new ReviewDataAccessObject(fileHelperObject);
-        dayRecordsDAO = new DayRecordsDataAccessObject(fileHelperObject);
+        playerDataAccessObject = new PlayerDataAccessObject(INITIAL_BALANCE, fileHelperObject);
+        pantryDataAccessObject = new PantryDataAccessObject(fileHelperObject);
+        reviewDataAccessObjectHash = new ReviewDataAccessObject(fileHelperObject);
+        dayRecordsDataAccessObject = new DayRecordsDataAccessObject(fileHelperObject);
         wageDataAccessObject = new WageDataAccessObject(fileHelperObject);
-        customerCount = reviewDAO.getReviewsByDay(dayRecordsDAO.getNumberOfDays()).size();
+        customerCount = reviewDataAccessObjectHash.getReviewsByDay(
+                dayRecordsDataAccessObject.getNumberOfDays() - 1
+        ).size();
     }
 
+    /**
+     * Adds the OfficeView to the application.
+     * @return AppBuilder with the OfficeView added.
+     */
     public AppBuilder addOfficeView() {
         officeViewModel = new OfficeViewModel();
         officeView = new OfficeView(officeViewModel, viewManagerModel);
@@ -120,15 +119,15 @@ public class AppBuilder {
     }
 
     /**
-     * Adds the Product Prices View to the application.
-     * @return AppBuilder with the Product Prices View added
+     * Adds the ProductPricesView to the application.
+     * @return AppBuilder with the ProductPricesView added.
      */
     public AppBuilder addProductPricesView() {
-        final Map<String, Recipe> recipes = pantryDAO.getPantry().getPantry();
+        final Map<String, Recipe> recipes = pantryDataAccessObject.getPantry().getPantry();
         productPricesViewModel = new ProductPricesViewModel(recipes);
         final ProductPricesPresenter productPricesPresenter = new ProductPricesPresenter(productPricesViewModel,
                 viewManagerModel);
-        final ProductPricesInteractor productPricesInteractor = new ProductPricesInteractor(pantryDAO,
+        final ProductPricesInteractor productPricesInteractor = new ProductPricesInteractor(pantryDataAccessObject,
                 productPricesPresenter);
         final ProductPricesController productPricesController = new ProductPricesController(productPricesInteractor);
         productPricesView = new ProductPricesView(productPricesViewModel, productPricesController, viewManagerModel);
@@ -136,25 +135,31 @@ public class AppBuilder {
         return this;
     }
 
+    /**
+     * Adds the BuyServingView to the application.
+     * @return AppBuilder with the BuyServingView added.
+     */
     public AppBuilder addBuyServingViewAndUseCase() {
 
         buyServingViewModel = new BuyServingViewModel();
-        buyServingViewModel.setNewBalance(playerDAO.getPlayer().getBalance());
+        buyServingViewModel.setNewBalance(playerDataAccessObject.getPlayer().getBalance());
 
-        String[] dishNames = pantryDAO.getPantry().getDishNames();
-        int[] dishCosts = new int[dishNames.length];
-        int[] dishStocks = new int[dishNames.length];
+        final String[] dishNames = pantryDataAccessObject.getPantry().getDishNames();
+        final int[] dishCosts = new int[dishNames.length];
+        final int[] dishStocks = new int[dishNames.length];
         for (int i = 0; i < dishNames.length; i++) {
-            dishCosts[i] = pantryDAO.getPantry().getRecipe(dishNames[i]).getBasePrice();
-            dishStocks[i] = pantryDAO.getPantry().getRecipe(dishNames[i]).getStock();
+            dishCosts[i] = pantryDataAccessObject.getPantry().getRecipe(dishNames[i]).getBasePrice();
+            dishStocks[i] = pantryDataAccessObject.getPantry().getRecipe(dishNames[i]).getStock();
         }
         buyServingViewModel.setDishNames(dishNames);
         buyServingViewModel.setDishCosts(dishCosts);
         buyServingViewModel.setDishStocks(dishStocks);
 
-        BuyServingPresenter presenter = new BuyServingPresenter(buyServingViewModel, officeViewModel, wageViewModel);
-        BuyServingInteractor interactor = new BuyServingInteractor(playerDAO, pantryDAO, presenter);
-        BuyServingController controller = new BuyServingController(interactor);
+        final BuyServingPresenter presenter = new BuyServingPresenter(buyServingViewModel,
+                officeViewModel, wageViewModel);
+        final BuyServingInteractor interactor = new BuyServingInteractor(playerDataAccessObject,
+                pantryDataAccessObject, dayRecordsDataAccessObject, presenter);
+        final BuyServingController controller = new BuyServingController(interactor);
 
         buyServingView = new BuyServingView(controller, buyServingViewModel, viewManagerModel);
         cardPanel.add(buyServingView, BuyServingViewModel.VIEW_NAME);
@@ -162,31 +167,34 @@ public class AppBuilder {
         return this;
     }
 
-    // Adds the ReviewView to the app builder
+    /**
+     * Adds the ReviewView to the application.
+     * @return AppBuilder with the ReviewView added.
+     */
     public AppBuilder addReviewViewAndUseCase() {
 
         // Creates ViewModel
-        ReviewViewModel reviewViewModel = new ReviewViewModel();
+        final ReviewViewModel reviewViewModel = new ReviewViewModel();
 
         // Creates a presenter
-        ReviewPresenter reviewPresenter = new ReviewPresenter(reviewViewModel);
+        final ReviewPresenter reviewPresenter = new ReviewPresenter(reviewViewModel);
 
         // Creates a review interactor
-        ReviewInteractor reviewInteractor = new ReviewInteractor(reviewDAO, reviewPresenter);
+        final ReviewInteractor reviewInteractor = new ReviewInteractor(reviewDataAccessObjectHash, reviewPresenter);
 
         // Creates a review controller
-        ReviewController reviewController = new ReviewController(reviewInteractor);
+        final ReviewController reviewController = new ReviewController(reviewInteractor);
 
         // Initializes View and add it to card panel
-        ReviewView reviewView = new ReviewView(reviewController, reviewViewModel, viewManagerModel);
+        final ReviewView reviewView = new ReviewView(reviewController, reviewViewModel, viewManagerModel);
         cardPanel.add(reviewView, ReviewViewModel.VIEW_NAME);
 
         return this;
     }
 
     /**
-     * Add the ManageWageView to the app builder.
-     * @return Appbuilder of Wage Manager.
+     * Add the ManageWagesView to the app builder.
+     * @return AppBuilder with the ManageWagesView added.
      */
     public AppBuilder addManageWageViewAndUseCase() {
         final Map<String, Employee> employees = wageDataAccessObject.getEmployees();
@@ -198,14 +206,15 @@ public class AppBuilder {
         state.setCookWageEffect(employees.get("Cook").getWageEffect());
         state.setWaiterWage(employees.get("Waiter").getWage());
         state.setWaiterWageEffect(employees.get("Waiter").getWageEffect());
-        state.setCurrentBalance(playerDAO.getPlayer().getBalance());
+        state.setCurrentBalance(playerDataAccessObject.getPlayer().getBalance());
         wageViewModel.setState(state);
         // fires property change
 
         // 2) Presenter + Controller
         final WagePresenter presenter = new WagePresenter(wageViewModel);
         final WageController controller =
-                new WageController(new WageInteractor(wageDataAccessObject, playerDAO, presenter, employees));
+                new WageController(new WageInteractor(wageDataAccessObject,
+                        playerDataAccessObject, presenter, employees));
 
         // 3) Build the view and inject the controller
         wageView = new ManageWagesView(wageViewModel, viewManagerModel);
@@ -220,7 +229,7 @@ public class AppBuilder {
 
     /**
      * Add Simulate Use Case to the app.
-     * @return AppBuilder with Simulate Use Case added
+     * @return AppBuilder with Simulate Use Case added.
      */
     public AppBuilder addSimulateUseCase() {
         final SimulateOutputBoundary simulateOutputBoundary = new SimulatePresenter(
@@ -232,11 +241,11 @@ public class AppBuilder {
 
         final SimulateInputBoundary simulateInteractor = new SimulateInteractor(
                 simulateOutputBoundary,
-                pantryDAO,
-                reviewDAO,
+                pantryDataAccessObject,
+                reviewDataAccessObjectHash,
                 wageDataAccessObject,
-                playerDAO,
-                dayRecordsDAO
+                playerDataAccessObject,
+                dayRecordsDataAccessObject
         );
 
         final SimulateController controller = new SimulateController(simulateInteractor);
@@ -244,23 +253,28 @@ public class AppBuilder {
         return this;
     }
 
+    /**
+     * Add InsightsView to the app.
+     * @return AppBuilder with InsightsView added.
+     */
     public AppBuilder addInsightsViewAndUseCase() {
         insightsViewModel = new InsightsViewModel();
-
-
-        PerformanceCalculationOutputBoundary performancePresenter = new PerformanceCalculationPresenter(
+        final PerformanceCalculationOutputBoundary performancePresenter = new PerformanceCalculationPresenter(
                 insightsViewModel, viewManagerModel);
-        PerformanceCalculationInputBoundary performanceInteractor = new PerformanceCalculationInteractor(
-                dayRecordsDAO, performancePresenter);
-        PerformanceCalculationController performanceController = new PerformanceCalculationController(
+        final PerformanceCalculationInputBoundary performanceInteractor = new PerformanceCalculationInteractor(
+                dayRecordsDataAccessObject, performancePresenter);
+        final PerformanceCalculationController performanceController = new PerformanceCalculationController(
                 performanceInteractor);
 
-        if (officeView != null){
+        if (officeView != null) {
             officeView.setPerformanceController(performanceController);
         }
-        DayInsightsOutputBoundary dayInsightsPresenter = new DayInsightsPresenter(insightsViewModel, viewManagerModel);
-        DayInsightsInputBoundary dayInsightsInteractor = new DayInsightsInteractor(dayRecordsDAO, dayInsightsPresenter);
-        DayInsightsController dayInsightsController = new DayInsightsController(dayInsightsInteractor);
+        final DayInsightsOutputBoundary dayInsightsPresenter =
+                new DayInsightsPresenter(insightsViewModel, viewManagerModel);
+        final DayInsightsInputBoundary dayInsightsInteractor =
+                new DayInsightsInteractor(dayRecordsDataAccessObject, dayInsightsPresenter);
+        final DayInsightsController dayInsightsController =
+                new DayInsightsController(dayInsightsInteractor);
 
         insightsView = new InsightsView(
                 insightsViewModel,
@@ -269,13 +283,16 @@ public class AppBuilder {
                 viewManagerModel
         );
         cardPanel.add(insightsView, insightsViewModel.getViewName());
-        DrillDownView drillDownView = new DrillDownView(insightsViewModel, viewManagerModel);
+        final DrillDownView drillDownView = new DrillDownView(insightsViewModel, viewManagerModel);
         cardPanel.add(drillDownView, DrillDownView.VIEW_NAME);
         return this;
 
     }
 
-
+    /**
+     * Initiating the View that user will see.
+     * @return JFrame with Office View.
+     */
     public JFrame build() {
         final JFrame application = new JFrame("Sizzle and Serve");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -283,9 +300,9 @@ public class AppBuilder {
         application.setResizable(false);
 
         viewManagerModel.setState(officeView.getViewName());
-        officeViewModel.getState().setCurrentBalance(playerDAO.getPlayer().getBalance());
-        officeViewModel.getState().setCurrentDay(dayRecordsDAO.getNumberOfDays());
-        officeViewModel.getState().setCurrentCustomerCount(customerCount);
+        officeViewModel.getState().setCurrentBalance(playerDataAccessObject.getPlayer().getBalance());
+        officeViewModel.getState().setCurrentDay(dayRecordsDataAccessObject.getNumberOfDays());
+        officeViewModel.getState().setPastCustomerCount(customerCount);
         officeViewModel.firePropertyChange();
         viewManagerModel.firePropertyChange();
 

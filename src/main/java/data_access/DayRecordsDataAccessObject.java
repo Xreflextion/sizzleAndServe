@@ -10,11 +10,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import constants.Constants;
 import entity.PerDayRecord;
+import use_case.buy_serving.BuyServingDayRecordsDataAccessInterface;
 import use_case.insights.performance_calculation.DayRecordsDataAccessInterface;
 import use_case.simulate.SimulateDayRecordsDataAccessInterface;
 
-public class DayRecordsDataAccessObject implements DayRecordsDataAccessInterface,
-        SimulateDayRecordsDataAccessInterface {
+public class DayRecordsDataAccessObject implements BuyServingDayRecordsDataAccessInterface,
+                                                   DayRecordsDataAccessInterface,
+                                                   SimulateDayRecordsDataAccessInterface {
 
     public static final double RATING = 3.0;
     private List<PerDayRecord> dayRecords;
@@ -39,6 +41,9 @@ public class DayRecordsDataAccessObject implements DayRecordsDataAccessInterface
                 rating = day.get("rating").getAsDouble();
             }
             newDayRecords.add(new PerDayRecord(revenue, expenses, rating));
+        }
+        if (newDayRecords.size() == 0) {
+            newDayRecords.add(new PerDayRecord(0,0,0));
         }
         this.dayRecords = newDayRecords;
 
@@ -76,10 +81,22 @@ public class DayRecordsDataAccessObject implements DayRecordsDataAccessInterface
         return dayRecords.size();
     }
 
+    @Override
+    public void updateDayData(int day, PerDayRecord updatedRecord){
+        if (updatedRecord == null){
+            throw new NullPointerException("updatedRecord is null");
+        }
+        if (day < 1 || day > dayRecords.size()){
+            throw new IllegalArgumentException("Invalid day number");
+        }
+        dayRecords.set(day - 1, updatedRecord);
+        save();
+    }
+
     /**
      * Seralizies the list of daily records.
      * @throws IOException if an I/O error occurs during the file-saving process.
-     */
+     */                                                 
     public void saveToFile() throws IOException {
         final JsonArray recordArray = new JsonArray();
         final Gson gson = new Gson();
