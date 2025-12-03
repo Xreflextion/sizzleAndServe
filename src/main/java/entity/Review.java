@@ -1,6 +1,6 @@
 package entity;
 
-public class ReviewEntity {
+public class Review {
 
     // Following things come from entity
     // The rating for the restaurant
@@ -9,13 +9,11 @@ public class ReviewEntity {
     private int dayNum;
 
     /**
-     * Each rating should come from the simulation.
-     * Where the simulation will randomly do the rating and the day number
-     * will already be tracked
-     * @param rating rating value given by customer
-     * @param dayNum day number that rating is given
+     Each rating should come from the simulation
+     Where the simulation will randomly do the rating and the day number
+     will already be tracked
      */
-    public ReviewEntity(double rating, int dayNum) {
+    public Review(double rating, int dayNum) {
         this.rating = rating;
         this.dayNum = dayNum;
     }

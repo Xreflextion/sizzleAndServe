@@ -7,7 +7,7 @@ import java.util.Random;
 
 import entity.PerDayRecord;
 import entity.Player;
-import entity.ReviewEntity;
+import entity.Review;
 
 public class SimulateInteractor implements SimulateInputBoundary {
     public static final int CUSTOMER_RANGE = 2;
@@ -68,13 +68,13 @@ public class SimulateInteractor implements SimulateInputBoundary {
             final Map<String, Integer> orders = getOrders(newCustomerCount, dishNames);
             final Map<String, Integer> doableOrders = new HashMap<>();
             final Map<String, Integer> impossibleOrders = new HashMap<>();
-            for (String dishName : dishNames) {
+            for (String dishName: dishNames) {
                 doableOrders.put(dishName, Math.min(stock.get(dishName), orders.get(dishName)));
                 impossibleOrders.put(dishName, Math.max(orders.get(dishName) - stock.get(dishName), 0));
             }
 
             // reduce stock for doable orders
-            for (String dishName : dishNames) {
+            for (String dishName: dishNames) {
                 stock.put(dishName, stock.get(dishName) - doableOrders.get(dishName));
             }
             // Saving stock
@@ -82,7 +82,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
 
             // Get revenue for doable orders
             double revenue = 0;
-            for (String dishName : dishNames) {
+            for (String dishName: dishNames) {
                 revenue += pantryDataAccessObject.getCurrentPrices().get(dishName) * doableOrders.get(dishName);
             }
 
@@ -92,8 +92,8 @@ public class SimulateInteractor implements SimulateInputBoundary {
             // Get ratings for today
             final ArrayList<Double> newRatings = getCurrentRatings(dishNames, doableOrders, impossibleOrders);
             // Saving ratings
-            for (double rating : newRatings) {
-                reviewManagerDataAccessObject.addReview(new ReviewEntity(rating, simulateInputData.getPreviousDay()));
+            for (double rating: newRatings) {
+                reviewManagerDataAccessObject.addReview(new Review(rating, simulateInputData.getPreviousDay()));
             }
 
             // Current balance management
@@ -268,7 +268,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
         final int max = dishes.length - 1;
 
         final Map<String, Integer> orders = new HashMap<>();
-        for (String dish : dishes) {
+        for (String dish: dishes) {
             orders.put(dish, 0);
         }
 

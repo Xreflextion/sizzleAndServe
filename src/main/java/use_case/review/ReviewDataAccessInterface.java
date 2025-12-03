@@ -3,7 +3,7 @@ package use_case.review;
 import java.util.ArrayList;
 import java.util.List;
 
-import entity.ReviewEntity;
+import entity.Review;
 
 public interface ReviewDataAccessInterface {
     // manage how review data is stored and retrieved
@@ -14,7 +14,7 @@ public interface ReviewDataAccessInterface {
      *
      * @param review - the review that will be added to the DAO
      */
-    void addReview(ReviewEntity review);
+    void addReview(Review review);
 
     /**
      * Gets the reviews/ratings by the day.
