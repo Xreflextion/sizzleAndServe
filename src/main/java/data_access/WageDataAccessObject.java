@@ -26,7 +26,7 @@ public class WageDataAccessObject implements WageUserDataAccessInterface, Simula
         final JsonArray employeeArray = fileHelperObject.getArrayFromSaveData(Constants.EMPLOYEE_KEY);
         if (employeeArray.size() == 2) {
             final Map<String, Employee> savedEmployees = new HashMap<>();
-            for (JsonElement element: employeeArray) {
+            for (JsonElement element : employeeArray) {
                 final JsonObject employeeJsonObject = element.getAsJsonObject();
                 final String position = employeeJsonObject.get("position").getAsString();
                 final int wage = employeeJsonObject.get("wage").getAsInt();
@@ -84,6 +84,7 @@ public class WageDataAccessObject implements WageUserDataAccessInterface, Simula
 
     /**
      * Serializes the current employee data into a JSON array and saves it to a file.
+     *
      * @throws IOException if an error occurs while saving the JSON array to the file
      */
     public void saveToFile() throws IOException {

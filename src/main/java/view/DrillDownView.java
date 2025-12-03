@@ -37,15 +37,6 @@ public class DrillDownView extends JPanel implements PropertyChangeListener {
         add(buildDrillDownPanel());
         add(buildBackButtonPanel());
 
-//      backButton.addActionListener(new ActionListener() {
-//          @Override
-//          public void actionPerformed(ActionEvent e) {
-//              JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(DrillDownView.this);
-//              frame.setContentPane(new InsightsView());
-//              frame.revalidate();
-//              frame.repaint();
-//          }
-//      });
     }
 
     private JPanel buildDrillDownPanel() {
@@ -113,15 +104,4 @@ public class DrillDownView extends JPanel implements PropertyChangeListener {
         }
     }
 
-//    public static void main(String[] args) {
-//        SwingUtilities.invokeLater(() -> {
-//            JFrame frame = new JFrame("DrillDown Demo");
-//            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//            frame.setContentPane(new DrillDownView());
-//            frame.pack();
-//            frame.setSize(400, 300);
-//            frame.setLocationRelativeTo(null);
-//            frame.setVisible(true);
-//        });
-//    }
 }

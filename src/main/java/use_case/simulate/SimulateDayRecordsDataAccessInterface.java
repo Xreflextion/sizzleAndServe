@@ -9,6 +9,7 @@ public interface SimulateDayRecordsDataAccessInterface {
 
     /**
      * Save a day record.
+     *
      * @param dayRecord the day record
      */
     void saveNewData(PerDayRecord dayRecord);
@@ -24,7 +25,7 @@ public interface SimulateDayRecordsDataAccessInterface {
     /**
      * Updates the performance record of an existing day.
      *
-     * @param day the day number to update (starting from 1)
+     * @param day           the day number to update (starting from 1)
      * @param updatedRecord the new PerDayRecord that replaces the existing record
      */
     void updateDayData(int day, PerDayRecord updatedRecord);

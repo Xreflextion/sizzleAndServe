@@ -27,20 +27,18 @@ import interface_adapter.review.ReviewViewModel;
 
 public class OfficeView extends JPanel implements ActionListener, PropertyChangeListener {
     private final OfficeViewModel officeViewModel;
-    private SimulateController simulationController;
-    private PerformanceCalculationController performanceController;
     private final ViewManagerModel viewManagerModel;
-
     private final JLabel curDayLabel;
     private final JLabel curBalanceLabel;
     private final JLabel pastCustomerCountLabel;
-
     private final JButton inventoryButton;
     private final JButton reviewButton;
     private final JButton insightsButton;
     private final JButton priceButton;
     private final JButton employeeButton;
     private final JButton simulateButton;
+    private SimulateController simulationController;
+    private PerformanceCalculationController performanceController;
 
     public OfficeView(OfficeViewModel officeViewModel, ViewManagerModel viewManagerModel) {
         this.officeViewModel = officeViewModel;
@@ -142,6 +140,7 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
 
     /**
      * Create title panel.
+     *
      * @return JPanel with title
      */
     public JPanel createTitlePanel() {
@@ -154,6 +153,7 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
 
     /**
      * Create panel with current day details.
+     *
      * @return JPanel with current day, current balance, and today's customer count
      */
     public JPanel createCurDetailsPanel() {
@@ -168,6 +168,7 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
 
     /**
      * Create panel in the middle left.
+     *
      * @return JPanel with inventory and review button
      */
     public JPanel createMidLeftPanel() {
@@ -181,6 +182,7 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
 
     /**
      * Create panel in the center.
+     *
      * @return JPanel with employee button
      */
     public JPanel createCenterPanel() {
@@ -191,6 +193,7 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
 
     /**
      * Create panel in the middle right.
+     *
      * @return JPanel with price and insights button
      */
     public JPanel createMidRightPanel() {
@@ -204,6 +207,7 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
 
     /**
      * Create panel at the bottom right.
+     *
      * @return JPanel with the simulate button
      */
     public JPanel createBotRightPanel() {
@@ -215,6 +219,7 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
 
     /**
      * Create a button with default size.
+     *
      * @param label the label of the button
      * @return the button
      */
@@ -226,8 +231,9 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
 
     /**
      * Add an action listener to the button for changing views.
+     *
      * @param button the button to add the action listener to
-     * @param state the state to move to
+     * @param state  the state to move to
      */
     public void addViewMovementActionListener(JButton button, String state) {
         button.addActionListener(
@@ -242,6 +248,7 @@ public class OfficeView extends JPanel implements ActionListener, PropertyChange
 
     /**
      * Apply default margins to button.
+     *
      * @param button The button of which to change margins
      */
     public void editButtonSize(JButton button) {

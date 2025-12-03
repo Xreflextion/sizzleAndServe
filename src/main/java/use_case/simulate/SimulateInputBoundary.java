@@ -7,6 +7,7 @@ public interface SimulateInputBoundary {
 
     /**
      * Executes the simulate use case.
+     *
      * @param simulateInputData the input data
      */
     void execute(SimulateInputData simulateInputData);

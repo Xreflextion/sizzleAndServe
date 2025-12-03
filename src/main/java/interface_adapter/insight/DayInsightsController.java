@@ -10,7 +10,11 @@ public class DayInsightsController {
         this.interactor = interactor;
     }
 
-    public void displayDayInsights(int dayNumber){
+    /**
+     * Triggers usecase to calculate and display insights of specific day.
+     * @param dayNumber the specific day to display insights
+     */
+    public void displayDayInsights(int dayNumber) {
         interactor.calculateDayInsights(dayNumber);
     }
 }

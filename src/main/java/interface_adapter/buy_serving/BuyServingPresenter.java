@@ -15,7 +15,7 @@ public class BuyServingPresenter implements BuyServingOutputBoundary {
     private final WageViewModel wageViewModel;
 
     public BuyServingPresenter(BuyServingViewModel viewModel,
-                                OfficeViewModel officeViewModel,
+                               OfficeViewModel officeViewModel,
                                WageViewModel wageViewModel) {
         this.viewModel = viewModel;
         this.officeViewModel = officeViewModel;

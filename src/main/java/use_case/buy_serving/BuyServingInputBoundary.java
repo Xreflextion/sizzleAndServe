@@ -8,6 +8,7 @@ public interface BuyServingInputBoundary {
 
     /**
      * Execute the Buy Servings Use Case.
+     *
      * @param inputData the input data for this use case
      */
     void execute(BuyServingInputData inputData);

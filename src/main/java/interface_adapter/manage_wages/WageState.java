@@ -13,28 +13,20 @@ public class WageState {
     private double currentBalance;
     private String warningMessage;
 
-    public void setWaiterWage(int waiterWage) {
-        this.waiterWage = waiterWage;
-    }
-
-    public void setCookWage(int cookWage) {
-        this.cookWage = cookWage;
-    }
-
-    public void setWaiterWageEffect(float waiterWageEffect) {
-        this.waiterWageEffect = waiterWageEffect;
-    }
-
-    public void setCookWageEffect(float cookWageEffect) {
-        this.cookWageEffect = cookWageEffect;
-    }
-
     public int getWaiterWage() {
         return waiterWage;
     }
 
+    public void setWaiterWage(int waiterWage) {
+        this.waiterWage = waiterWage;
+    }
+
     public int getCookWage() {
         return cookWage;
+    }
+
+    public void setCookWage(int cookWage) {
+        this.cookWage = cookWage;
     }
 
     public int getTotalWage() {
@@ -45,23 +37,31 @@ public class WageState {
         return waiterWageEffect;
     }
 
+    public void setWaiterWageEffect(float waiterWageEffect) {
+        this.waiterWageEffect = waiterWageEffect;
+    }
+
     public float getCookWageEffect() {
         return cookWageEffect;
     }
 
-    public void setCurrentBalance(double currentBalance) {
-        this.currentBalance = currentBalance;
-    }
-
-    public void setWarningMessage(String warningMessage) {
-        this.warningMessage = warningMessage;
+    public void setCookWageEffect(float cookWageEffect) {
+        this.cookWageEffect = cookWageEffect;
     }
 
     public String getWarningMessage() {
         return warningMessage;
     }
 
+    public void setWarningMessage(String warningMessage) {
+        this.warningMessage = warningMessage;
+    }
+
     public double getCurrentBalance() {
         return currentBalance;
+    }
+
+    public void setCurrentBalance(double currentBalance) {
+        this.currentBalance = currentBalance;
     }
 }

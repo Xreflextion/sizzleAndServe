@@ -68,13 +68,13 @@ public class SimulateInteractor implements SimulateInputBoundary {
             final Map<String, Integer> orders = getOrders(newCustomerCount, dishNames);
             final Map<String, Integer> doableOrders = new HashMap<>();
             final Map<String, Integer> impossibleOrders = new HashMap<>();
-            for (String dishName: dishNames) {
+            for (String dishName : dishNames) {
                 doableOrders.put(dishName, Math.min(stock.get(dishName), orders.get(dishName)));
                 impossibleOrders.put(dishName, Math.max(orders.get(dishName) - stock.get(dishName), 0));
             }
 
             // reduce stock for doable orders
-            for (String dishName: dishNames) {
+            for (String dishName : dishNames) {
                 stock.put(dishName, stock.get(dishName) - doableOrders.get(dishName));
             }
             // Saving stock
@@ -82,7 +82,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
 
             // Get revenue for doable orders
             double revenue = 0;
-            for (String dishName: dishNames) {
+            for (String dishName : dishNames) {
                 revenue += pantryDataAccessObject.getCurrentPrices().get(dishName) * doableOrders.get(dishName);
             }
 
@@ -92,7 +92,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
             // Get ratings for today
             final ArrayList<Double> newRatings = getCurrentRatings(dishNames, doableOrders, impossibleOrders);
             // Saving ratings
-            for (double rating: newRatings) {
+            for (double rating : newRatings) {
                 reviewManagerDataAccessObject.addReview(new ReviewEntity(rating, simulateInputData.getPreviousDay()));
             }
 
@@ -129,12 +129,13 @@ public class SimulateInteractor implements SimulateInputBoundary {
 
     /**
      * Generate average rating from list of ratings.
+     *
      * @param ratings list of ratings that is non-empty
      * @return average rating
      */
     private double getAvgRating(ArrayList<Double> ratings) {
         double ratingsSum = 0;
-        for (double rating: ratings) {
+        for (double rating : ratings) {
             ratingsSum += rating;
         }
         return roundToOneDecimalPlace(ratingsSum / ratings.size());
@@ -142,8 +143,9 @@ public class SimulateInteractor implements SimulateInputBoundary {
 
     /**
      * Generate ratings for the given doable and impossible orders.
-     * @param dishNames dish names
-     * @param doableOrders mapping of dish name to number of orders that can be done
+     *
+     * @param dishNames        dish names
+     * @param doableOrders     mapping of dish name to number of orders that can be done
      * @param impossibleOrders mapping of dish name to number of orders that can't be done
      * @return list of ratings
      */
@@ -155,7 +157,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
         final double waiterEffect = wageDataAccessObject.getEmployee(WAITER_POSITION).getWageEffect();
         final ArrayList<Double> ratings = new ArrayList<>();
 
-        for (String dishName: dishNames) {
+        for (String dishName : dishNames) {
             final int noStockRatingUpperBound = 2;
             final int normalRatingUpperBound = 5;
             final int ratingLowerBound = 1;
@@ -177,6 +179,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
 
     /**
      * Get the average rating of a list of ratings. Default is 3 if no ratings exist
+     *
      * @param ratings list of ratings
      * @return average rating
      */
@@ -187,7 +190,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
 
         if (!ratings.isEmpty()) {
             double sum = 0;
-            for (double rating: ratings) {
+            for (double rating : ratings) {
                 sum += rating;
             }
             avgRating = sum / ratings.size();
@@ -197,6 +200,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
 
     /**
      * Get a multiplier to impact new customer count based on current rating.
+     *
      * @param rating the rating
      * @return multiplier to use on the randomized customer count
      */
@@ -209,10 +213,12 @@ public class SimulateInteractor implements SimulateInputBoundary {
 
     /**
      * Randomize the number of customers for the day.
-     * @param pastDay the previous day
+     *
+     * @param pastDay           the previous day
      * @param pastCustomerCount the customer count from the previous day
      * @return customer count
-     * */
+     *
+     */
     private int getCustomerCount(int pastDay, int pastCustomerCount) {
         final ArrayList<Double> previousRatings = reviewManagerDataAccessObject.getReviewsByDay(pastDay);
         final double rating = getAverageRating(previousRatings);
@@ -236,7 +242,8 @@ public class SimulateInteractor implements SimulateInputBoundary {
 
     /**
      * Add some customers to the current customer count based on the cook effect.
-     * @param cookEffect cook effect
+     *
+     * @param cookEffect    cook effect
      * @param customerCount customer count
      * @return number of additional customers to add to customer count (not rounded yet)
      */
@@ -251,8 +258,9 @@ public class SimulateInteractor implements SimulateInputBoundary {
 
     /**
      * Generate random customer orders.
+     *
      * @param customerCount number of customers
-     * @param dishes dish options
+     * @param dishes        dish options
      * @return a mapping of dish names to number of orders related to them
      */
     private Map<String, Integer> getOrders(int customerCount, String[] dishes) {
@@ -260,7 +268,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
         final int max = dishes.length - 1;
 
         final Map<String, Integer> orders = new HashMap<>();
-        for (String dish: dishes) {
+        for (String dish : dishes) {
             orders.put(dish, 0);
         }
 
@@ -276,8 +284,9 @@ public class SimulateInteractor implements SimulateInputBoundary {
 
     /**
      * Generate a customer rating given a range between 1 and 5.
-     * @param max upper bound for possible value of randomized rating
-     * @param min lower bound for possible value of randomized rating
+     *
+     * @param max          upper bound for possible value of randomized rating
+     * @param min          lower bound for possible value of randomized rating
      * @param waiterEffect the waiter effect that impacts customer rating
      * @return rating the rating
      */
@@ -307,6 +316,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
 
     /**
      * Generate a random integer between a range (inclusive).
+     *
      * @param max max value
      * @param min min value
      * @return random value between max and min
@@ -317,6 +327,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
 
     /**
      * Round a number to one decimal place.
+     *
      * @param number to round
      * @return number rounded to one decimal place
      */
@@ -327,6 +338,7 @@ public class SimulateInteractor implements SimulateInputBoundary {
 
     /**
      * Round a number to two decimal place.
+     *
      * @param number to round
      * @return number rounded to two decimal place
      */

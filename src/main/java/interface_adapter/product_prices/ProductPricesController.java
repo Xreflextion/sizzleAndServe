@@ -15,7 +15,8 @@ public class ProductPricesController {
 
     /**
      * Executes the Product Prices Use Case.
-     * @param name the dish's name
+     *
+     * @param name             the dish's name
      * @param marginPercentage the margin percentage to apply to the dish
      */
     public void execute(String name, int marginPercentage) {

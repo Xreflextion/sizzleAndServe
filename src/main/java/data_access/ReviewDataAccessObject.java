@@ -1,5 +1,6 @@
 package data_access;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,7 +13,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import constants.Constants;
-import java.io.IOException;
 import entity.ReviewEntity;
 import use_case.review.ReviewDataAccessInterface;
 import use_case.simulate.SimulateReviewDataAccessInterface;
@@ -28,12 +28,14 @@ public class ReviewDataAccessObject implements ReviewDataAccessInterface, Simula
      * you are able to get the total number of reviews per day
      * An example of what it may look like
      * {
-     *     1 : [5.0, 4.1, 3.5, 5.0],
-     *     2 : [2.9, 5.0],
-     *     3 : [4.8, 4.5, 4.1]
+     * 1 : [5.0, 4.1, 3.5, 5.0],
+     * 2 : [2.9, 5.0],
+     * 3 : [4.8, 4.5, 4.1]
      * }
      *
      */
+
+    private static final String RATINGS_LIST = "ratings_list";
 
     private final Map<Integer, ArrayList<Double>> storage;
     private final FileHelperObject fileHelperObject;
@@ -45,12 +47,12 @@ public class ReviewDataAccessObject implements ReviewDataAccessInterface, Simula
 
         if (fileHelperObject != null) {
             final JsonArray daysArray = fileHelperObject.getArrayFromSaveData(Constants.REVIEWS_KEY);
-            for (JsonElement element: daysArray) {
+            for (JsonElement element : daysArray) {
                 final JsonObject day = element.getAsJsonObject();
                 final int dayNumber = day.getAsJsonPrimitive("day_number").getAsInt();
-                if (day.keySet().contains("ratings_list")) {
+                if (day.keySet().contains(RATINGS_LIST)) {
                     final Double[] ratingsList = new Gson().fromJson(
-                            day.getAsJsonArray("ratings_list"), Double[].class);
+                            day.getAsJsonArray(RATINGS_LIST), Double[].class);
                     final ArrayList<Double> ratings = new ArrayList<>(Arrays.asList(ratingsList));
                     reviewsByDay.put(dayNumber, ratings);
                 }
@@ -106,14 +108,18 @@ public class ReviewDataAccessObject implements ReviewDataAccessInterface, Simula
         return storage.keySet();
     }
 
+    /**
+     * Converts stored review data into JSON format and writes it to disk.
+     * @throws IOException if error occurs when writing to file
+     */
     public void saveToFile() throws IOException {
-        JsonArray array = new JsonArray();
-        Gson gson = new Gson();
+        final JsonArray array = new JsonArray();
+        // final Gson gson = new Gson();
 
         for (Map.Entry<Integer, ArrayList<Double>> entry : storage.entrySet()) {
-            JsonObject obj = new JsonObject();
+            final JsonObject obj = new JsonObject();
             obj.addProperty("day_number", entry.getKey());
-            JsonArray ratingsArray = new JsonArray();
+            final JsonArray ratingsArray = new JsonArray();
             for (Double rating : entry.getValue()) {
                 ratingsArray.add(rating);
             }
@@ -123,12 +129,16 @@ public class ReviewDataAccessObject implements ReviewDataAccessInterface, Simula
         fileHelperObject.saveArray(Constants.REVIEWS_KEY, array);
     }
 
+    /**
+     * Save all current review data to persistent storage.
+     */
     public void save() {
         if (fileHelperObject != null) {
             try {
                 saveToFile();
-            } catch (IOException e) {
-                e.printStackTrace();
+            }
+            catch (IOException exception) {
+                exception.printStackTrace();
             }
         }
     }

@@ -8,12 +8,14 @@ public interface WageInputBoundary {
 
     /**
      * Increases the wage of the employee with the given position.
+     *
      * @param position The position of the employee (e.g., "Cook", "Waiter")
      */
     void increaseWage(String position);
 
     /**
      * Decreases the wage of the employee with the given position.
+     *
      * @param position The position of the employee (e.g., "Cook", "Waiter")
      */
     void decreaseWage(String position);

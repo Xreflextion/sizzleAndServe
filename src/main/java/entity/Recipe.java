@@ -17,7 +17,8 @@ public class Recipe {
 
     /**
      * Creates a new recipe with the given non-empty name and positive double basePrice.
-     * @param name the name
+     *
+     * @param name      the name
      * @param basePrice the basePrice
      * @throws IllegalArgumentException if the name is empty or if basePrice is non-positive
      */
@@ -44,6 +45,7 @@ public class Recipe {
 
     /**
      * Sets the stock price.
+     *
      * @param quantity the quantity of the dish
      * @throws IllegalArgumentException if the quantity is negative
      */
@@ -64,6 +66,7 @@ public class Recipe {
 
     /**
      * Modifies the current price of the dish.
+     *
      * @param newPrice the new value the dish will adjust to
      * @throws IllegalArgumentException if the price is negative
      */
@@ -76,6 +79,7 @@ public class Recipe {
 
     /**
      * Applies the margin to the base price.
+     *
      * @param marginPercentage the percentage that will be applied
      * @throws IllegalArgumentException if the price is negative
      */

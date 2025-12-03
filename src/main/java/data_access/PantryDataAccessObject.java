@@ -22,6 +22,7 @@ import entity.Recipe;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
 import use_case.buy_serving.PantryDataAccessInterface;
 import use_case.product_prices.ProductPricesPantryDataAccessInterface;
 import use_case.simulate.SimulatePantryDataAccessInterface;
@@ -45,7 +46,7 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
         final JsonArray recipeArray = fileHelperObject.getArrayFromSaveData(Constants.RECIPE_KEY);
         if (recipeArray.size() == REQUIRED_RECIPE_COUNT) {
 
-            for (JsonElement element: recipeArray) {
+            for (JsonElement element : recipeArray) {
                 final JsonObject recipeJsonObject = element.getAsJsonObject();
                 final String name = recipeJsonObject.get("name").getAsString();
                 final int stock = recipeJsonObject.get("stock").getAsInt();
@@ -64,7 +65,27 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
     }
 
     /**
+     * Downloads a temporary image from the given URL and stores it in a predefined directory.
+     *
+     * @param imageUrl The URL of the image to download.
+     * @param dishName The name of the dish used to generate the filename for the temporary image.
+     * @throws IOException If any error occurs during the download or file creation process.
+     */
+    public static void downloadTempImage(String imageUrl, String dishName) throws IOException {
+        final String dirPath = Constants.DIR_PATH;
+        final File dir = new File(dirPath);
+
+        final File tempFile = new File(dir, dishName.replaceAll(Constants.REGEX_CHARACTERS,
+                Constants.REPLACEMENT_CHARACTER) + Constants.FILE_TYPE);
+        final URL url = new URL(imageUrl);
+        try (InputStream inputStream = url.openStream()) {
+            Files.copy(inputStream, tempFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+        }
+    }
+
+    /**
      * Randomizes the pantry with three random dishes fetched from an external API.
+     *
      * @throws RuntimeException if meals cannot be fetched from API
      */
     public void randomizePantry() {
@@ -105,11 +126,12 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
 
     /**
      * Return a mapping of dish name to integer where each integer represents the stock of the corresponding dish name.
+     *
      * @return the stock of all dishes
      */
     public Map<String, Integer> getStock() {
         final Map<String, Integer> stock = new HashMap<>();
-        for (String dishName: pantry.getDishNames()) {
+        for (String dishName : pantry.getDishNames()) {
             stock.put(dishName, pantry.getRecipe(dishName).getStock());
         }
         return stock;
@@ -117,10 +139,11 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
 
     /**
      * Replace the current stock with the stock passed in.
+     *
      * @param stock The new stock
      */
     public void saveStock(Map<String, Integer> stock) {
-        for (String dishName: stock.keySet()) {
+        for (String dishName : stock.keySet()) {
             pantry.getRecipe(dishName).setStock(stock.get(dishName));
         }
         save();
@@ -128,11 +151,12 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
 
     /**
      * Retrieves the current prices of dishes available in the pantry.
+     *
      * @return a map where the keys are dish names (as Strings) and the values are their current prices (as Doubles)
      */
     public Map<String, Double> getCurrentPrices() {
         final Map<String, Double> prices = new HashMap<>();
-        for (String dishName: pantry.getDishNames()) {
+        for (String dishName : pantry.getDishNames()) {
             prices.put(dishName, pantry.getRecipe(dishName).getCurrentPrice());
         }
         return prices;
@@ -151,25 +175,8 @@ public class PantryDataAccessObject implements PantryDataAccessInterface, Produc
     }
 
     /**
-     * Downloads a temporary image from the given URL and stores it in a predefined directory.
-     * @param imageUrl The URL of the image to download.
-     * @param dishName The name of the dish used to generate the filename for the temporary image.
-     * @throws IOException If any error occurs during the download or file creation process.
-     */
-    public static void downloadTempImage(String imageUrl, String dishName) throws IOException {
-        final String dirPath = Constants.DIR_PATH;
-        final File dir = new File(dirPath);
-
-        final File tempFile = new File(dir, dishName.replaceAll(Constants.REGEX_CHARACTERS,
-                Constants.REPLACEMENT_CHARACTER) + Constants.FILE_TYPE);
-        final URL url = new URL(imageUrl);
-        try (InputStream inputStream = url.openStream()) {
-            Files.copy(inputStream, tempFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-        }
-    }
-
-    /**
      * Serializes the current state of the pantry.
+     *
      * @throws IOException if an IO error occurs during the file saving process
      */
     public void saveToFile() throws IOException {

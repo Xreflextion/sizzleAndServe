@@ -1,4 +1,3 @@
-
 package view;
 
 import java.awt.CardLayout;
@@ -95,7 +94,7 @@ public class ReviewView extends JPanel implements ActionListener, PropertyChange
                 availableDays.add(0);
             }
             daySelect.removeAllItems();
-            for (int d: availableDays) {
+            for (int d : availableDays) {
                 daySelect.addItem(String.valueOf(d));
             }
 

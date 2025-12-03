@@ -32,9 +32,8 @@ public class ManageWagesView extends JPanel implements ActionListener, PropertyC
     private static final String FONT = "Arial";
 
     private final WageViewModel wageViewModel;
-    private WageController wageController;
     private final ViewManagerModel viewManagerModel;
-
+    private WageController wageController;
     private JLabel waiterWage;
     private JLabel cookWage;
     private JLabel totalWage;
@@ -154,6 +153,7 @@ public class ManageWagesView extends JPanel implements ActionListener, PropertyC
 
     /**
      * Setting Controller.
+     *
      * @param controller the controller that has been created.
      */
     public void setController(WageController controller) {

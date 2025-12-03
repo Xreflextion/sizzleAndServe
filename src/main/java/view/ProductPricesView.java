@@ -83,6 +83,7 @@ public class ProductPricesView extends JPanel implements ActionListener, Propert
 
     /**
      * React to a button click that results in evt.
+     *
      * @param evt the ActionEvent to react to
      */
     public void actionPerformed(ActionEvent evt) {
@@ -97,6 +98,7 @@ public class ProductPricesView extends JPanel implements ActionListener, Propert
 
     /**
      * Updates the fields in the current view based on the provided state information.
+     *
      * @param state the ProductPricesState object containing the current selected dish name and its price.
      */
     public void setFields(ProductPricesState state) {

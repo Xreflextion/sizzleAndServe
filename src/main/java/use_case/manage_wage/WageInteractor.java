@@ -5,9 +5,9 @@ import java.util.Map;
 import entity.Employee;
 
 /**
-        * Interactor for managing employee wages.
+ * Interactor for managing employee wages.
  * Implements the WageInputBoundary and coordinates between data access and presenter.
-        */
+ */
 public class WageInteractor implements WageInputBoundary {
     private static final int WAGE_CHANGE = 10;
     private final WageUserDataAccessInterface dataAccess;

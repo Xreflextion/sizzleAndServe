@@ -109,6 +109,7 @@ public class AppBuilder {
 
     /**
      * Adds the OfficeView to the application.
+     *
      * @return AppBuilder with the OfficeView added.
      */
     public AppBuilder addOfficeView() {
@@ -120,6 +121,7 @@ public class AppBuilder {
 
     /**
      * Adds the ProductPricesView to the application.
+     *
      * @return AppBuilder with the ProductPricesView added.
      */
     public AppBuilder addProductPricesView() {
@@ -137,6 +139,7 @@ public class AppBuilder {
 
     /**
      * Adds the BuyServingView to the application.
+     *
      * @return AppBuilder with the BuyServingView added.
      */
     public AppBuilder addBuyServingViewAndUseCase() {
@@ -169,6 +172,7 @@ public class AppBuilder {
 
     /**
      * Adds the ReviewView to the application.
+     *
      * @return AppBuilder with the ReviewView added.
      */
     public AppBuilder addReviewViewAndUseCase() {
@@ -194,6 +198,7 @@ public class AppBuilder {
 
     /**
      * Add the ManageWagesView to the app builder.
+     *
      * @return AppBuilder with the ManageWagesView added.
      */
     public AppBuilder addManageWageViewAndUseCase() {
@@ -229,6 +234,7 @@ public class AppBuilder {
 
     /**
      * Add Simulate Use Case to the app.
+     *
      * @return AppBuilder with Simulate Use Case added.
      */
     public AppBuilder addSimulateUseCase() {
@@ -255,6 +261,7 @@ public class AppBuilder {
 
     /**
      * Add InsightsView to the app.
+     *
      * @return AppBuilder with InsightsView added.
      */
     public AppBuilder addInsightsViewAndUseCase() {
@@ -291,6 +298,7 @@ public class AppBuilder {
 
     /**
      * Initiating the View that user will see.
+     *
      * @return JFrame with Office View.
      */
     public JFrame build() {

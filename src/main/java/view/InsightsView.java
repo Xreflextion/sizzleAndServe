@@ -207,109 +207,108 @@ public class InsightsView extends JPanel implements PropertyChangeListener {
             super.paintComponent(g);
             if (revenueTrend == null || expensesTrend == null || profitTrend == null) {
                 g.drawString("No data available", NO_DATA_MESSAGE_X, NO_DATA_MESSAGE_Y);
-                return;
-            }
-            final Graphics2D g2d = (Graphics2D) g;
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-            final int width = getWidth();
-            final int height = getHeight();
-            final int padding = 30;
-            final int chartWidth = width - 2 * padding;
-            final int chartHeight = height - 2 * padding;
-
-            int maxPoints = 0;
-            double maxValue = Double.NEGATIVE_INFINITY;
-            double minValue = Double.POSITIVE_INFINITY;
-
-            if (revenueTrend != null) {
-                maxPoints = Math.max(maxPoints, revenueTrend.size());
-                for (double currvalue : revenueTrend) {
-                    maxValue = Math.max(maxValue, currvalue);
-                    minValue = Math.min(minValue, currvalue);
-                }
-            }
-            if (expensesTrend != null) {
-                maxPoints = Math.max(maxPoints, expensesTrend.size());
-                for (double currvalue : expensesTrend) {
-                    maxValue = Math.max(maxValue, currvalue);
-                    minValue = Math.min(minValue, currvalue);
-                }
-            }
-            if (profitTrend != null) {
-                maxPoints = Math.max(maxPoints, profitTrend.size());
-                for (double currvalue : profitTrend) {
-                    maxValue = Math.max(maxValue, currvalue);
-                    minValue = Math.min(minValue, currvalue);
-                }
-            }
-
-            if (maxPoints < 2 || minValue == Double.POSITIVE_INFINITY) {
-                g2d.drawString("There must be at least 2 days of data to draw trendline", NO_DATA_MESSAGE_X,
-                        NO_DATA_MESSAGE_Y);
-                return;
-            }
-
-            if (maxValue == minValue) {
-                maxValue = maxValue + 1;
-                minValue = minValue - 1;
-            }
-
-            final int originX = padding;
-            final int originY = height - padding;
-
-            final int zeroY;
-            if (0 < minValue) {
-                zeroY = originY;
-            }
-            else if (0 > maxValue) {
-                zeroY = originY - chartHeight;
             }
             else {
-                zeroY = originY - (int) (((0 - minValue) / (maxValue - minValue)) * chartHeight);
-            }
+                final Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            g2d.setColor(Color.BLACK);
-            g2d.drawLine(originX, zeroY, originX + chartWidth, zeroY);
-            g2d.drawLine(originX, originY, originX, originY - chartHeight);
+                final int width = getWidth();
+                final int height = getHeight();
+                final int padding = 30;
+                final int chartWidth = width - 2 * padding;
+                final int chartHeight = height - 2 * padding;
 
-            final int finalMaxPoints = maxPoints;
-            final double finalMinValue = minValue;
-            final double finalRange = maxValue - minValue;
+                int maxPoints = 0;
+                double maxValue = Double.NEGATIVE_INFINITY;
+                double minValue = Double.POSITIVE_INFINITY;
 
-            final java.util.function.BiConsumer<List<Double>, Color> drawTrendLine = (List<Double> list,
-                                                                                      Color color) -> {
-                if (list != null && list.size() >= 2) {
-                    g2d.setColor(color);
-                    for (int i = 0; i < list.size() - 1; i++) {
-                        final double value1 = list.get(i);
-                        final double value2 = list.get(i + 1);
-
-                        final double point1 = (double) i / (finalMaxPoints - 1);
-                        final double point2 = (double) (i + 1) / (finalMaxPoints - 1);
-
-                        final int x1 = originX + (int) (point1 * chartWidth);
-                        final int x2 = originX + (int) (point2 * chartWidth);
-
-                        final int y1 = originY - (int) (((value1 - finalMinValue) / finalRange) * chartHeight);
-                        final int y2 = originY - (int) (((value2 - finalMinValue) / finalRange) * chartHeight);
-
-                        g2d.drawLine(x1, y1, x2, y2);
+                if (revenueTrend != null) {
+                    maxPoints = Math.max(maxPoints, revenueTrend.size());
+                    for (double currvalue : revenueTrend) {
+                        maxValue = Math.max(maxValue, currvalue);
+                        minValue = Math.min(minValue, currvalue);
                     }
                 }
-            };
+                if (expensesTrend != null) {
+                    maxPoints = Math.max(maxPoints, expensesTrend.size());
+                    for (double currvalue : expensesTrend) {
+                        maxValue = Math.max(maxValue, currvalue);
+                        minValue = Math.min(minValue, currvalue);
+                    }
+                }
+                if (profitTrend != null) {
+                    maxPoints = Math.max(maxPoints, profitTrend.size());
+                    for (double currvalue : profitTrend) {
+                        maxValue = Math.max(maxValue, currvalue);
+                        minValue = Math.min(minValue, currvalue);
+                    }
+                }
 
-            drawTrendLine.accept(revenueTrend, Color.RED);
-            drawTrendLine.accept(expensesTrend, Color.BLUE);
-            drawTrendLine.accept(profitTrend, Color.GREEN);
+                if (maxPoints < 2 || minValue == Double.POSITIVE_INFINITY) {
+                    g2d.drawString("There must be at least 2 days of data to draw trendline", NO_DATA_MESSAGE_X,
+                            NO_DATA_MESSAGE_Y);
+                    return;
+                }
 
-            final int legendY = padding;
-            g2d.setColor(Color.RED);
-            g2d.drawString("Revenue", originX + LEGEND_REVENUE_X_OFFSET, legendY);
-            g2d.setColor(Color.BLUE);
-            g2d.drawString("Expenses", originX + LEGEND_EXPENSES_X_OFFSET, legendY);
-            g2d.setColor(Color.GREEN);
-            g2d.drawString("Profit", originX + LEGEND_PROFIT_X_OFFSET, legendY);
+                if (maxValue == minValue) {
+                    maxValue = maxValue + 1;
+                    minValue = minValue - 1;
+                }
+
+                final int originX = padding;
+                final int originY = height - padding;
+
+                final int zeroY;
+                if (0 < minValue) {
+                    zeroY = originY;
+                } else if (0 > maxValue) {
+                    zeroY = originY - chartHeight;
+                } else {
+                    zeroY = originY - (int) (((0 - minValue) / (maxValue - minValue)) * chartHeight);
+                }
+
+                g2d.setColor(Color.BLACK);
+                g2d.drawLine(originX, zeroY, originX + chartWidth, zeroY);
+                g2d.drawLine(originX, originY, originX, originY - chartHeight);
+
+                final int finalMaxPoints = maxPoints;
+                final double finalMinValue = minValue;
+                final double finalRange = maxValue - minValue;
+
+                final java.util.function.BiConsumer<List<Double>, Color> drawTrendLine = (List<Double> list,
+                                                                                          Color color) -> {
+                    if (list != null && list.size() >= 2) {
+                        g2d.setColor(color);
+                        for (int i = 0; i < list.size() - 1; i++) {
+                            final double value1 = list.get(i);
+                            final double value2 = list.get(i + 1);
+
+                            final double point1 = (double) i / (finalMaxPoints - 1);
+                            final double point2 = (double) (i + 1) / (finalMaxPoints - 1);
+
+                            final int x1 = originX + (int) (point1 * chartWidth);
+                            final int x2 = originX + (int) (point2 * chartWidth);
+
+                            final int y1 = originY - (int) (((value1 - finalMinValue) / finalRange) * chartHeight);
+                            final int y2 = originY - (int) (((value2 - finalMinValue) / finalRange) * chartHeight);
+
+                            g2d.drawLine(x1, y1, x2, y2);
+                        }
+                    }
+                };
+
+                drawTrendLine.accept(revenueTrend, Color.RED);
+                drawTrendLine.accept(expensesTrend, Color.BLUE);
+                drawTrendLine.accept(profitTrend, Color.GREEN);
+
+                final int legendY = padding;
+                g2d.setColor(Color.RED);
+                g2d.drawString("Revenue", originX + LEGEND_REVENUE_X_OFFSET, legendY);
+                g2d.setColor(Color.BLUE);
+                g2d.drawString("Expenses", originX + LEGEND_EXPENSES_X_OFFSET, legendY);
+                g2d.setColor(Color.GREEN);
+                g2d.drawString("Profit", originX + LEGEND_PROFIT_X_OFFSET, legendY);
+            }
         }
     }
 }

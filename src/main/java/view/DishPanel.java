@@ -78,6 +78,7 @@ public class DishPanel extends JPanel {
 
     /**
      * Update prices when state changes in ProductPricesViewModel.
+     *
      * @param currentPrice the current price of the dish that is being updated.
      */
     public void updatePrices(double currentPrice) {

@@ -1,9 +1,9 @@
 package interface_adapter.insight;
 
+import interface_adapter.ViewManagerModel;
 import use_case.insights.day_calculation.DayInsightsOutputBoundary;
 import use_case.insights.day_calculation.DayInsightsOutputData;
 import view.DrillDownView;
-import interface_adapter.ViewManagerModel;
 
 public class DayInsightsPresenter implements DayInsightsOutputBoundary {
     private final InsightsViewModel viewModel;
@@ -15,8 +15,8 @@ public class DayInsightsPresenter implements DayInsightsOutputBoundary {
     }
 
     @Override
-    public void successView (DayInsightsOutputData outputData){
-        InsightsState state = viewModel.getState();
+    public void successView(DayInsightsOutputData outputData) {
+        final InsightsState state = viewModel.getState();
 
         state.setDayNumber(outputData.getDayNumber());
         state.setDayRating(outputData.getDayRating());
@@ -32,14 +32,8 @@ public class DayInsightsPresenter implements DayInsightsOutputBoundary {
     }
 
     @Override
-    public void failView (String errorMessage){
-//        InsightsState state = viewModel.getState();
-//
-//        state.setErrorMessage(errorMessage);
-//
-//        viewModel.setState(state);
+    public void failView(String errorMessage) {
+
     }
-
-
 
 }

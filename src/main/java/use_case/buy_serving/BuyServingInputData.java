@@ -7,7 +7,8 @@ public class BuyServingInputData {
 
     /**
      * Constructs a BuyServingInputData.
-     * @param dishNames the list of dishes to purchase servings for
+     *
+     * @param dishNames     the list of dishes to purchase servings for
      * @param servingsToBuy the number of servings the user wants to buy
      */
     public BuyServingInputData(String[] dishNames, int[] servingsToBuy) {
