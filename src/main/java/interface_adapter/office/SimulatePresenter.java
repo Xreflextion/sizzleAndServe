@@ -17,7 +17,7 @@ public class SimulatePresenter implements SimulateOutputBoundary {
     private final WageViewModel wageViewModel;
 
     public SimulatePresenter(ViewManagerModel viewManagerModel,
-                            OfficeViewModel officeViewModel,
+                             OfficeViewModel officeViewModel,
                              BuyServingViewModel buyServingViewModel,
                              WageViewModel wageViewModel) {
         this.viewManagerModel = viewManagerModel;

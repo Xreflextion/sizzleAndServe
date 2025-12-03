@@ -10,10 +10,11 @@ public class BuyServingOutputData {
 
     /**
      * Constructs a BuyServingOutputData.
-     * @param success whether the purchase was successful
-     * @param message a message to display to the user
+     *
+     * @param success    whether the purchase was successful
+     * @param message    a message to display to the user
      * @param newBalance the user's new balance after purchase
-     * @param dishCosts the costs of the dishes
+     * @param dishCosts  the costs of the dishes
      * @param dishStocks the stocks of the dishes
      */
     public BuyServingOutputData(

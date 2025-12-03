@@ -1,10 +1,8 @@
 package interface_adapter.insight;
 
+import interface_adapter.ViewManagerModel;
 import use_case.insights.performance_calculation.PerformanceCalculationOutputBoundary;
 import use_case.insights.performance_calculation.PerformanceCalculationOutputData;
-import view.InsightsView;
-import interface_adapter.ViewManagerModel;
-
 
 public class PerformanceCalculationPresenter implements PerformanceCalculationOutputBoundary {
 
@@ -17,9 +15,9 @@ public class PerformanceCalculationPresenter implements PerformanceCalculationOu
     }
 
     @Override
-    public void successView (PerformanceCalculationOutputData outputData) {
+    public void successView(PerformanceCalculationOutputData outputData) {
 
-        InsightsState state = new InsightsState();
+        final InsightsState state = new InsightsState();
 
         state.setAverageRating(outputData.getAverageRating());
         state.setReviewCount(outputData.getReviewCount());
@@ -34,19 +32,13 @@ public class PerformanceCalculationPresenter implements PerformanceCalculationOu
 
         viewModel.setState(state);
 
-
         viewManagerModel.setState(InsightsViewModel.VIEW_NAME);
         viewManagerModel.firePropertyChange();
 
     }
 
     @Override
-    public void failView(String errorMessage){
-//        InsightsState state = new InsightsState();
-//
-//        state.setErrorMessage(errorMessage);
-//
-//        viewModel.setState(state);
+    public void failView(String errorMessage) {
 
     }
 

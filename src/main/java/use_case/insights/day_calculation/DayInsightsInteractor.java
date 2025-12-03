@@ -1,8 +1,7 @@
 package use_case.insights.day_calculation;
 
-import use_case.insights.performance_calculation.DayRecordsDataAccessInterface;
 import entity.PerDayRecord;
-
+import use_case.insights.performance_calculation.DayRecordsDataAccessInterface;
 
 public class DayInsightsInteractor implements DayInsightsInputBoundary {
 
@@ -16,23 +15,23 @@ public class DayInsightsInteractor implements DayInsightsInputBoundary {
     }
 
     @Override
-    public void calculateDayInsights(int dayNumber){
-        PerDayRecord record = dataStorage.getDayData(dayNumber);
+    public void calculateDayInsights(int dayNumber) {
+        final PerDayRecord record = dataStorage.getDayData(dayNumber);
 
         if (record == null) {
             presenter.failView("No data available yet");
-            return;
         }
-        DayInsightsOutputData outputData = new DayInsightsOutputData(
-                dayNumber,
-                record.getRating(),
-                record.getRevenue(),
-                record.getExpenses(),
-                record.getProfit()
-        );
-        presenter.successView(outputData);
+        else {
+            final DayInsightsOutputData outputData = new DayInsightsOutputData(
+                    dayNumber,
+                    record.getRating(),
+                    record.getRevenue(),
+                    record.getExpenses(),
+                    record.getProfit()
+            );
+            presenter.successView(outputData);
+        }
 
     }
-
 
 }

@@ -10,7 +10,10 @@ public class PerformanceCalculationController {
         this.interactor = interactor;
     }
 
-    public void displayInsights(){
+    /**
+     * Triggers calculation for insights for overall performance.
+     */
+    public void displayInsights() {
         interactor.calculateInsights();
     }
 

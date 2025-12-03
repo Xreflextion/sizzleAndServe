@@ -14,8 +14,8 @@ public class BuyServingController {
      * Initiates the buy serving use case by converting the user's selected dishes
      * and quantities into an input data object and passing it to the interactor.
      *
-     * @param dishNames   the names of the dishes the user wants to purchase
-     * @param quantities  the corresponding quantities for each dish name
+     * @param dishNames  the names of the dishes the user wants to purchase
+     * @param quantities the corresponding quantities for each dish name
      */
     public void confirmPurchase(String[] dishNames, int[] quantities) {
         final BuyServingInputData inputData = new BuyServingInputData(dishNames, quantities);

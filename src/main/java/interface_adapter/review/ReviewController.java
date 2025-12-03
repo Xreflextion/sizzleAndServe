@@ -1,4 +1,3 @@
-
 package interface_adapter.review;
 
 import use_case.review.ReviewInputBoundary;
@@ -17,6 +16,7 @@ public class ReviewController {
 
     /**
      * Gets a review.
+     *
      * @param day - this is needed to get the review by the day, or left as null if it's the overall review
      */
     public void getReview(Integer day) {

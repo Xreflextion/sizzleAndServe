@@ -66,14 +66,16 @@ public class ReviewInteractor implements ReviewInputBoundary {
      * then the counter variable will increment by the size of these array list
      * since that will be the number of reviews
      * uses the DAO to get all reviews to increase the num of reviews.
+     *
      * @return - The number of total reviews
      */
     public int getTotalNumReview() {
-        int counter = 0;
-        for (double ignored : reviewDataAccessObjectHash.getAllReviews()) {
-            counter += 1;
-        }
-        return counter;
+        return reviewDataAccessObjectHash.getAllReviews().size();
+        // int counter = 0;
+        // for (double ignored : reviewDataAccessObjectHash.getAllReviews()) {
+        //     counter += 1;
+        // }
+        // return counter;
     }
 
     /**
@@ -81,13 +83,14 @@ public class ReviewInteractor implements ReviewInputBoundary {
      * For example day 1: 3.5 stars out of 5
      * uses the getReviews for the day to get the number of reviews for that day
      * Iterates through the reviews to find the numerator.
+     *
      * @param day - the day to get the average review for the day
      * @return - Returns the average rating for the day.
      */
     public double getAverageReviewDay(int day) {
         double numerator = 0;
         final double totalReviews = reviewDataAccessObjectHash.getReviewsByDay(day).size();
-        for (Double reviews: reviewDataAccessObjectHash.getReviewsByDay(day)) {
+        for (Double reviews : reviewDataAccessObjectHash.getReviewsByDay(day)) {
             numerator += reviews;
         }
         final double avg = numerator / totalReviews;
@@ -97,6 +100,7 @@ public class ReviewInteractor implements ReviewInputBoundary {
     /**
      * Gets the average reviews overall for the restaurant
      * uses the get all reviews to iterate through all reviews.
+     *
      * @return - the average rating
      */
     public double getAverageOverall() {
@@ -111,6 +115,7 @@ public class ReviewInteractor implements ReviewInputBoundary {
 
     /**
      * Returns the emoji.
+     *
      * @param rating - the rating to get the right emoji
      * @return - the emoji for the rating
      */
@@ -130,6 +135,7 @@ public class ReviewInteractor implements ReviewInputBoundary {
 
     /**
      * Gets all the days the user has completed.
+     *
      * @return - A list of the days
      */
     public List<Integer> getAvailableDays() {

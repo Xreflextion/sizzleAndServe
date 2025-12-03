@@ -8,6 +8,7 @@ public interface BuyServingOutputBoundary {
 
     /**
      * Present the result of the Buy Servings use case.
+     *
      * @param outputData the output data containing the result
      */
     void present(BuyServingOutputData outputData);

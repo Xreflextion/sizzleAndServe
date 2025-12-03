@@ -9,12 +9,14 @@ public interface SimulatePlayerDataAccessInterface {
 
     /**
      * Get the player.
+     *
      * @return the stored player
      */
     Player getPlayer();
 
     /**
      * Save the given player.
+     *
      * @param player the player to save
      */
     void savePlayer(Player player);

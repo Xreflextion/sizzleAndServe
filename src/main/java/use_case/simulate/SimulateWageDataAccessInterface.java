@@ -9,6 +9,7 @@ public interface SimulateWageDataAccessInterface {
 
     /**
      * Get an employee.
+     *
      * @param position the position of the employee
      * @return the employee
      */
@@ -16,6 +17,7 @@ public interface SimulateWageDataAccessInterface {
 
     /**
      * Get the total wage of all employees.
+     *
      * @return the total wage
      */
     int getTotalWage();

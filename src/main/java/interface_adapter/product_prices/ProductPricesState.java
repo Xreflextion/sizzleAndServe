@@ -28,6 +28,7 @@ public class ProductPricesState {
 
     /**
      * Updates the selected dish name and adjusts the current price based on the provided dish name.
+     *
      * @param dishName the name of the dish to set as selected
      */
     public void setSelectedDishName(String dishName) {

@@ -1,4 +1,3 @@
-
 package interface_adapter.review;
 
 import interface_adapter.ViewModel;

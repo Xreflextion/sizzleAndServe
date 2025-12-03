@@ -14,6 +14,7 @@ public class Pantry {
 
     /**
      * Creates a new pantry initialized with 3 dishes.
+     *
      * @param dish1 the first dish object
      * @param dish2 the second dish object
      * @param dish3 the third dish object
@@ -35,6 +36,7 @@ public class Pantry {
 
     /**
      * Provides the recipe object associated with the dish name.
+     *
      * @param dish the name of the dish
      * @return Recipe
      */
@@ -44,7 +46,8 @@ public class Pantry {
 
     /**
      * Adds the amount of quantity to the stock of the given dish.
-     * @param dish the name of the dish
+     *
+     * @param dish     the name of the dish
      * @param quantity the quantity of the dish
      * @return boolean
      * @throws NullPointerException if the dish is not found in the pantry
@@ -60,7 +63,8 @@ public class Pantry {
 
     /**
      * Removes the amount of quantity to the stock of the given dish (if there is enough in stock).
-     * @param dish the name of the dish
+     *
+     * @param dish     the name of the dish
      * @param quantity the quantity of the dish
      * @return boolean
      * @throws NullPointerException if the dish is not found in the pantry

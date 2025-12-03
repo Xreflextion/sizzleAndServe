@@ -16,7 +16,8 @@ public class SimulateController {
 
     /**
      * Executes the Simulate Use Case by simulating the next day.
-     * @param currentDay The current day
+     *
+     * @param currentDay           The current day
      * @param currentCustomerCount The number of customers on this day
      */
     public void execute(int currentDay, int currentCustomerCount) {

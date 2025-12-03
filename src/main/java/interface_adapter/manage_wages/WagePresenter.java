@@ -34,6 +34,7 @@ public class WagePresenter implements WageOutputBoundary {
 
     /**
      * Prepare Error View when wage change in unsuccessful.
+     *
      * @param message the message shown when the increase/decrease is unsuccessful.
      */
     public void prepareErrorView(String message) {

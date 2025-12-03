@@ -54,6 +54,7 @@ public class PlayerDataAccessObject implements PlayerDataAccessInterface,
 
     /**
      * Serializes the current state of the player.
+     *
      * @throws IOException if an IO error occurs during the file saving process
      */
     private void saveToFile() throws IOException {

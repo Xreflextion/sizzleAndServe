@@ -14,9 +14,9 @@ import com.google.gson.JsonObject;
 
 public class FileHelperObject {
 
+    private final String fileName;
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private JsonObject saveData;
-    private final String fileName;
 
     public FileHelperObject(String fileName) {
         this.fileName = fileName;
@@ -42,6 +42,7 @@ public class FileHelperObject {
 
     /**
      * Saves a map of JSON objects to a file.
+     *
      * @param jsonObjects a map containing string keys and corresponding JSON object values to be saved
      * @throws IOException if an I/O error occurs during the file writing process
      */
@@ -64,6 +65,7 @@ public class FileHelperObject {
     /**
      * Retrieves a JsonObject from the in-memory saveData using the specified key.
      * If the key is not present in the saveData, a new empty JsonObject is returned.
+     *
      * @param key the key used to retrieve the JsonObject from the saveData
      * @return the JsonObject corresponding to the given key, or a new empty JsonObject if the key does not exist
      */
@@ -81,7 +83,8 @@ public class FileHelperObject {
     /**
      * Saves a JsonArray to the in-memory saveData under the specified key and writes the updated
      * saveData to a file.
-     * @param key the key used to store the JsonArray in the in-memory saveData
+     *
+     * @param key   the key used to store the JsonArray in the in-memory saveData
      * @param array the JsonArray to be saved
      * @throws IOException if an I/O error occurs during the file writing process
      */
@@ -100,6 +103,7 @@ public class FileHelperObject {
     /**
      * Retrieves a JsonArray from the in-memory saveData using the specified key.
      * If the key does not exist in the saveData, an empty JsonArray is returned.
+     *
      * @param key the key used to retrieve the JsonArray from the saveData
      * @return the JsonArray corresponding to the given key, or an empty JsonArray if the key does not exist
      */

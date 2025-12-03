@@ -197,13 +197,13 @@ public class BuyServingView extends JPanel {
     public void showTransactionResult(boolean success) {
         if (success) {
             JOptionPane.showMessageDialog(this,
-                                 "Transaction succeeded!",
-                                     "Message", JOptionPane.INFORMATION_MESSAGE);
+                    "Transaction succeeded!",
+                    "Message", JOptionPane.INFORMATION_MESSAGE);
         }
         else {
             JOptionPane.showMessageDialog(this,
-                                 "Insufficient fund. Transactions failed.",
-                                     "Warning", JOptionPane.WARNING_MESSAGE);
+                    "Insufficient fund. Transactions failed.",
+                    "Warning", JOptionPane.WARNING_MESSAGE);
         }
     }
 }

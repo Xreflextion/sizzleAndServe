@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 public class Main {
     /**
      * The main entry point of the project.
+     *
      * @param args commandline arguments to be ignored.
      */
     public static void main(String[] args) {
